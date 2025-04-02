@@ -1,14 +1,14 @@
 import { ReactNode } from "react";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
-import { useMobile } from "@/hooks/use-mobile";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface MainLayoutProps {
   children: ReactNode;
 }
 
 export default function MainLayout({ children }: MainLayoutProps) {
-  const isMobile = useMobile();
+  const isMobile = useIsMobile();
   
   return (
     <div className="min-h-screen flex flex-col bg-dark-50 text-dark-800 font-sans">
