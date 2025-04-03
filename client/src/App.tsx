@@ -6,6 +6,7 @@ import NotFound from "@/pages/not-found";
 import Dashboard from "@/pages/dashboard";
 import Project from "@/pages/project";
 import MainLayout from "@/components/layouts/MainLayout";
+import { ProjectProvider } from "@/context/ProjectContext";
 
 function Router() {
   return (
@@ -20,10 +21,12 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <MainLayout>
-        <Router />
-      </MainLayout>
-      <Toaster />
+      <ProjectProvider>
+        <MainLayout>
+          <Router />
+        </MainLayout>
+        <Toaster />
+      </ProjectProvider>
     </QueryClientProvider>
   );
 }

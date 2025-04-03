@@ -1,4 +1,5 @@
 import { ProjectStep } from "@shared/schema";
+import { Button } from "@/components/ui/button";
 
 interface WorkflowStepsProps {
   steps: ProjectStep[];
@@ -7,6 +8,15 @@ interface WorkflowStepsProps {
 }
 
 export default function WorkflowSteps({ steps, currentStep, onStepClick }: WorkflowStepsProps) {
+  console.log("WorkflowSteps rendering with currentStep:", currentStep);
+  
+  const handleStepClick = (step: ProjectStep) => {
+    console.log("Step clicked in component:", step);
+    if (onStepClick) {
+      onStepClick(step);
+    }
+  };
+  
   return (
     <div className="mb-8">
       <div className="overflow-x-auto pb-4">
@@ -21,9 +31,11 @@ export default function WorkflowSteps({ steps, currentStep, onStepClick }: Workf
             
             return (
               <div className="flex items-center" key={step}>
-                <div 
-                  className="flex flex-col items-center cursor-pointer transition-all duration-200 transform hover:scale-105"
-                  onClick={() => onStepClick && onStepClick(step)}
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className="flex flex-col items-center p-1 h-auto"
+                  onClick={() => handleStepClick(step)}
                 >
                   <div 
                     className={`h-10 w-10 rounded-full flex items-center justify-center transition-colors duration-200
@@ -38,7 +50,7 @@ export default function WorkflowSteps({ steps, currentStep, onStepClick }: Workf
                   >
                     {stepLabel}
                   </span>
-                </div>
+                </Button>
                 {index < steps.length - 1 && (
                   <div 
                     className={`h-1 w-12 sm:w-16 md:w-20 transition-colors duration-300 

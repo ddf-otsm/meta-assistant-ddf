@@ -52,11 +52,15 @@ const defaultSpecification: ApiSpecification = {
 // Default workflow steps
 const defaultWorkflowSteps: ProjectStep[] = [
   "concept",
-  "model",
-  "template",
+  "patterns",
+  "metamodel",
   "specification",
+  "generator",
+  "template",
   "generate",
-  "test"
+  "refine",
+  "test",
+  "iterate"
 ];
 
 interface ProjectContextProps {

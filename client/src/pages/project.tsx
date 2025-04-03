@@ -9,28 +9,15 @@ import ModelBuilder from "@/components/workspace/ModelBuilder";
 import AIAssistant from "@/components/workspace/AIAssistant";
 import MetadataViewer from "@/components/workspace/MetadataViewer";
 import { Project, ModelDefinition, AiConversation, GeneratedCode, ApiSpecification, ProjectStep, Message } from "@shared/schema";
+import { useProject } from "@/context/ProjectContext";
 
 export default function ProjectPage() {
   const [, params] = useRoute<{ id: string }>("/projects/:id");
   const projectId = parseInt(params?.id || "1");
   const { toast } = useToast();
   
-  // State for the current workflow step
-  const [currentStep, setCurrentStep] = useState<ProjectStep>("specification");
-  
-  // Define workflow steps according to ProjectStep type
-  const steps: ProjectStep[] = [
-    "concept", 
-    "patterns", 
-    "metamodel", 
-    "specification", 
-    "generator",  
-    "template",   
-    "generate",
-    "refine",     
-    "test",      
-    "iterate"     
-  ];
+  // Get global workflow state from context
+  const { currentStep, setCurrentStep, steps } = useProject();
   
   // State for the API specification
   const [specification, setSpecification] = useState<ApiSpecification>({
@@ -244,7 +231,10 @@ export default function ProjectPage() {
       <WorkflowSteps 
         steps={steps} 
         currentStep={currentStep} 
-        onStepClick={setCurrentStep}
+        onStepClick={(step) => {
+          console.log("Step clicked:", step);
+          setCurrentStep(step);
+        }}
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
