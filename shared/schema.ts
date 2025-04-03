@@ -124,12 +124,22 @@ export type ResourceProperty = {
   name: string;
   type: string;
   required: boolean;
+  description?: string;
+  validation?: string[];
+  defaultValue?: any;
 };
 
 export type Endpoint = {
   method: string;
   path: string;
   description: string;
+  parameters?: ResourceProperty[];
+  responses?: {
+    status: number;
+    description: string;
+    schema?: string;
+  }[];
+  security?: string[];
   pagination?: boolean;
   filtering?: boolean;
 };
@@ -137,13 +147,23 @@ export type Endpoint = {
 export type ResourceDefinition = {
   name: string;
   path: string;
+  description?: string;
   properties: ResourceProperty[];
   endpoints: Endpoint[];
+  relationships?: {
+    type: 'one-to-one' | 'one-to-many' | 'many-to-many';
+    target: string;
+    name: string;
+    inverseName?: string;
+  }[];
 };
 
 export type FrameworkDefinition = {
   name: string;
   language: string;
+  version?: string;
+  libraries?: string[];
+  features?: string[];
 };
 
 export type FeatureOptions = {
@@ -152,21 +172,51 @@ export type FeatureOptions = {
   validation: boolean;
   testing: boolean;
   docker: boolean;
+  caching?: boolean;
+  logging?: boolean;
+  monitoring?: boolean;
+  rateLimit?: boolean;
+  versioning?: boolean;
+};
+
+export type MetaModel = {
+  name: string;
+  description?: string;
+  type: 'component' | 'page' | 'form' | 'workflow' | 'api' | 'report' | 'custom';
+  config: Record<string, any>;
+  templates: string[]; // References to template IDs or names
+};
+
+export type Generator = {
+  name: string;
+  description?: string;
+  language: string;
+  framework: string;
+  templateEngine: string;
+  outputFormats: string[];
+  config?: Record<string, any>;
 };
 
 export type ApiSpecification = {
   resource: ResourceDefinition;
   framework: FrameworkDefinition;
   features: FeatureOptions;
+  metamodels?: MetaModel[];
+  generators?: Generator[];
+  version?: string;
 };
 
 export type ProjectStep = 
-  | 'concept'
-  | 'model'
-  | 'template'
-  | 'specification'
-  | 'generate'
-  | 'test';
+  | 'concept'               // Initial project concept and goals
+  | 'patterns'              // Identify repetitive patterns in the domain
+  | 'metamodel'             // Define the meta-models for code generation
+  | 'specification'         // Create specifications using meta-models
+  | 'generator'             // Define/select the code generators
+  | 'template'              // Create code templates
+  | 'generate'              // Execute generation process
+  | 'refine'                // AI-assisted refinement of generated code
+  | 'test'                  // Test the generated system
+  | 'iterate';              // Cycle back with improvements;
 
 export type WorkflowState = {
   currentStep: ProjectStep;

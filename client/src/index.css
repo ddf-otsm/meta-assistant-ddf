@@ -3,11 +3,122 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    /* Base Solarized-inspired colors */
+    --base03: 193, 100%, 12%;
+    --base02: 192, 81%, 16%;
+    --base01: 194, 14%, 40%;
+    --base00: 196, 13%, 45%;
+    --base0: 186, 13%, 55%;
+    --base1: 180, 14%, 65%;
+    --base2: 46, 42%, 88%;
+    --base3: 44, 87%, 94%;
+    
+    /* Accent colors with cherry primary */
+    --cherry: 347, 76%, 50%;
+    --cherry-light: 347, 77%, 60%;
+    --cherry-dark: 347, 83%, 36%;
+    --teal: 177, 51%, 47%;
+    --violet: 282, 65%, 55%;
+    --orange: 28, 89%, 55%;
+    --blue: 205, 69%, 49%;
+    --green: 115, 54%, 46%;
+    
+    /* Semantic colors */
+    --background: var(--base3);
+    --foreground: var(--base01);
+    --card: var(--base2);
+    --card-foreground: var(--base01);
+    --popover: var(--base2);
+    --popover-foreground: var(--base01);
+    --primary: var(--cherry);
+    --primary-foreground: 0, 0%, 98%;
+    --secondary: var(--teal);
+    --secondary-foreground: var(--base3);
+    --muted: var(--base2);
+    --muted-foreground: var(--base00);
+    --accent: var(--violet);
+    --accent-foreground: var(--base3);
+    --destructive: 0, 84%, 48%;
+    --destructive-foreground: var(--base3);
+    --border: var(--base1);
+    --input: var(--base1);
+    --ring: var(--cherry);
+    
+    /* Chart colors */
+    --chart-1: var(--cherry);
+    --chart-2: var(--blue);
+    --chart-3: var(--teal);
+    --chart-4: var(--orange);
+    --chart-5: var(--violet);
+    
+    /* Sidebar colors */
+    --sidebar-background: var(--base02);
+    --sidebar-foreground: var(--base1);
+    --sidebar-primary: var(--cherry);
+    --sidebar-primary-foreground: var(--base3);
+    --sidebar-accent: var(--blue);
+    --sidebar-accent-foreground: var(--base3);
+    --sidebar-border: var(--base01);
+    --sidebar-ring: var(--cherry);
+    
+    --radius: 0.75rem;
+  }
+  
+  .dark {
+    --background: var(--base03);
+    --foreground: var(--base1);
+    --card: var(--base02);
+    --card-foreground: var(--base1);
+    --popover: var(--base02);
+    --popover-foreground: var(--base1);
+    --primary: var(--cherry);
+    --primary-foreground: var(--base3);
+    --secondary: var(--teal);
+    --secondary-foreground: var(--base3);
+    --muted: var(--base02);
+    --muted-foreground: var(--base0);
+    --accent: var(--violet);
+    --accent-foreground: var(--base3);
+    --destructive: 0, 84%, 48%;
+    --destructive-foreground: var(--base3);
+    --border: var(--base01);
+    --input: var(--base01);
+    --ring: var(--cherry);
+    
+    /* Sidebar dark mode */
+    --sidebar-background: var(--base03);
+    --sidebar-foreground: var(--base1);
+    --sidebar-primary: var(--cherry);
+    --sidebar-primary-foreground: var(--base3);
+    --sidebar-accent: var(--blue);
+    --sidebar-accent-foreground: var(--base3);
+    --sidebar-border: var(--base01);
+    --sidebar-ring: var(--cherry);
+  }
+
   * {
     @apply border-border;
   }
 
   body {
     @apply font-sans antialiased bg-background text-foreground;
+  }
+
+  /* Special gradient effects */
+  .gradient-text {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-[hsl(var(--cherry))] to-[hsl(var(--accent))];
+  }
+  
+  .gradient-border {
+    @apply relative;
+  }
+  
+  .gradient-border::before {
+    content: '';
+    @apply absolute inset-0 p-[1px] rounded-[calc(var(--radius)+1px)] bg-gradient-to-r from-[hsl(var(--cherry))] to-[hsl(var(--accent))];
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
   }
 }
