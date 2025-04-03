@@ -121,4 +121,13 @@
     -webkit-mask-composite: xor;
     mask-composite: exclude;
   }
+  
+  /* Framework selection styling */
+  .framework-option {
+    @apply transition-all duration-200 ease-in-out transform hover:scale-105;
+  }
+  
+  .framework-option.selected {
+    @apply border-2 border-[hsl(var(--primary))] bg-[hsla(var(--primary),0.05)];
+  }
 }

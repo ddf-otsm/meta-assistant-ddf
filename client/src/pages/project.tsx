@@ -17,7 +17,7 @@ export default function ProjectPage() {
   
   // State for the current workflow step
   const [currentStep, setCurrentStep] = useState<ProjectStep>("specification");
-  const steps: ProjectStep[] = ["concept", "model", "template", "specification", "generate", "test"];
+  const steps: ProjectStep[] = ["concept", "patterns", "metamodel", "specification", "generate", "test"];
   
   // State for the API specification
   const [specification, setSpecification] = useState<ApiSpecification>({
@@ -85,7 +85,11 @@ export default function ProjectPage() {
     }
     
     if (conversation && conversation.messages) {
-      setMessages(conversation.messages);
+      // The messages are stored as a JSON object in the database, so we need to parse it
+      const conversationMessages = conversation.messages as unknown as Message[];
+      if (Array.isArray(conversationMessages)) {
+        setMessages(conversationMessages);
+      }
     }
     
     if (generatedCodeFiles) {
@@ -234,7 +238,15 @@ export default function ProjectPage() {
         <div className="lg:col-span-2">
           <ModelBuilder 
             specification={specification} 
-            onSpecificationChange={handleSpecificationChange} 
+            onSpecificationChange={handleSpecificationChange}
+            onSave={handleSave}
+            onNextStep={() => {
+              // Move to the next step in the workflow
+              const currentIndex = steps.indexOf(currentStep);
+              if (currentIndex < steps.length - 1) {
+                setCurrentStep(steps[currentIndex + 1]);
+              }
+            }}
           />
         </div>
         
