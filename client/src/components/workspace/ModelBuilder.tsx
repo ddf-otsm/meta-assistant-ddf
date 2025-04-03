@@ -9,9 +9,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 interface ModelBuilderProps {
   specification: ApiSpecification;
   onSpecificationChange: (spec: ApiSpecification) => void;
+  onSave?: () => void;
+  onNextStep?: () => void;
 }
 
-export default function ModelBuilder({ specification, onSpecificationChange }: ModelBuilderProps) {
+export default function ModelBuilder({ specification, onSpecificationChange, onSave, onNextStep }: ModelBuilderProps) {
   const [newProperty, setNewProperty] = useState<ResourceProperty>({ 
     name: '', 
     type: 'string', 
@@ -280,7 +282,11 @@ export default function ModelBuilder({ specification, onSpecificationChange }: M
                   <Checkbox 
                     className="rounded text-primary-600 mr-2" 
                     checked={true}
-                    onCheckedChange={(checked) => handleEndpointChange(index, 'enabled', !!checked)}
+                    onCheckedChange={(checked) => {
+                      // Since 'enabled' is not a property of Endpoint, we'll use this checkbox for toggling something else
+                      // For now, let's just log the change
+                      console.log(`Toggled endpoint ${index} to ${checked ? 'enabled' : 'disabled'}`);
+                    }}
                   />
                   <button className="text-dark-500 hover:text-dark-700">
                     <i className="ri-settings-3-line"></i>
@@ -298,8 +304,7 @@ export default function ModelBuilder({ specification, onSpecificationChange }: M
           <Label className="block text-dark-700 font-medium mb-2">Framework Selection</Label>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <div 
-              className={`border ${specification.framework.name === 'express' ? 'border-primary-600 bg-primary-50' : 'border-dark-300 hover:border-primary-600 bg-white hover:bg-primary-50'} 
-                rounded-md p-3 flex flex-col items-center cursor-pointer transition`}
+              className={`framework-option border rounded-md p-3 flex flex-col items-center cursor-pointer ${specification.framework.name === 'express' ? 'selected' : 'border-dark-300 bg-white'}`}
               onClick={() => handleFrameworkChange('express')}
             >
               <img src="https://expressjs.com/images/express-facebook-share.png" alt="Express.js" className="h-10 object-contain mb-2" />
@@ -307,8 +312,7 @@ export default function ModelBuilder({ specification, onSpecificationChange }: M
               <span className="text-xs text-dark-500 mt-1">Node.js</span>
             </div>
             <div 
-              className={`border ${specification.framework.name === 'fastapi' ? 'border-primary-600 bg-primary-50' : 'border-dark-300 hover:border-primary-600 bg-white hover:bg-primary-50'} 
-                rounded-md p-3 flex flex-col items-center cursor-pointer transition`}
+              className={`framework-option border rounded-md p-3 flex flex-col items-center cursor-pointer ${specification.framework.name === 'fastapi' ? 'selected' : 'border-dark-300 bg-white'}`}
               onClick={() => handleFrameworkChange('fastapi')}
             >
               <img src="https://static-00.iconduck.com/assets.00/fastapi-icon-512x512-a7ggfxfw.png" alt="FastAPI" className="h-10 object-contain mb-2" />
@@ -316,8 +320,7 @@ export default function ModelBuilder({ specification, onSpecificationChange }: M
               <span className="text-xs text-dark-500 mt-1">Python</span>
             </div>
             <div 
-              className={`border ${specification.framework.name === 'spring' ? 'border-primary-600 bg-primary-50' : 'border-dark-300 hover:border-primary-600 bg-white hover:bg-primary-50'} 
-                rounded-md p-3 flex flex-col items-center cursor-pointer transition`}
+              className={`framework-option border rounded-md p-3 flex flex-col items-center cursor-pointer ${specification.framework.name === 'spring' ? 'selected' : 'border-dark-300 bg-white'}`}
               onClick={() => handleFrameworkChange('spring')}
             >
               <img src="https://spring.io/img/spring.svg" alt="Spring Boot" className="h-10 object-contain mb-2" />
@@ -325,8 +328,7 @@ export default function ModelBuilder({ specification, onSpecificationChange }: M
               <span className="text-xs text-dark-500 mt-1">Java</span>
             </div>
             <div 
-              className={`border ${specification.framework.name === 'laravel' ? 'border-primary-600 bg-primary-50' : 'border-dark-300 hover:border-primary-600 bg-white hover:bg-primary-50'} 
-                rounded-md p-3 flex flex-col items-center cursor-pointer transition`}
+              className={`framework-option border rounded-md p-3 flex flex-col items-center cursor-pointer ${specification.framework.name === 'laravel' ? 'selected' : 'border-dark-300 bg-white'}`}
               onClick={() => handleFrameworkChange('laravel')}
             >
               <img src="https://laravel.com/img/logomark.min.svg" alt="Laravel" className="h-10 object-contain mb-2" />
@@ -385,6 +387,20 @@ export default function ModelBuilder({ specification, onSpecificationChange }: M
               <Label htmlFor="feature-docker" className="text-dark-700">Docker Configuration</Label>
             </div>
           </div>
+        </div>
+        
+        <div className="mt-8 flex justify-end">
+          <Button 
+            className="bg-primary-600 hover:bg-primary-700 text-white flex items-center"
+            onClick={() => {
+              // Call onSave callback if provided
+              console.log("Saved specification and moving to next step");
+              if (onSave) onSave();
+              if (onNextStep) onNextStep();
+            }}
+          >
+            Save and Continue <i className="ri-arrow-right-line ml-2"></i>
+          </Button>
         </div>
       </div>
     </div>
