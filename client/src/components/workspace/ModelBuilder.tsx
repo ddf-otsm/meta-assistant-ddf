@@ -97,13 +97,19 @@ export default function ModelBuilder({ specification, onSpecificationChange }: M
       laravel: 'php'
     };
     
-    onSpecificationChange({
+    console.log(`Changing framework to: ${name}, language: ${languageMap[name]}`);
+    
+    // Create a new specification object to ensure React detects the change
+    const updatedSpec = {
       ...specification,
       framework: {
         name,
         language: languageMap[name] || 'javascript'
       }
-    });
+    };
+    
+    // Update the state through the parent component
+    onSpecificationChange(updatedSpec);
   };
 
   const handleFeatureChange = (feature: keyof ApiSpecification['features'], value: boolean) => {
