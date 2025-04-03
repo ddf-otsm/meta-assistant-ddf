@@ -9,23 +9,26 @@ export default function Sidebar() {
         <div className="mb-6">
           <h3 className="text-xs uppercase text-dark-500 font-semibold tracking-wider mb-3">Projects</h3>
           <div className="space-y-1">
-            <Link href="/projects/1">
-              <a className={`flex items-center px-3 py-2 rounded-md ${location === '/projects/1' ? 'bg-primary-50 text-primary-700' : 'text-dark-600 hover:bg-dark-100'}`}>
-                <i className="ri-folder-line mr-2"></i>
-                <span>Meta-API Generator</span>
-              </a>
+            <Link 
+              href="/projects/1" 
+              className={`flex items-center px-3 py-2 rounded-md ${location === '/projects/1' ? 'bg-primary-50 text-primary-700' : 'text-dark-600 hover:bg-dark-100'}`}
+            >
+              <i className="ri-folder-line mr-2"></i>
+              <span>Meta-API Generator</span>
             </Link>
-            <Link href="/projects/2">
-              <a className={`flex items-center px-3 py-2 rounded-md ${location === '/projects/2' ? 'bg-primary-50 text-primary-700' : 'text-dark-600 hover:bg-dark-100'}`}>
-                <i className="ri-folder-line mr-2"></i>
-                <span>Dashboard Builder</span>
-              </a>
+            <Link 
+              href="/projects/2" 
+              className={`flex items-center px-3 py-2 rounded-md ${location === '/projects/2' ? 'bg-primary-50 text-primary-700' : 'text-dark-600 hover:bg-dark-100'}`}
+            >
+              <i className="ri-folder-line mr-2"></i>
+              <span>Dashboard Builder</span>
             </Link>
-            <Link href="/projects/3">
-              <a className={`flex items-center px-3 py-2 rounded-md ${location === '/projects/3' ? 'bg-primary-50 text-primary-700' : 'text-dark-600 hover:bg-dark-100'}`}>
-                <i className="ri-folder-line mr-2"></i>
-                <span>CRUD App Generator</span>
-              </a>
+            <Link 
+              href="/projects/3" 
+              className={`flex items-center px-3 py-2 rounded-md ${location === '/projects/3' ? 'bg-primary-50 text-primary-700' : 'text-dark-600 hover:bg-dark-100'}`}
+            >
+              <i className="ri-folder-line mr-2"></i>
+              <span>CRUD App Generator</span>
             </Link>
           </div>
         </div>
@@ -33,40 +36,40 @@ export default function Sidebar() {
         <div className="mb-6">
           <h3 className="text-xs uppercase text-dark-500 font-semibold tracking-wider mb-3">Tools</h3>
           <div className="space-y-1">
-            <a href="#" className="flex items-center px-3 py-2 rounded-md text-dark-600 hover:bg-dark-100">
+            <span className="flex items-center px-3 py-2 rounded-md text-dark-600 hover:bg-dark-100 cursor-pointer">
               <i className="ri-magic-line mr-2"></i>
               <span>Model Designer</span>
-            </a>
-            <a href="#" className="flex items-center px-3 py-2 rounded-md text-dark-600 hover:bg-dark-100">
+            </span>
+            <span className="flex items-center px-3 py-2 rounded-md text-dark-600 hover:bg-dark-100 cursor-pointer">
               <i className="ri-code-box-line mr-2"></i>
               <span>Template Editor</span>
-            </a>
-            <a href="#" className="flex items-center px-3 py-2 rounded-md text-dark-600 hover:bg-dark-100">
+            </span>
+            <span className="flex items-center px-3 py-2 rounded-md text-dark-600 hover:bg-dark-100 cursor-pointer">
               <i className="ri-terminal-box-line mr-2"></i>
               <span>Generator CLI</span>
-            </a>
-            <a href="#" className="flex items-center px-3 py-2 rounded-md text-dark-600 hover:bg-dark-100">
+            </span>
+            <span className="flex items-center px-3 py-2 rounded-md text-dark-600 hover:bg-dark-100 cursor-pointer">
               <i className="ri-robot-line mr-2"></i>
               <span>AI Assistant</span>
-            </a>
+            </span>
           </div>
         </div>
 
         <div className="mb-6">
           <h3 className="text-xs uppercase text-dark-500 font-semibold tracking-wider mb-3">Learn</h3>
           <div className="space-y-1">
-            <a href="#" className="flex items-center px-3 py-2 rounded-md text-dark-600 hover:bg-dark-100">
+            <span className="flex items-center px-3 py-2 rounded-md text-dark-600 hover:bg-dark-100 cursor-pointer">
               <i className="ri-book-line mr-2"></i>
               <span>Tutorials</span>
-            </a>
-            <a href="#" className="flex items-center px-3 py-2 rounded-md text-dark-600 hover:bg-dark-100">
+            </span>
+            <span className="flex items-center px-3 py-2 rounded-md text-dark-600 hover:bg-dark-100 cursor-pointer">
               <i className="ri-file-list-line mr-2"></i>
               <span>Documentation</span>
-            </a>
-            <a href="#" className="flex items-center px-3 py-2 rounded-md text-dark-600 hover:bg-dark-100">
+            </span>
+            <span className="flex items-center px-3 py-2 rounded-md text-dark-600 hover:bg-dark-100 cursor-pointer">
               <i className="ri-community-line mr-2"></i>
               <span>Community</span>
-            </a>
+            </span>
           </div>
         </div>
 

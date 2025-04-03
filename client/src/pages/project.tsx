@@ -17,7 +17,20 @@ export default function ProjectPage() {
   
   // State for the current workflow step
   const [currentStep, setCurrentStep] = useState<ProjectStep>("specification");
-  const steps: ProjectStep[] = ["concept", "patterns", "metamodel", "specification", "generate", "test"];
+  
+  // Define workflow steps according to ProjectStep type
+  const steps: ProjectStep[] = [
+    "concept", 
+    "patterns", 
+    "metamodel", 
+    "specification", 
+    "generator",  
+    "template",   
+    "generate",
+    "refine",     
+    "test",      
+    "iterate"     
+  ];
   
   // State for the API specification
   const [specification, setSpecification] = useState<ApiSpecification>({

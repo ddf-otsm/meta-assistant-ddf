@@ -6,21 +6,21 @@ export default function Header() {
       <div className="container mx-auto px-4 flex items-center justify-between h-16">
         <div className="flex items-center space-x-2">
           <i className="ri-code-box-line text-primary-600 text-2xl"></i>
-          <Link href="/">
-            <a className="text-xl font-semibold text-dark-900">Meta-Engineer</a>
+          <Link href="/" className="text-xl font-semibold text-dark-900">
+            Meta-Engineer
           </Link>
           <span className="bg-accent-100 text-accent-800 text-xs px-2 py-0.5 rounded-full font-medium">Beta</span>
         </div>
 
         <nav className="hidden md:flex items-center space-x-6">
-          <Link href="/">
-            <a className="text-dark-600 hover:text-primary-600 font-medium transition">Dashboard</a>
+          <Link href="/" className="text-dark-600 hover:text-primary-600 font-medium transition">
+            Dashboard
           </Link>
-          <Link href="/projects/1">
-            <a className="text-dark-600 hover:text-primary-600 font-medium transition">Projects</a>
+          <Link href="/projects/1" className="text-dark-600 hover:text-primary-600 font-medium transition">
+            Projects
           </Link>
-          <a href="#" className="text-dark-600 hover:text-primary-600 font-medium transition">Templates</a>
-          <a href="#" className="text-dark-600 hover:text-primary-600 font-medium transition">Documentation</a>
+          <span className="text-dark-600 hover:text-primary-600 font-medium transition cursor-pointer">Templates</span>
+          <span className="text-dark-600 hover:text-primary-600 font-medium transition cursor-pointer">Documentation</span>
         </nav>
 
         <div className="flex items-center space-x-4">
