@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+dist/
+build/
+coverage/
+
+# Generated files
+*.d.ts
+*.js.map
+*.css.map
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+logs/
+*.log
+
+# Test files
+**/__tests__/coverage/
+**/__mocks__/
+
+# Docker
+.docker/
+docker-compose*.yml
+Dockerfile*
+
+# Documentation
+docs/
+*.md
+
+# Package files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml 

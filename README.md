@@ -2,6 +2,44 @@
 
 A platform that implements the "Generate Instead of Code" approach to software engineering, where AI agents and human developers collaborate to build software that creates software.
 
+## Quick Start
+
+### Docker Setup (Recommended)
+```bash
+# Start the application with Docker
+npm run docker:start
+
+# Stop the application
+npm run docker:stop
+```
+
+The application will be available at http://localhost:3000
+
+### Local Setup
+```bash
+# Install dependencies
+npm install
+
+# Start the development server
+npm run dev
+```
+
+## Project Structure
+- `config/` - Configuration files
+  - `docker/` - Docker configuration files
+  - `node/` - Node.js configuration
+  - `typescript/` - TypeScript configuration
+  - `vite/` - Vite configuration
+  - `env/` - Environment configurations
+
+- `multi-env/` - Environment-specific code
+  - `docker/` - Docker environment scripts
+  - `local/` - Local development scripts
+  - `replit/` - Replit environment scripts
+
+- `docs/` - Project documentation
+  - See `docs/index.md` for detailed documentation
+
 ## Core Concept
 
 Rather than directly coding features, this platform enables you to:
@@ -27,9 +65,9 @@ Rather than directly coding features, this platform enables you to:
 - **AI Integration**: OpenAI API (GPT-4o)
 - **Data Storage**: In-memory storage (with database schema)
 
-## Setup Instructions
+## Detailed Setup Instructions
 
-### Option 1: Docker Setup (Recommended for Development)
+### Docker Setup (Recommended for Development)
 
 1. Make sure Docker Desktop is installed and running
 2. Start the containers:
@@ -42,7 +80,7 @@ Rather than directly coding features, this platform enables you to:
    npm run docker:stop
    ```
 
-### Option 2: Local Setup
+### Local Setup
 
 #### Prerequisites
 - Node.js v23.11.0 or later
@@ -84,7 +122,7 @@ Rather than directly coding features, this platform enables you to:
 
 3. The application will be available at http://localhost:3000
 
-## Development
+## Development Scripts
 
 - `npm run dev` - Start the development server
 - `npm run build` - Build the application
@@ -92,6 +130,8 @@ Rather than directly coding features, this platform enables you to:
 - `npm run test` - Run tests
 - `npm run test:coverage` - Run tests with coverage
 - `npm run test:ui` - Run tests with UI
+- `npm run docker:start` - Start Docker containers
+- `npm run docker:stop` - Stop Docker containers
 
 ## Database Management
 
