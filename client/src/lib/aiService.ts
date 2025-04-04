@@ -1,6 +1,5 @@
-import { Express } from 'express';
-
 import { apiRequest } from '@/lib/queryClient';
+
 import { Message, ApiSpecification } from '@shared/schema';
 
 interface AiServiceResult {
@@ -111,7 +110,3 @@ export class AIService {
     }
   }
 }
-
-export const setupRoutes = (app: Express) => {
-  app.use('/api', router);
-};

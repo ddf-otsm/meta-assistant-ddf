@@ -1,8 +1,11 @@
 // External dependencies
-import { InfoIcon, MaximizeIcon, EditIcon, TrashIcon } from 'lucide-react';
 import { useState } from 'react';
 
+import { InfoIcon, MaximizeIcon, EditIcon, TrashIcon } from 'lucide-react';
+
 // UI Components
+import { getLogger } from '@lib/logger';
+
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
@@ -14,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { getLogger } from '@lib/logger';
+
 import { ResourceProperty, ApiSpecification } from '@shared/schema';
 
 // Shared types

@@ -3,15 +3,11 @@ import express, { json, urlencoded } from 'express';
 import session from 'express-session';
 
 import { setupLogRotation } from './config/log-rotation';
-import { setupLogging } from './config/logging_config';
 import { errorHandler } from './middleware/errorHandler';
 import { setupRoutes } from './routes';
 
-const app = express();
-
-// Setup logging
-setupLogging();
 const logger = setupLogRotation();
+const app = express();
 
 // Middleware
 app.use(cors());
@@ -19,10 +15,9 @@ app.use(json());
 app.use(urlencoded({ extended: true }));
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || 'your-secret-key',
+    secret: 'your-secret-key',
     resave: false,
-    saveUninitialized: false,
-    cookie: { secure: process.env.NODE_ENV === 'production' },
+    saveUninitialized: true,
   })
 );
 

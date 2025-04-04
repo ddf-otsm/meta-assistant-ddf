@@ -20,9 +20,14 @@
     "ecmaFeatures": {
       "jsx": true
     },
-    "ecmaVersion": 12,
+    "ecmaVersion": "latest",
     "sourceType": "module",
-    "project": ["./tsconfig.json", "./tsconfig.node.json"],
+    "project": [
+      "./client/tsconfig.json",
+      "./server/tsconfig.json",
+      "./shared/tsconfig.json",
+      "./tsconfig.node.json"
+    ],
     "tsconfigRootDir": ".",
     "warnOnUnsupportedTypeScriptVersion": false,
     "createDefaultProgram": true
@@ -46,9 +51,38 @@
     "import/order": [
       "error",
       {
-        "groups": ["builtin", "external", "internal", "parent", "sibling", "index"],
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          ["parent", "sibling"],
+          "index",
+          "object",
+          "type"
+        ],
+        "pathGroups": [
+          {
+            "pattern": "react",
+            "group": "external",
+            "position": "before"
+          },
+          {
+            "pattern": "@/**",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "@shared/**",
+            "group": "internal",
+            "position": "after"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": ["react"],
         "newlines-between": "always",
-        "alphabetize": { "order": "asc" }
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
       }
     ],
     "import/no-unresolved": "error",
@@ -82,7 +116,11 @@
     },
     "import/resolver": {
       "typescript": {
-        "project": ["./tsconfig.json", "./tsconfig.node.json"],
+        "project": [
+          "./client/tsconfig.json",
+          "./server/tsconfig.json",
+          "./shared/tsconfig.json"
+        ],
         "alwaysTryTypes": true
       },
       "node": {
@@ -95,7 +133,7 @@
     {
       "files": ["*.ts", "*.tsx"],
       "parserOptions": {
-        "project": ["./tsconfig.json", "./tsconfig.node.json"],
+        "project": ["./client/tsconfig.json", "./server/tsconfig.json", "./shared/tsconfig.json", "./tsconfig.node.json"],
         "warnOnUnsupportedTypeScriptVersion": false,
         "createDefaultProgram": true
       }

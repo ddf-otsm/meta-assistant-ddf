@@ -1,5 +1,6 @@
-import { useQuery, useMutation } from '@tanstack/react-query';
 import { useState, useEffect } from 'react';
+
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { useRoute } from 'wouter';
 
 import { Button } from '@/components/ui/button';
@@ -9,6 +10,7 @@ import ModelBuilder from '@/components/workspace/ModelBuilder';
 import WorkflowSteps from '@/components/workspace/WorkflowSteps';
 import { useToast } from '@/hooks/use-toast';
 import { queryClient, apiRequest } from '@/lib/queryClient';
+
 import {
   Project,
   ModelDefinition,

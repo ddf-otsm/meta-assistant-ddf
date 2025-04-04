@@ -9,7 +9,6 @@ import { createServer } from 'vite';
 import { createLogger, format, transports } from 'winston';
 
 import viteConfig from '../vite.config';
-
 import { getLogger } from './src/logging_config';
 
 const __filename = fileURLToPath(import.meta.url);
