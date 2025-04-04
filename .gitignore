@@ -40,6 +40,10 @@ package-lock.json
 tsconfig.json
 vite.config.ts
 
+# Environment-specific files
+multi-env/*/workflow_tasks/*.log
+multi-env/*/workflow_tasks/*.tmp
+
 # Additional security-related ignores
 *.pem
 *.key
