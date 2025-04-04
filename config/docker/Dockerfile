@@ -4,11 +4,13 @@ FROM node:20-slim
 # Set working directory
 WORKDIR /app
 
-# Install esbuild globally
-RUN npm install -g esbuild
+# Install wget for health checks and esbuild for building
+RUN apt-get update && apt-get install -y wget && \
+    npm install -g esbuild && \
+    rm -rf /var/lib/apt/lists/*
 
 # Copy package files first to leverage Docker cache
-COPY package*.json ./
+COPY config/node/package*.json ./
 
 # Install dependencies
 RUN npm install

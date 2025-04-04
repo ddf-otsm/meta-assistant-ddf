@@ -2,7 +2,9 @@ version: '3.8'
 
 services:
   app:
-    build: .
+    build:
+      context: ../..
+      dockerfile: config/docker/Dockerfile
     ports:
       - "3000:3000"
     environment:
@@ -13,11 +15,11 @@ services:
       db:
         condition: service_healthy
     volumes:
-      - .:/app
+      - ../..:/app
       - /app/node_modules
     command: npm run dev
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      test: ["CMD-SHELL", "node -e 'fetch(\"http://localhost:3000/health\").then(r => process.exit(r.ok ? 0 : 1))'"]
       interval: 30s
       timeout: 10s
       retries: 3

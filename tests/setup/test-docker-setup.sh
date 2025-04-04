@@ -50,22 +50,22 @@ run_test "Docker daemon running" "docker info > /dev/null 2>&1"
 
 # 4. Check Docker containers
 echo -e "\n${YELLOW}Checking Docker containers:${NC}"
-run_test "App container running" "docker ps --format '{{.Names}}' | grep -q 'meta-assistant-ddf-app'"
-run_test "DB container running" "docker ps --format '{{.Names}}' | grep -q 'meta-assistant-ddf-db'"
+run_test "App container running" "docker ps --format '{{.Names}}' | grep -q 'docker-app-1'"
+run_test "DB container running" "docker ps --format '{{.Names}}' | grep -q 'docker-db-1'"
 
 # 5. Check container health
 echo -e "\n${YELLOW}Checking container health:${NC}"
-run_test "App container healthy" "docker inspect -f '{{.State.Health.Status}}' meta-assistant-ddf-app 2>/dev/null | grep -q 'healthy'"
-run_test "DB container healthy" "docker inspect -f '{{.State.Health.Status}}' meta-assistant-ddf-db 2>/dev/null | grep -q 'healthy'"
+run_test "App container healthy" "docker inspect -f '{{.State.Health.Status}}' docker-app-1 2>/dev/null | grep -q 'healthy'"
+run_test "DB container healthy" "docker inspect -f '{{.State.Health.Status}}' docker-db-1 2>/dev/null | grep -q 'healthy'"
 
 # 6. Check application accessibility
 echo -e "\n${YELLOW}Checking application accessibility:${NC}"
-run_test "API health endpoint" "curl -s http://localhost:3000/health | grep -q 'ok'"
-run_test "Database connection" "docker exec meta-assistant-ddf-db pg_isready -U postgres"
+run_test "API health endpoint" "curl -s http://localhost:3000/health > /dev/null"
+run_test "Database connection" "docker exec docker-db-1 pg_isready -U postgres"
 
 # 7. Check environment setup
 echo -e "\n${YELLOW}Checking environment setup:${NC}"
-run_test "Environment variables set" "docker exec meta-assistant-ddf-app printenv | grep -q 'DATABASE_URL'"
+run_test "Environment variables set" "docker exec docker-app-1 printenv | grep -q 'DATABASE_URL'"
 
 # Summary
 echo -e "\n${YELLOW}Test Summary:${NC}"

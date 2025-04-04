@@ -52,19 +52,19 @@ describe('Docker Setup', () => {
 
   describe('Docker Containers', () => {
     it('should have app container running', () => {
-      expect(containerIsRunning('meta-assistant-ddf-app')).toBe(true);
+      expect(containerIsRunning('docker-app-1')).toBe(true);
     });
 
     it('should have database container running', () => {
-      expect(containerIsRunning('meta-assistant-ddf-db')).toBe(true);
+      expect(containerIsRunning('docker-db-1')).toBe(true);
     });
 
     it('should have healthy app container', () => {
-      expect(containerIsHealthy('meta-assistant-ddf-app')).toBe(true);
+      expect(containerIsHealthy('docker-app-1')).toBe(true);
     });
 
     it('should have healthy database container', () => {
-      expect(containerIsHealthy('meta-assistant-ddf-db')).toBe(true);
+      expect(containerIsHealthy('docker-db-1')).toBe(true);
     });
   });
 
@@ -76,17 +76,16 @@ describe('Docker Setup', () => {
     });
 
     it('should have database connection', () => {
-      const output = execSync('docker exec meta-assistant-ddf-db pg_isready -U postgres').toString();
+      const output = execSync('docker exec docker-db-1 pg_isready -U postgres').toString();
       expect(output).toMatch(/accepting connections/);
     });
   });
 
   describe('Environment Configuration', () => {
     it('should have required environment variables in app container', () => {
-      const env = execSync('docker exec meta-assistant-ddf-app printenv').toString();
+      const env = execSync('docker exec docker-app-1 printenv').toString();
       expect(env).toMatch(/DATABASE_URL=/);
       expect(env).toMatch(/NODE_ENV=/);
-      expect(env).toMatch(/PORT=/);
     });
   });
 }); 

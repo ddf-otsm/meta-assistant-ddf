@@ -1,6 +1,7 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
-import { setupVite, serveStatic, log } from "./vite";
+import { setupVite, serveStatic } from "./vite";
+import logger from "../config/node/logger";
 
 const app = express();
 app.use(express.json());
@@ -8,6 +9,7 @@ app.use(express.urlencoded({ extended: false }));
 
 // Health check endpoint
 app.get('/health', (req: Request, res: Response) => {
+  logger.info('Health check requested');
   res.status(200).json({ status: 'ok' });
 });
 
@@ -34,7 +36,7 @@ app.use((req, res, next) => {
         logLine = logLine.slice(0, 79) + "…";
       }
 
-      log(logLine);
+      logger.http(logLine);
     }
   });
 
@@ -48,8 +50,8 @@ app.use((req, res, next) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
 
+    logger.error(`Error: ${message}`, { status, stack: err.stack });
     res.status(status).json({ message });
-    throw err;
   });
 
   // importantly only setup vite in development and after
@@ -63,12 +65,11 @@ app.use((req, res, next) => {
 
   // Use PORT environment variable or default to 3000
   const port = process.env.PORT || 3000;
-  const host = process.env.NODE_ENV === 'production' ? '0.0.0.0' : 'localhost';
   
   server.listen({
     port: Number(port),
-    host,
+    host: '0.0.0.0',
   }, () => {
-    log(`serving on ${host}:${port}`);
+    logger.info(`Server started on 0.0.0.0:${port}`);
   });
 })();
