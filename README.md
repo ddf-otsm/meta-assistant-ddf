@@ -27,47 +27,75 @@ Rather than directly coding features, this platform enables you to:
 - **AI Integration**: OpenAI API (GPT-4o)
 - **Data Storage**: In-memory storage (with database schema)
 
-## Getting Started
+## Setup Instructions
 
-1. Clone the repository
-2. Install dependencies: `npm install`
-3. Set up your OpenAI API key as an environment variable:
-   ```
-   OPENAI_API_KEY=your_api_key_here
-   ```
-4. Run the application: `npm run dev`
-5. Access the application at: http://localhost:5000
+### Option 1: Docker Setup (Recommended for Development)
 
-## Docker Setup
-
-If you prefer to run the application in an isolated environment using Docker:
-
-1. Make sure you have Docker and Docker Compose installed on your system
-   - For macOS: Install Docker Desktop from https://www.docker.com/products/docker-desktop/
-   - For Linux: Install Docker and Docker Compose using your package manager
-
-2. Build and start the containers:
+1. Make sure Docker Desktop is installed and running
+2. Start the containers:
    ```bash
-   docker-compose up --build
+   npm run docker:start
+   ```
+3. The application will be available at http://localhost:3000
+4. To stop the containers:
+   ```bash
+   npm run docker:stop
+   ```
+
+### Option 2: Local Setup
+
+#### Prerequisites
+- Node.js v23.11.0 or later
+- npm v10.9.2 or later
+- PostgreSQL 15
+
+#### Database Setup
+1. Install PostgreSQL 15:
+   ```bash
+   brew install postgresql@15
+   ```
+
+2. Add PostgreSQL to your PATH:
+   ```bash
+   echo 'export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"' >> ~/.zshrc
+   source ~/.zshrc
+   ```
+
+3. Start PostgreSQL service:
+   ```bash
+   brew services start postgresql@15
+   ```
+
+4. Create database and user:
+   ```bash
+   psql -f scripts/setup-local-db.sql postgres
+   ```
+
+#### Application Setup
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+2. Start the development server:
+   ```bash
+   npm run dev
    ```
 
 3. The application will be available at http://localhost:3000
 
-The Docker setup includes:
-- Node.js application container
-- PostgreSQL database container
-- Automatic database initialization
-- Hot-reloading for development
+## Development
 
-To stop the containers:
-```bash
-docker-compose down
-```
+- `npm run dev` - Start the development server
+- `npm run build` - Build the application
+- `npm run start` - Start the production server
+- `npm run test` - Run tests
+- `npm run test:coverage` - Run tests with coverage
+- `npm run test:ui` - Run tests with UI
 
-To stop and remove all data (including the database):
-```bash
-docker-compose down -v
-```
+## Database Management
+
+- `npm run db:push` - Push database schema changes
 
 ## Workflow Steps
 
