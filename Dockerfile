@@ -4,13 +4,16 @@ FROM node:20-slim
 # Set working directory
 WORKDIR /app
 
-# Copy package files
+# Install esbuild globally
+RUN npm install -g esbuild
+
+# Copy package files first to leverage Docker cache
 COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy the rest of the application
+# Copy source code
 COPY . .
 
 # Build the application
@@ -20,4 +23,4 @@ RUN npm run build
 EXPOSE 3000
 
 # Start the application
-CMD ["npm", "start"] 
+CMD ["npm", "run", "dev"] 
