@@ -1,6 +1,6 @@
 workflows:
   quality:
-    description: "Comprehensive code quality checks and analysis"
+    description: "This workflow performs comprehensive code quality analysis through multiple static analysis tools, enforces code style guidelines, and ensures type safety. It executes a complete suite of linting, formatting, and architectural checks to maintain high code quality standards across the codebase."
     run: "./scripts/run_all_checks.sh"
     children:
       - sonar_analysis:
@@ -33,7 +33,7 @@ workflows:
             - .github/workflows/code-quality.yml
 
   test:
-    description: "Comprehensive test suite execution"
+    description: "This workflow executes the entire testing strategy, including unit, integration, and end-to-end tests, while generating comprehensive code coverage reports. It ensures application behavior matches specifications at all levels, validates data flow between components, and verifies end-user interactions behave as expected."
     run: "npm run test:coverage"
     children:
       - unit_tests:
@@ -54,7 +54,7 @@ workflows:
             - tests/e2e/**/*.test.ts
 
   azure:
-    description: "Azure OpenAI setup and management"
+    description: "This workflow manages the provisioning, configuration, and maintenance of Azure OpenAI resources used by the application. It handles credential management, deployment configuration, and service connectivity while providing diagnostics and usage monitoring for Azure OpenAI services."
     run: "./scripts/setup_azure_openai.sh"
     children:
       - dry_run:
@@ -72,7 +72,7 @@ workflows:
 
 suggested_workflows:
   - name: "security_scan"
-    description: "Run security vulnerability scanning"
+    description: "This proposed workflow would implement comprehensive security vulnerability scanning across dependencies, code, and infrastructure. It would integrate tools like Snyk and OWASP Dependency Check to identify potential security risks, CVEs, and best practice violations before they reach production."
     proposed_run: "npm run security"
     needed_files:
       - .snyk
@@ -82,7 +82,7 @@ suggested_workflows:
       - OWASP Dependency Check
 
   - name: "performance_test"
-    description: "Run performance and load testing"
+    description: "This suggested workflow would execute performance and load testing to identify bottlenecks, scalability limits, and response time degradations. It would establish baseline performance metrics and detect regressions using tools like k6 and Artillery to simulate realistic traffic patterns and user loads."
     proposed_run: "npm run perf"
     needed_files:
       - k6-config.js
@@ -92,7 +92,7 @@ suggested_workflows:
       - Artillery
 
   - name: "accessibility_test"
-    description: "Run accessibility compliance checks"
+    description: "This workflow proposal would automate accessibility compliance verification against WCAG standards to ensure inclusive application design. It would scan UI components and pages using pa11y and axe-core to identify accessibility issues that might prevent users with disabilities from effectively using the application."
     proposed_run: "npm run a11y"
     needed_files:
       - pa11y-config.json
@@ -102,11 +102,19 @@ suggested_workflows:
       - axe-core
 
   - name: "documentation"
-    description: "Generate and validate documentation"
+    description: "This proposed workflow would generate, validate, and maintain comprehensive technical documentation from code comments and dedicated documentation files. It would leverage TypeDoc and documentation.js to produce developer documentation, API references, and integration guides that stay synchronized with code changes."
     proposed_run: "npm run docs"
     needed_files:
       - typedoc.json
       - docs-validation.yml
     tools:
       - TypeDoc
-      - documentation.js 
+      - documentation.js
+
+  - name: "format"
+    description: "This workflow would run code formatting to fix issues with prettier"
+    proposed_run: "npm run format"
+    needed_files:
+      - .prettierrc
+    tools:
+      - prettier 
