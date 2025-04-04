@@ -1,3 +1,5 @@
+import React, { createContext, useContext, useState, ReactNode } from 'react';
+
 import {
   ApiSpecification,
   ProjectStep,
@@ -6,7 +8,6 @@ import {
   FeatureOptions,
   Message,
 } from '@shared/schema';
-import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 // Default resource definition
 const defaultResource: ResourceDefinition = {

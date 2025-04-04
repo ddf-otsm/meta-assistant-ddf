@@ -1,12 +1,3 @@
-import {
-  Project,
-  ModelDefinition,
-  AiConversation,
-  GeneratedCode,
-  ApiSpecification,
-  ProjectStep,
-  Message,
-} from '@shared/schema';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { useState, useEffect } from 'react';
 import { useRoute } from 'wouter';
@@ -18,6 +9,15 @@ import ModelBuilder from '@/components/workspace/ModelBuilder';
 import WorkflowSteps from '@/components/workspace/WorkflowSteps';
 import { useToast } from '@/hooks/use-toast';
 import { queryClient, apiRequest } from '@/lib/queryClient';
+import {
+  Project,
+  ModelDefinition,
+  AiConversation,
+  GeneratedCode,
+  ApiSpecification,
+  ProjectStep,
+  Message,
+} from '@shared/schema';
 
 export default function ProjectPage() {
   const [, params] = useRoute<{ id: string }>('/projects/:id');

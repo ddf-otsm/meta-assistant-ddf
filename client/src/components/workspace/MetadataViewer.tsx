@@ -1,12 +1,12 @@
-import { ApiSpecification, GeneratedCode } from '@shared/schema';
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
+import { ApiSpecification, GeneratedCode } from '@shared/schema';
 
 interface MetadataViewerProps {
-  projectId: number;
+  _projectId: number;
   modelId: number;
   specification: ApiSpecification;
   generatedFiles: GeneratedCode[];
@@ -14,7 +14,7 @@ interface MetadataViewerProps {
 }
 
 export default function MetadataViewer({
-  projectId,
+  _projectId,
   modelId,
   specification,
   generatedFiles,
@@ -134,7 +134,11 @@ interface FileTreeProps {
 
 function FileTree({ files }: FileTreeProps) {
   // Create a nested structure from file paths
-  const fileTree: any = {};
+  interface FileTreeDirectory {
+    [key: string]: FileTreeDirectory | GeneratedCode;
+  }
+  
+  const fileTree: FileTreeDirectory = {};
 
   files.forEach(file => {
     const pathParts = file.path.split('/');
@@ -143,10 +147,10 @@ function FileTree({ files }: FileTreeProps) {
     // Create the nested structure
     for (let i = 0; i < pathParts.length - 1; i++) {
       const part = pathParts[i];
-      if (!current[part]) {
+      if (!current[part] || 'path' in current[part]) {
         current[part] = {};
       }
-      current = current[part];
+      current = current[part] as FileTreeDirectory;
     }
 
     // Add the file at the end
@@ -155,15 +159,15 @@ function FileTree({ files }: FileTreeProps) {
   });
 
   // Render the tree recursively
-  const renderTree = (tree: any, indent = 0) => {
-    return Object.keys(tree).map(key => {
-      const item = tree[key];
-
+  const renderTree = (tree: FileTreeDirectory, indent = 0) => {
+    return Object.entries(tree).map(([key, item]) => {
+      const uniqueKey = 'path' in item ? item.path : `dir-${key}`;
+      
       // If it's a file (has path & code properties)
-      if (item.path && item.code) {
+      if ('path' in item && 'code' in item) {
         return (
           <div
-            key={item.path}
+            key={uniqueKey}
             className="text-dark-600 mb-1"
             style={{ marginLeft: `${indent * 5}px` }}
           >
@@ -175,7 +179,7 @@ function FileTree({ files }: FileTreeProps) {
 
       // It's a directory
       return (
-        <div key={key}>
+        <div key={uniqueKey}>
           <div
             className="flex items-center text-dark-700 mb-1"
             style={{ marginLeft: `${indent * 5}px` }}

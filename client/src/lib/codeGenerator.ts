@@ -1,6 +1,5 @@
-import { ApiSpecification, GeneratedCode } from '@shared/schema';
-
 import { apiRequest } from '@/lib/queryClient';
+import { ApiSpecification, GeneratedCode } from '@shared/schema';
 
 interface GenerateCodeOptions {
   modelId: number;

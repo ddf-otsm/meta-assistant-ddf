@@ -1,7 +1,14 @@
 import fs from 'fs';
 import path from 'path';
 
-import winston from 'winston';
+import { 
+  addColors, 
+  createLogger, 
+  format as winstonFormat, 
+  transports as winstonTransports, 
+  Logger, 
+  LeveledLogMethod 
+} from 'winston';
 
 // Define log levels
 const levels = {
@@ -22,13 +29,13 @@ const colors = {
 };
 
 // Add colors to Winston
-winston.addColors(colors);
+addColors(colors);
 
 // Define log format
-const format = winston.format.combine(
-  winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss:ms' }),
-  winston.format.colorize({ all: true }),
-  winston.format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)
+const format = winstonFormat.combine(
+  winstonFormat.timestamp({ format: 'YYYY-MM-DD HH:mm:ss:ms' }),
+  winstonFormat.colorize({ all: true }),
+  winstonFormat.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)
 );
 
 // Create logs directory if it doesn't exist
@@ -53,40 +60,40 @@ if (!fs.existsSync(errorLogPath)) {
 // Define log transports
 const transports = [
   // Console transport
-  new winston.transports.Console(),
+  new winstonTransports.Console(),
 
   // File transport for all logs
-  new winston.transports.File({
+  new winstonTransports.File({
     filename: appLogPath,
-    format: winston.format.combine(
-      winston.format.uncolorize(),
-      winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss:ms' }),
-      winston.format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)
+    format: winstonFormat.combine(
+      winstonFormat.uncolorize(),
+      winstonFormat.timestamp({ format: 'YYYY-MM-DD HH:mm:ss:ms' }),
+      winstonFormat.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)
     ),
     handleExceptions: true,
   }),
 
   // Error log file
-  new winston.transports.File({
+  new winstonTransports.File({
     filename: errorLogPath,
     level: 'error',
-    format: winston.format.combine(
-      winston.format.uncolorize(),
-      winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss:ms' }),
-      winston.format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)
+    format: winstonFormat.combine(
+      winstonFormat.uncolorize(),
+      winstonFormat.timestamp({ format: 'YYYY-MM-DD HH:mm:ss:ms' }),
+      winstonFormat.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)
     ),
     handleExceptions: true,
   }),
 ];
 
 // Create the logger
-const logger = winston.createLogger({
+const logger = createLogger({
   level: 'http', // Set default level to http to ensure http logs are captured
   levels,
   format,
   transports,
   exitOnError: false,
-}) as winston.Logger & { http: winston.LeveledLogMethod };
+}) as Logger & { http: LeveledLogMethod };
 
 // Create a stream object for Morgan
 export const stream = {

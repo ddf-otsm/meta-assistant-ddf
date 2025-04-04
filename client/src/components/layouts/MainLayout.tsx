@@ -1,9 +1,9 @@
 import { ReactNode } from 'react';
 
+import { useIsMobile } from '@/hooks/use-mobile';
+
 import Header from './Header';
 import Sidebar from './Sidebar';
-
-import { useIsMobile } from '@/hooks/use-mobile';
 
 interface MainLayoutProps {
   children: ReactNode;

@@ -13,11 +13,7 @@ export const createRotatingLogger = (name: string) => {
     format: format.combine(format.timestamp(), format.json()),
   });
 
-  rotateTransport.on('rotate', (oldFilename, newFilename) => {
-    console.log('Rotating log file', { oldFilename, newFilename });
-  });
-
-  return createLogger({
+  const logger = createLogger({
     level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
     format: format.combine(
       format.timestamp({
@@ -35,4 +31,10 @@ export const createRotatingLogger = (name: string) => {
       }),
     ],
   });
+
+  rotateTransport.on('rotate', (oldFilename, newFilename) => {
+    logger.info('Rotating log file', { oldFilename, newFilename });
+  });
+
+  return logger;
 };

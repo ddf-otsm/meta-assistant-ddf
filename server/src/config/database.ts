@@ -7,6 +7,8 @@ interface DatabaseError {
   stack?: string;
 }
 
+type QueryParam = string | number | boolean | null | Date;
+
 // This is a placeholder for your actual database configuration
 // Replace with your actual database setup (e.g., TypeORM, Sequelize, etc.)
 export const db = {
@@ -44,7 +46,7 @@ export const db = {
     }
   },
 
-  query: async (sql: string, params: any[] = []) => {
+  query: async (sql: string, params: QueryParam[] = []) => {
     try {
       logger.debug('Executing query', {
         sql,

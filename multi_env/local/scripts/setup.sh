@@ -1,21 +1,25 @@
 #!/bin/bash
 
-# Create symlinks for configuration files
-ln -sf ../../config/node/package.json ../../package.json
-ln -sf ../../config/node/package-lock.json ../../package-lock.json
-ln -sf ../../config/typescript/tsconfig.json ../../tsconfig.json
-ln -sf ../../config/vite/vite.config.ts ../../vite.config.ts
+# Get the project root directory
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../" && pwd)"
 
-# Set up environment variables from .env.example if .env doesn't exist
-if [ ! -f ".env" ]; then
-    cp config/env/.env.example .env
-    echo "Created .env file from .env.example"
+# Create symlinks for configuration files
+ln -sf "$PROJECT_ROOT/config/node/package.json" "$PROJECT_ROOT/package.json"
+ln -sf "$PROJECT_ROOT/config/node/package-lock.json" "$PROJECT_ROOT/package-lock.json"
+ln -sf "$PROJECT_ROOT/config/typescript/tsconfig.json" "$PROJECT_ROOT/tsconfig.json"
+ln -sf "$PROJECT_ROOT/config/vite/vite.config.ts" "$PROJECT_ROOT/vite.config.ts"
+
+# Set up environment variables from local.env.example if .env doesn't exist
+if [ ! -f "$PROJECT_ROOT/.env" ]; then
+    touch "$PROJECT_ROOT/.env"
+    cp "$PROJECT_ROOT/config/env/local.env.example" "$PROJECT_ROOT/.env"
+    echo "Created .env file from local.env.example"
     echo "Please update .env with your local configuration"
 fi
 
 # Make scripts executable
-chmod +x multi-env/local/scripts/*.sh
-chmod +x multi-env/local/workflow_tasks/*.sh
+find "$PROJECT_ROOT/multi_env/local/scripts" -name "*.sh" -exec chmod +x {} \; 2>/dev/null || true
+find "$PROJECT_ROOT/multi_env/local/workflow_tasks" -name "*.sh" -exec chmod +x {} \; 2>/dev/null || true
 
 echo "Local development environment setup complete!"
 echo "Please:"

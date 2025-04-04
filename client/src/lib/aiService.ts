@@ -1,6 +1,5 @@
-import { Message } from '@shared/schema';
-
 import { apiRequest } from '@/lib/queryClient';
+import { Message } from '@shared/schema';
 
 interface AiServiceResult {
   message: Message;

@@ -1,5 +1,4 @@
 // External dependencies
-import { ResourceProperty, Endpoint, ApiSpecification } from '@shared/schema';
 import { InfoIcon, MaximizeIcon, EditIcon, TrashIcon } from 'lucide-react';
 import { useState } from 'react';
 
@@ -15,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { ResourceProperty, Endpoint, ApiSpecification } from '@shared/schema';
 
 // Shared types
 
@@ -96,7 +96,7 @@ export default function ModelBuilder({
     });
   };
 
-  const handleEndpointChange = (index: number, field: keyof Endpoint, value: any) => {
+  const handleEndpointChange = (index: number, field: keyof Endpoint, value: unknown) => {
     const updatedEndpoints = [...specification.resource.endpoints];
     updatedEndpoints[index] = {
       ...updatedEndpoints[index],
@@ -166,11 +166,11 @@ export default function ModelBuilder({
     // Add fullscreen logic
   };
 
-  const handleEditProperty = (property: ResourceProperty) => {
+  const handleEditProperty = (_property: ResourceProperty) => {
     // Add edit logic
   };
 
-  const handleDeleteProperty = (property: ResourceProperty) => {
+  const handleDeleteProperty = (_property: ResourceProperty) => {
     // Add delete logic
   };
 

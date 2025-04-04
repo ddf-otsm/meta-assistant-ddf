@@ -1,14 +1,13 @@
 import { createServer, type Server } from 'http';
 
+import express, { type Express } from 'express';
+import { z } from 'zod';
+
 import {
   insertProjectSchema,
   insertModelDefinitionSchema,
   Message,
-  MetaModel,
-  Generator,
 } from '@shared/schema';
-import express, { type Express, Request, Response } from 'express';
-import { z } from 'zod';
 
 import { aiService } from './services/aiService';
 import { generateCode } from './services/codeGenerator';

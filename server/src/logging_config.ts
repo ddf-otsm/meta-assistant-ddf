@@ -8,5 +8,9 @@ export function getLogger(name: string): Logger {
   if (!loggers.has(name)) {
     loggers.set(name, createRotatingLogger(name));
   }
-  return loggers.get(name)!;
+  const logger = loggers.get(name);
+  if (!logger) {
+    throw new Error(`Logger ${name} not found`);
+  }
+  return logger;
 }
