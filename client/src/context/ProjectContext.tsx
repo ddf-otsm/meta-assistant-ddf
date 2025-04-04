@@ -70,7 +70,9 @@ const defaultWorkflowSteps: ProjectStep[] = [
   'test',
 ];
 
-interface ProjectContextProps {
+type ProjectStep = 'data' | 'model' | 'deploy' | 'monitor';
+
+interface ProjectContextType {
   currentStep: ProjectStep;
   setCurrentStep: (step: ProjectStep) => void;
   steps: ProjectStep[];
@@ -88,7 +90,23 @@ interface ProjectContextProps {
   setIsSaving: (isSaving: boolean) => void;
 }
 
-const ProjectContext = createContext<ProjectContextProps | undefined>(undefined);
+const ProjectContext = createContext<ProjectContextType>({
+  currentStep: 'data',
+  setCurrentStep: () => {},
+  steps: defaultWorkflowSteps,
+  specification: defaultSpecification,
+  updateSpecification: () => {},
+  updateResource: () => {},
+  updateFramework: () => {},
+  updateFeatures: () => {},
+  messages: [],
+  setMessages: () => {},
+  addMessage: () => {},
+  isGenerating: false,
+  setIsGenerating: () => {},
+  isSaving: false,
+  setIsSaving: () => {},
+});
 
 export function useProject() {
   const context = useContext(ProjectContext);

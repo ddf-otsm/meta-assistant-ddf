@@ -160,38 +160,20 @@ function FileTree({ files }: FileTreeProps) {
   });
 
   // Render the tree recursively
-  const renderTree = (tree: FileTreeDirectory, indent = 0) => {
-    return Object.entries(tree).map(([key, item]) => {
-      const uniqueKey = 'path' in item ? item.path : `dir-${key}`;
-
-      // If it's a file (has path & code properties)
-      if ('path' in item && 'code' in item) {
-        return (
-          <div
-            key={uniqueKey}
-            className="text-dark-600 mb-1"
-            style={{ marginLeft: `${indent * 5}px` }}
-          >
-            <i className="ri-file-code-line mr-1"></i>
-            <span>{key}</span>
-          </div>
-        );
-      }
-
-      // It's a directory
-      return (
-        <div key={uniqueKey}>
-          <div
-            className="flex items-center text-dark-700 mb-1"
-            style={{ marginLeft: `${indent * 5}px` }}
-          >
-            <i className="ri-folder-line mr-1"></i>
-            <span className="font-medium">{key}/</span>
-          </div>
-          {renderTree(item, indent + 1)}
-        </div>
-      );
-    });
+  const renderTree = (node: FileTreeItem, level = 0) => {
+    const isDirectory = 'children' in node;
+    const key = isDirectory ? `dir-${node.path}` : `file-${node.id}`;
+    
+    return (
+      <div key={key} style={{ marginLeft: `${level * 20}px` }}>
+        {isDirectory ? (
+          <div className="font-semibold">{node.path}</div>
+        ) : (
+          <div className="text-sm">{node.path}</div>
+        )}
+        {isDirectory && node.children?.map(child => renderTree(child, level + 1))}
+      </div>
+    );
   };
 
   return <>{renderTree(fileTree)}</>;

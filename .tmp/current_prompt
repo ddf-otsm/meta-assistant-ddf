@@ -1,18 +1,15 @@
-#1 Framework Selection is not working
-Express.js
-Express.js
-Node.js
-FastAPI
-FastAPI
-Python
-Spring Boot
-Spring Boot
-Java
-Laravel
+#1 create a workflow_tasks/ 
+index_workflow.yaml
 
+#2 on the index, propose a description, the run command and related children files for each workflow and suggest others
 
-#2 Is the AI assisstant really implemented? waht model is using? Documented on readme?
+npm run sonar - Run SonarQube analysis
+npm run codeclimate - Run CodeClimate analysis
+npm run quality - Run all quality checks
+npm run validate - Run all checks including quality tools
 
-# The stages are not working, and I don't have a next clear button to click after I insert all the API Specification Builder inputs
+#3 include the test workflows
 
-$4 What is
+#4 document sonaqube codeclimate and other jusificatoin for other libiraries on docs/tech_stack.md
+
+#5 Help me run and test sucessfully the azure open ai setup

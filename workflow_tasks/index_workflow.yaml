@@ -1,0 +1,112 @@
+workflows:
+  quality:
+    description: "Comprehensive code quality checks and analysis"
+    run: "./scripts/run_all_checks.sh"
+    children:
+      - sonar_analysis:
+          description: "Run SonarQube static code analysis"
+          run: "npm run sonar"
+          files:
+            - sonar-project.properties
+            - .github/workflows/code-quality.yml
+            - docs/code-quality.md
+      - codeclimate_analysis:
+          description: "Run CodeClimate maintainability analysis"
+          run: "npm run codeclimate"
+          files:
+            - .codeclimate.yml
+            - .github/workflows/code-quality.yml
+            - docs/code-quality.md
+      - validate:
+          description: "Run all code validation checks"
+          run: "npm run validate"
+          files:
+            - .eslintrc.json
+            - .prettierrc
+            - tsconfig.json
+      - all_checks:
+          description: "Run comprehensive checks and tests"
+          run: "./scripts/run_all_checks.sh"
+          files:
+            - scripts/run_all_checks.sh
+            - package.json
+            - .github/workflows/code-quality.yml
+
+  test:
+    description: "Comprehensive test suite execution"
+    run: "npm run test:coverage"
+    children:
+      - unit_tests:
+          description: "Run unit tests with Vitest"
+          run: "npm run test"
+          files:
+            - vitest.config.ts
+            - tests/**/*.test.ts
+      - integration_tests:
+          description: "Run integration tests"
+          run: "npm run test:integration"
+          files:
+            - tests/integration/**/*.test.ts
+      - e2e_tests:
+          description: "Run end-to-end tests"
+          run: "npm run test:e2e"
+          files:
+            - tests/e2e/**/*.test.ts
+
+  azure:
+    description: "Azure OpenAI setup and management"
+    run: "./scripts/setup_azure_openai.sh"
+    children:
+      - dry_run:
+          description: "Test Azure OpenAI setup without making changes"
+          run: "./scripts/setup_azure_openai.sh --dry-run"
+          files:
+            - scripts/setup_azure_openai.sh
+            - .env
+      - live_setup:
+          description: "Create and configure Azure OpenAI resources"
+          run: "./scripts/setup_azure_openai.sh"
+          files:
+            - scripts/setup_azure_openai.sh
+            - .env
+
+suggested_workflows:
+  - name: "security_scan"
+    description: "Run security vulnerability scanning"
+    proposed_run: "npm run security"
+    needed_files:
+      - .snyk
+      - security-audit.yml
+    tools:
+      - Snyk
+      - OWASP Dependency Check
+
+  - name: "performance_test"
+    description: "Run performance and load testing"
+    proposed_run: "npm run perf"
+    needed_files:
+      - k6-config.js
+      - performance-test.yml
+    tools:
+      - k6
+      - Artillery
+
+  - name: "accessibility_test"
+    description: "Run accessibility compliance checks"
+    proposed_run: "npm run a11y"
+    needed_files:
+      - pa11y-config.json
+      - accessibility-test.yml
+    tools:
+      - pa11y
+      - axe-core
+
+  - name: "documentation"
+    description: "Generate and validate documentation"
+    proposed_run: "npm run docs"
+    needed_files:
+      - typedoc.json
+      - docs-validation.yml
+    tools:
+      - TypeDoc
+      - documentation.js 
