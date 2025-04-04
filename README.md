@@ -38,6 +38,37 @@ Rather than directly coding features, this platform enables you to:
 4. Run the application: `npm run dev`
 5. Access the application at: http://localhost:5000
 
+## Docker Setup
+
+If you prefer to run the application in an isolated environment using Docker:
+
+1. Make sure you have Docker and Docker Compose installed on your system
+   - For macOS: Install Docker Desktop from https://www.docker.com/products/docker-desktop/
+   - For Linux: Install Docker and Docker Compose using your package manager
+
+2. Build and start the containers:
+   ```bash
+   docker-compose up --build
+   ```
+
+3. The application will be available at http://localhost:3000
+
+The Docker setup includes:
+- Node.js application container
+- PostgreSQL database container
+- Automatic database initialization
+- Hot-reloading for development
+
+To stop the containers:
+```bash
+docker-compose down
+```
+
+To stop and remove all data (including the database):
+```bash
+docker-compose down -v
+```
+
 ## Workflow Steps
 
 The platform guides you through a structured meta-engineering approach:
