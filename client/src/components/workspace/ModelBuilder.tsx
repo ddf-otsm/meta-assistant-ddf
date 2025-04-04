@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useProject } from "@/context/ProjectContext";
 
 interface ModelBuilderProps {
   specification: ApiSpecification;
@@ -14,6 +15,9 @@ interface ModelBuilderProps {
 }
 
 export default function ModelBuilder({ specification, onSpecificationChange, onSave, onNextStep }: ModelBuilderProps) {
+  // Removed the useProject hook since we're getting project state from props
+  // Let's just add console log for debugging
+  console.log("ModelBuilder rendering with specification:", specification);
   const [newProperty, setNewProperty] = useState<ResourceProperty>({ 
     name: '', 
     type: 'string', 
