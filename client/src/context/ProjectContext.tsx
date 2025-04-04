@@ -1,36 +1,46 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
-import { 
-  ApiSpecification, 
-  ProjectStep, 
-  ResourceDefinition, 
-  FrameworkDefinition, 
+import {
+  ApiSpecification,
+  ProjectStep,
+  ResourceDefinition,
+  FrameworkDefinition,
   FeatureOptions,
-  Message
-} from "@shared/schema";
+  Message,
+} from '@shared/schema';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 // Default resource definition
 const defaultResource: ResourceDefinition = {
-  name: "UserProfile",
-  path: "userProfiles",
+  name: 'UserProfile',
+  path: 'userProfiles',
   properties: [
-    { name: "id", type: "string", required: true },
-    { name: "username", type: "string", required: true },
-    { name: "email", type: "string", required: true },
-    { name: "isActive", type: "boolean", required: false }
+    { name: 'id', type: 'string', required: true },
+    { name: 'username', type: 'string', required: true },
+    { name: 'email', type: 'string', required: true },
+    { name: 'isActive', type: 'boolean', required: false },
   ],
   endpoints: [
-    { method: "GET", path: "/api/userProfiles", description: "List all user profiles", pagination: true, filtering: true },
-    { method: "GET", path: "/api/userProfiles/:id", description: "Get a single user profile" },
-    { method: "POST", path: "/api/userProfiles", description: "Create a new user profile" },
-    { method: "PUT", path: "/api/userProfiles/:id", description: "Update an existing user profile" },
-    { method: "DELETE", path: "/api/userProfiles/:id", description: "Delete a user profile" }
-  ]
+    {
+      method: 'GET',
+      path: '/api/userProfiles',
+      description: 'List all user profiles',
+      pagination: true,
+      filtering: true,
+    },
+    { method: 'GET', path: '/api/userProfiles/:id', description: 'Get a single user profile' },
+    { method: 'POST', path: '/api/userProfiles', description: 'Create a new user profile' },
+    {
+      method: 'PUT',
+      path: '/api/userProfiles/:id',
+      description: 'Update an existing user profile',
+    },
+    { method: 'DELETE', path: '/api/userProfiles/:id', description: 'Delete a user profile' },
+  ],
 };
 
 // Default framework definition
 const defaultFramework: FrameworkDefinition = {
-  name: "express",
-  language: "javascript"
+  name: 'express',
+  language: 'javascript',
 };
 
 // Default feature options
@@ -39,24 +49,24 @@ const defaultFeatures: FeatureOptions = {
   documentation: true,
   validation: true,
   testing: false,
-  docker: false
+  docker: false,
 };
 
 // Default specification
 const defaultSpecification: ApiSpecification = {
   resource: defaultResource,
   framework: defaultFramework,
-  features: defaultFeatures
+  features: defaultFeatures,
 };
 
 // Default workflow steps
 const defaultWorkflowSteps: ProjectStep[] = [
-  "concept",
-  "model",
-  "template",
-  "specification",
-  "generate",
-  "test"
+  'concept',
+  'model',
+  'template',
+  'specification',
+  'generate',
+  'test',
 ];
 
 interface ProjectContextProps {
@@ -82,7 +92,7 @@ const ProjectContext = createContext<ProjectContextProps | undefined>(undefined)
 export function useProject() {
   const context = useContext(ProjectContext);
   if (context === undefined) {
-    throw new Error("useProject must be used within a ProjectProvider");
+    throw new Error('useProject must be used within a ProjectProvider');
   }
   return context;
 }
@@ -93,53 +103,53 @@ interface ProjectProviderProps {
 
 export function ProjectProvider({ children }: ProjectProviderProps) {
   // Workflow state
-  const [currentStep, setCurrentStep] = useState<ProjectStep>("specification");
+  const [currentStep, setCurrentStep] = useState<ProjectStep>('specification');
   const [steps] = useState<ProjectStep[]>(defaultWorkflowSteps);
-  
+
   // Specification state
   const [specification, setSpecification] = useState<ApiSpecification>(defaultSpecification);
-  
+
   // AI conversation state
   const [messages, setMessages] = useState<Message[]>([]);
-  
+
   // Loading states
   const [isGenerating, setIsGenerating] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  
+
   // Update the entire specification
   const updateSpecification = (spec: ApiSpecification) => {
     setSpecification(spec);
   };
-  
+
   // Update just the resource part of the specification
   const updateResource = (resource: ResourceDefinition) => {
     setSpecification({
       ...specification,
-      resource
+      resource,
     });
   };
-  
+
   // Update just the framework part of the specification
   const updateFramework = (framework: FrameworkDefinition) => {
     setSpecification({
       ...specification,
-      framework
+      framework,
     });
   };
-  
+
   // Update just the features part of the specification
   const updateFeatures = (features: FeatureOptions) => {
     setSpecification({
       ...specification,
-      features
+      features,
     });
   };
-  
+
   // Add a new message to the conversation
   const addMessage = (message: Message) => {
-    setMessages((prevMessages) => [...prevMessages, message]);
+    setMessages(prevMessages => [...prevMessages, message]);
   };
-  
+
   const value = {
     currentStep,
     setCurrentStep,
@@ -155,12 +165,8 @@ export function ProjectProvider({ children }: ProjectProviderProps) {
     isGenerating,
     setIsGenerating,
     isSaving,
-    setIsSaving
+    setIsSaving,
   };
-  
-  return (
-    <ProjectContext.Provider value={value}>
-      {children}
-    </ProjectContext.Provider>
-  );
+
+  return <ProjectContext.Provider value={value}>{children}</ProjectContext.Provider>;
 }

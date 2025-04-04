@@ -1,9 +1,10 @@
-import { createRoot } from "react-dom/client";
-import App from "./App";
-import "./index.css";
-import { ProjectProvider } from "./context/ProjectContext";
+import { createRoot } from 'react-dom/client';
 
-createRoot(document.getElementById("root")!).render(
+import App from './App';
+import './index.css';
+import { ProjectProvider } from './context/ProjectContext';
+
+createRoot(document.getElementById('root')!).render(
   <ProjectProvider>
     <App />
   </ProjectProvider>

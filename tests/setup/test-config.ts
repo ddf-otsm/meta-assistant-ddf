@@ -1,7 +1,8 @@
-import { describe, it, expect } from 'vitest';
+import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
-import { execSync } from 'child_process';
+
+import { describe, it, expect } from 'vitest';
 
 // Helper functions
 const fileExists = (filepath: string): boolean => fs.existsSync(filepath);
@@ -59,4 +60,4 @@ describe('Project Configuration', () => {
       expect(envExample).toMatch(/NODE_ENV=/);
     });
   });
-}); 
+});

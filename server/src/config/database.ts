@@ -71,4 +71,4 @@ export const db = {
       throw error;
     }
   },
-}; 
+};

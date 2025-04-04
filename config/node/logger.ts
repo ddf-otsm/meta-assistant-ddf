@@ -1,6 +1,7 @@
-import winston from 'winston';
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
+
+import winston from 'winston';
 
 // Define log levels
 const levels = {
@@ -27,9 +28,7 @@ winston.addColors(colors);
 const format = winston.format.combine(
   winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss:ms' }),
   winston.format.colorize({ all: true }),
-  winston.format.printf(
-    (info) => `${info.timestamp} ${info.level}: ${info.message}`,
-  ),
+  winston.format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)
 );
 
 // Create logs directory if it doesn't exist
@@ -55,20 +54,18 @@ if (!fs.existsSync(errorLogPath)) {
 const transports = [
   // Console transport
   new winston.transports.Console(),
-  
+
   // File transport for all logs
   new winston.transports.File({
     filename: appLogPath,
     format: winston.format.combine(
       winston.format.uncolorize(),
       winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss:ms' }),
-      winston.format.printf(
-        (info) => `${info.timestamp} ${info.level}: ${info.message}`,
-      ),
+      winston.format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)
     ),
     handleExceptions: true,
   }),
-  
+
   // Error log file
   new winston.transports.File({
     filename: errorLogPath,
@@ -76,9 +73,7 @@ const transports = [
     format: winston.format.combine(
       winston.format.uncolorize(),
       winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss:ms' }),
-      winston.format.printf(
-        (info) => `${info.timestamp} ${info.level}: ${info.message}`,
-      ),
+      winston.format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)
     ),
     handleExceptions: true,
   }),
@@ -100,4 +95,4 @@ export const stream = {
   },
 };
 
-export default logger; 
+export default logger;

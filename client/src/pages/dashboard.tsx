@@ -1,50 +1,77 @@
-import { useState } from "react";
-import { useQuery, useMutation } from "@tanstack/react-query";
-import { useLocation } from "wouter";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { queryClient, apiRequest } from "@/lib/queryClient";
-import { useToast } from "@/hooks/use-toast";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Project } from "@shared/schema";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Project } from '@shared/schema';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useLocation } from 'wouter';
+import { z } from 'zod';
+
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/hooks/use-toast';
+import { queryClient, apiRequest } from '@/lib/queryClient';
 
 // Project creation form schema
 const projectSchema = z.object({
-  name: z.string().min(1, "Project name is required"),
+  name: z.string().min(1, 'Project name is required'),
   description: z.string().optional(),
-  userId: z.number()
+  userId: z.number(),
 });
 
 export default function Dashboard() {
   const [_, setLocation] = useLocation();
   const { toast } = useToast();
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  
+
   // Fetch all projects
-  const { data: projects, isLoading, isError } = useQuery<Project[]>({ 
-    queryKey: ['/api/projects'], 
+  const {
+    data: projects,
+    isLoading,
+    isError,
+  } = useQuery<Project[]>({
+    queryKey: ['/api/projects'],
   });
-  
+
   // Create project form
   const form = useForm<z.infer<typeof projectSchema>>({
     resolver: zodResolver(projectSchema),
     defaultValues: {
-      name: "",
-      description: "",
-      userId: 1 // Using the demo user ID
-    }
+      name: '',
+      description: '',
+      userId: 1, // Using the demo user ID
+    },
   });
-  
+
   // Create project mutation
   const createProject = useMutation({
     mutationFn: async (values: z.infer<typeof projectSchema>) => {
-      const res = await apiRequest("POST", "/api/projects", values);
+      const res = await apiRequest('POST', '/api/projects', values);
       return res.json();
     },
     onSuccess: () => {
@@ -52,25 +79,25 @@ export default function Dashboard() {
       setIsCreateDialogOpen(false);
       form.reset();
       toast({
-        title: "Project created",
-        description: "Your new project has been created successfully."
+        title: 'Project created',
+        description: 'Your new project has been created successfully.',
       });
     },
-    onError: (error) => {
+    onError: error => {
       toast({
-        title: "Error",
-        description: "Failed to create project. Please try again.",
-        variant: "destructive"
+        title: 'Error',
+        description: 'Failed to create project. Please try again.',
+        variant: 'destructive',
       });
-      console.error("Project creation error:", error);
-    }
+      console.error('Project creation error:', error);
+    },
   });
-  
+
   // Handle form submission
   const onSubmit = (values: z.infer<typeof projectSchema>) => {
     createProject.mutate(values);
   };
-  
+
   const handleProjectClick = (projectId: number) => {
     setLocation(`/projects/${projectId}`);
   };
@@ -117,9 +144,9 @@ export default function Dashboard() {
                     <FormItem>
                       <FormLabel>Description</FormLabel>
                       <FormControl>
-                        <Textarea 
-                          placeholder="Build a generator that creates API endpoints from specifications" 
-                          {...field} 
+                        <Textarea
+                          placeholder="Build a generator that creates API endpoints from specifications"
+                          {...field}
                         />
                       </FormControl>
                       <FormMessage />
@@ -127,8 +154,8 @@ export default function Dashboard() {
                   )}
                 />
                 <DialogFooter>
-                  <Button 
-                    type="submit" 
+                  <Button
+                    type="submit"
                     className="bg-primary-600 hover:bg-primary-700"
                     disabled={createProject.isPending}
                   >
@@ -138,7 +165,7 @@ export default function Dashboard() {
                         Creating...
                       </>
                     ) : (
-                      "Create Project"
+                      'Create Project'
                     )}
                   </Button>
                 </DialogFooter>
@@ -176,7 +203,7 @@ export default function Dashboard() {
           <p className="text-dark-500 max-w-md mx-auto mb-6">
             Start by creating your first meta-engineering project to build software generators.
           </p>
-          <Button 
+          <Button
             className="bg-primary-600 hover:bg-primary-700"
             onClick={() => setIsCreateDialogOpen(true)}
           >
@@ -187,25 +214,31 @@ export default function Dashboard() {
 
       {!isLoading && !isError && projects && projects.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {projects.map((project) => (
+          {projects.map(project => (
             <Card key={project.id} className="cursor-pointer hover:shadow-md transition-shadow">
-              <CardHeader 
-                className="bg-primary-50 border-b border-primary-100" 
+              <CardHeader
+                className="bg-primary-50 border-b border-primary-100"
                 onClick={() => handleProjectClick(project.id)}
               >
                 <CardTitle>{project.name}</CardTitle>
-                <CardDescription>Created on {new Date(project.createdAt).toLocaleDateString()}</CardDescription>
+                <CardDescription>
+                  Created on {new Date(project.createdAt).toLocaleDateString()}
+                </CardDescription>
               </CardHeader>
               <CardContent className="pt-4" onClick={() => handleProjectClick(project.id)}>
                 <p className="text-dark-600 text-sm">
-                  {project.description || "No description provided"}
+                  {project.description || 'No description provided'}
                 </p>
               </CardContent>
               <CardFooter className="border-t border-dark-100 pt-3 flex justify-between">
-                <Button variant="ghost" size="sm" onClick={(e) => {
-                  e.stopPropagation();
-                  handleProjectClick(project.id);
-                }}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={e => {
+                    e.stopPropagation();
+                    handleProjectClick(project.id);
+                  }}
+                >
                   <i className="ri-eye-line mr-1"></i> Open
                 </Button>
                 <div className="flex space-x-2">

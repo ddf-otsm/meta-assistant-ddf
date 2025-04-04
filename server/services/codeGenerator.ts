@@ -1,4 +1,4 @@
-import { ModelDefinition, ApiSpecification } from "@shared/schema";
+import { ModelDefinition, ApiSpecification } from '@shared/schema';
 
 interface GeneratedFile {
   path: string;
@@ -11,35 +11,35 @@ interface GeneratedFile {
 export async function generateCode(model: ModelDefinition): Promise<GeneratedFile[]> {
   const spec = model.definition as ApiSpecification;
   const files: GeneratedFile[] = [];
-  
+
   // Generate a model file
   if (spec.resource) {
     files.push(generateModelFile(spec));
   }
-  
+
   // Generate routes file
   if (spec.resource && spec.resource.endpoints) {
     files.push(generateRoutesFile(spec));
   }
-  
+
   // Generate controller file
   if (spec.resource) {
     files.push(generateControllerFile(spec));
   }
-  
+
   // Generate validation file if requested
   if (spec.features && spec.features.validation) {
     files.push(generateValidationFile(spec));
   }
-  
+
   // Generate auth middleware if requested
   if (spec.features && spec.features.authentication) {
     files.push(generateAuthFile(spec));
   }
-  
+
   // Generate main app file
   files.push(generateAppFile(spec));
-  
+
   return files;
 }
 
@@ -50,26 +50,28 @@ function generateModelFile(spec: ApiSpecification): GeneratedFile {
   const { resource } = spec;
   let path = '';
   let content = '';
-  
+
   if (spec.framework.name === 'express') {
     path = `src/models/${resource.name}.js`;
-    
+
     content = `
 const mongoose = require('mongoose');
 
 const ${resource.name}Schema = new mongoose.Schema({
-${resource.properties.map(prop => {
-  return `  ${prop.name}: {
+${resource.properties
+  .map(prop => {
+    return `  ${prop.name}: {
     type: ${getMongooseType(prop.type)},
     required: ${prop.required}
   }`;
-}).join(',\n')}
+  })
+  .join(',\n')}
 }, { timestamps: true });
 
 module.exports = mongoose.model('${resource.name}', ${resource.name}Schema);
 `;
   }
-  
+
   return { path, content };
 }
 
@@ -80,39 +82,45 @@ function generateRoutesFile(spec: ApiSpecification): GeneratedFile {
   const { resource } = spec;
   let path = '';
   let content = '';
-  
+
   if (spec.framework.name === 'express') {
     path = `src/routes/${resource.path}Routes.js`;
-    
-    const authMiddleware = spec.features.authentication ? "const { authenticate } = require('../middleware/auth');\n" : '';
-    const validationMiddleware = spec.features.validation ? `const { validate${resource.name} } = require('../middleware/validation');\n` : '';
-    
+
+    const authMiddleware = spec.features.authentication
+      ? "const { authenticate } = require('../middleware/auth');\n"
+      : '';
+    const validationMiddleware = spec.features.validation
+      ? `const { validate${resource.name} } = require('../middleware/validation');\n`
+      : '';
+
     content = `
 const express = require('express');
 const router = express.Router();
 const ${resource.name}Controller = require('../controllers/${resource.name}Controller');
 ${authMiddleware}${validationMiddleware}
-${resource.endpoints.map(endpoint => {
-  const method = endpoint.method.toLowerCase();
-  const path = endpoint.path.replace(`/api/${resource.path}`, '');
-  const middlewares = [];
-  
-  if (spec.features.authentication) {
-    middlewares.push('authenticate');
-  }
-  
-  if (spec.features.validation && (method === 'post' || method === 'put')) {
-    middlewares.push(`validate${resource.name}`);
-  }
-  
-  if (endpoint.pagination) {
-    middlewares.push('paginate');
-  }
-  
-  const middlewareString = middlewares.length > 0 ? middlewares.join(', ') + ', ' : '';
-  
-  return `router.${method}('${path}', ${middlewareString}${resource.name}Controller.${getControllerMethodName(method, path)});`;
-}).join('\n')}
+${resource.endpoints
+  .map(endpoint => {
+    const method = endpoint.method.toLowerCase();
+    const path = endpoint.path.replace(`/api/${resource.path}`, '');
+    const middlewares = [];
+
+    if (spec.features.authentication) {
+      middlewares.push('authenticate');
+    }
+
+    if (spec.features.validation && (method === 'post' || method === 'put')) {
+      middlewares.push(`validate${resource.name}`);
+    }
+
+    if (endpoint.pagination) {
+      middlewares.push('paginate');
+    }
+
+    const middlewareString = middlewares.length > 0 ? middlewares.join(', ') + ', ' : '';
+
+    return `router.${method}('${path}', ${middlewareString}${resource.name}Controller.${getControllerMethodName(method, path)});`;
+  })
+  .join('\n')}
 
 // Pagination middleware
 const paginate = (req, res, next) => {
@@ -127,7 +135,7 @@ const paginate = (req, res, next) => {
 module.exports = router;
 `;
   }
-  
+
   return { path, content };
 }
 
@@ -138,16 +146,18 @@ function generateControllerFile(spec: ApiSpecification): GeneratedFile {
   const { resource } = spec;
   let path = '';
   let content = '';
-  
+
   if (spec.framework.name === 'express') {
     path = `src/controllers/${resource.name}Controller.js`;
-    
+
     content = `
 const ${resource.name} = require('../models/${resource.name}');
 
 exports.getAll = async (req, res) => {
   try {
-    ${endpoint.pagination ? `
+    ${
+      endpoint.pagination
+        ? `
     const { skip, limit, page } = req.pagination;
     
     const ${resource.path} = await ${resource.name}.find()
@@ -163,9 +173,11 @@ exports.getAll = async (req, res) => {
         page,
         pages: Math.ceil(total / limit)
       }
-    });` : `
+    });`
+        : `
     const ${resource.path} = await ${resource.name}.find();
-    res.json(${resource.path});`}
+    res.json(${resource.path});`
+    }
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -229,7 +241,7 @@ exports.delete = async (req, res) => {
 };
 `;
   }
-  
+
   return { path, content };
 }
 
@@ -240,24 +252,26 @@ function generateValidationFile(spec: ApiSpecification): GeneratedFile {
   const { resource } = spec;
   let path = '';
   let content = '';
-  
+
   if (spec.framework.name === 'express') {
     path = `src/middleware/validation.js`;
-    
+
     content = `
 const Joi = require('joi');
 
 const ${resource.name}Schema = Joi.object({
-${resource.properties.map(prop => {
-  let validation = `Joi.${getJoiType(prop.type)}()`;
-  if (prop.required) {
-    validation += '.required()';
-  }
-  if (prop.type === 'string' && prop.name === 'email') {
-    validation += '.email()';
-  }
-  return `  ${prop.name}: ${validation}`;
-}).join(',\n')}
+${resource.properties
+  .map(prop => {
+    let validation = `Joi.${getJoiType(prop.type)}()`;
+    if (prop.required) {
+      validation += '.required()';
+    }
+    if (prop.type === 'string' && prop.name === 'email') {
+      validation += '.email()';
+    }
+    return `  ${prop.name}: ${validation}`;
+  })
+  .join(',\n')}
 });
 
 exports.validate${resource.name} = (req, res, next) => {
@@ -271,7 +285,7 @@ exports.validate${resource.name} = (req, res, next) => {
 };
 `;
   }
-  
+
   return { path, content };
 }
 
@@ -281,10 +295,10 @@ exports.validate${resource.name} = (req, res, next) => {
 function generateAuthFile(spec: ApiSpecification): GeneratedFile {
   let path = '';
   let content = '';
-  
+
   if (spec.framework.name === 'express') {
     path = `src/middleware/auth.js`;
-    
+
     content = `
 const jwt = require('jsonwebtoken');
 
@@ -306,7 +320,7 @@ exports.authenticate = (req, res, next) => {
 };
 `;
   }
-  
+
   return { path, content };
 }
 
@@ -316,11 +330,12 @@ exports.authenticate = (req, res, next) => {
 function generateAppFile(spec: ApiSpecification): GeneratedFile {
   let path = '';
   let content = '';
-  
+
   if (spec.framework.name === 'express') {
     path = `src/app.js`;
-    
-    const swaggerSetup = spec.features.documentation ? `
+
+    const swaggerSetup = spec.features.documentation
+      ? `
 // Swagger documentation setup
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
@@ -345,8 +360,9 @@ const swaggerOptions = {
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
-` : '';
-    
+`
+      : '';
+
     content = `
 const express = require('express');
 const mongoose = require('mongoose');
@@ -378,30 +394,42 @@ app.use((err, req, res, next) => {
 module.exports = app;
 `;
   }
-  
+
   return { path, content };
 }
 
 // Helper functions
 function getMongooseType(type: string): string {
   switch (type) {
-    case 'string': return 'String';
-    case 'number': return 'Number';
-    case 'boolean': return 'Boolean';
-    case 'object': return 'Object';
-    case 'array': return 'Array';
-    default: return 'String';
+    case 'string':
+      return 'String';
+    case 'number':
+      return 'Number';
+    case 'boolean':
+      return 'Boolean';
+    case 'object':
+      return 'Object';
+    case 'array':
+      return 'Array';
+    default:
+      return 'String';
   }
 }
 
 function getJoiType(type: string): string {
   switch (type) {
-    case 'string': return 'string';
-    case 'number': return 'number';
-    case 'boolean': return 'boolean';
-    case 'object': return 'object';
-    case 'array': return 'array';
-    default: return 'string';
+    case 'string':
+      return 'string';
+    case 'number':
+      return 'number';
+    case 'boolean':
+      return 'boolean';
+    case 'object':
+      return 'object';
+    case 'array':
+      return 'array';
+    default:
+      return 'string';
   }
 }
 
@@ -410,13 +438,17 @@ function getControllerMethodName(method: string, path: string): string {
     return method === 'get' ? 'getAll' : 'create';
   } else if (path.includes(':id')) {
     switch (method) {
-      case 'get': return 'getOne';
-      case 'put': return 'update';
-      case 'delete': return 'delete';
-      default: return 'getOne';
+      case 'get':
+        return 'getOne';
+      case 'put':
+        return 'update';
+      case 'delete':
+        return 'delete';
+      default:
+        return 'getOne';
     }
   }
-  
+
   // Custom endpoint
   return `custom${path.replace(/\//g, '_').replace(/:/g, '').replace(/-/g, '_')}`;
 }

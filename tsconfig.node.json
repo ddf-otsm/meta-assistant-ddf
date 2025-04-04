@@ -5,7 +5,27 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
-    "strict": true
+    "strict": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["client/src/*"],
+      "@server/*": ["server/src/*"],
+      "@shared/*": ["shared/*"],
+      "@config/*": ["config/*"]
+    },
+    "types": ["node", "vitest/globals"],
+    "target": "ES2020",
+    "lib": ["ES2020"],
+    "noEmit": true
   },
-  "include": ["config/vite/vite.config.ts"]
+  "include": [
+    "vite.config.ts",
+    "vitest.config.ts",
+    "config/**/*.ts",
+    "server/**/*.ts",
+    "shared/**/*.ts",
+    "tests/**/*.ts"
+  ]
 } 

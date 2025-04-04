@@ -1,10 +1,11 @@
-import express from 'express';
 import cors from 'cors';
+import express from 'express';
 import session from 'express-session';
-import { routes } from './routes';
-import { errorHandler } from './middleware/errorHandler';
+
 import { db } from './config/database';
 import { getLogger } from './logging_config';
+import { errorHandler } from './middleware/errorHandler';
+import { routes } from './routes';
 
 const logger = getLogger('server');
 const app = express();
@@ -12,11 +13,13 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'default-secret',
-  resave: false,
-  saveUninitialized: false,
-}));
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || 'default-secret',
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
 // Request logging middleware
 app.use((req, res, next) => {
@@ -45,4 +48,4 @@ app.listen(PORT, () => {
   logger.info(`Server started on port ${PORT}`);
 });
 
-export { app }; 
+export { app };

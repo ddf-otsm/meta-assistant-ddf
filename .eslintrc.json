@@ -22,7 +22,10 @@
     },
     "ecmaVersion": 12,
     "sourceType": "module",
-    "project": "./tsconfig.json"
+    "project": ["./tsconfig.json", "./tsconfig.node.json"],
+    "tsconfigRootDir": ".",
+    "warnOnUnsupportedTypeScriptVersion": false,
+    "createDefaultProgram": true
   },
   "plugins": [
     "@typescript-eslint",
@@ -38,6 +41,8 @@
     "react/prop-types": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/no-non-null-assertion": "warn",
     "import/order": [
       "error",
       {
@@ -46,17 +51,54 @@
         "alphabetize": { "order": "asc" }
       }
     ],
-    "no-console": ["warn", { "allow": ["warn", "error"] }]
+    "import/no-unresolved": "error",
+    "import/namespace": "error",
+    "import/default": "error",
+    "import/no-named-as-default": "error",
+    "import/no-named-as-default-member": "error",
+    "no-console": ["warn", { "allow": ["warn", "error"] }],
+    "jsx-a11y/click-events-have-key-events": "warn",
+    "jsx-a11y/no-static-element-interactions": "warn",
+    "jsx-a11y/anchor-is-valid": [
+      "error",
+      {
+        "components": ["Link"],
+        "specialLink": ["to", "href"],
+        "aspects": ["noHref", "invalidHref", "preferButton"],
+        "allowChildren": true
+      }
+    ],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "react/no-unescaped-entities": "off",
+    "react/no-unknown-property": ["error", { "ignore": ["cmdk-input-wrapper"] }]
   },
   "settings": {
     "react": {
       "version": "detect"
     },
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
     "import/resolver": {
-      "typescript": {},
+      "typescript": {
+        "project": ["./tsconfig.json", "./tsconfig.node.json"],
+        "alwaysTryTypes": true
+      },
       "node": {
-        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+        "extensions": [".js", ".jsx", ".ts", ".tsx"],
+        "moduleDirectory": ["node_modules", "."]
       }
     }
-  }
+  },
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "parserOptions": {
+        "project": ["./tsconfig.json", "./tsconfig.node.json"],
+        "warnOnUnsupportedTypeScriptVersion": false,
+        "createDefaultProgram": true
+      }
+    }
+  ]
 } 

@@ -1,7 +1,9 @@
-import { ReactNode } from "react";
-import Header from "./Header";
-import Sidebar from "./Sidebar";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { ReactNode } from 'react';
+
+import Header from './Header';
+import Sidebar from './Sidebar';
+
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -9,22 +11,26 @@ interface MainLayoutProps {
 
 export default function MainLayout({ children }: MainLayoutProps) {
   const isMobile = useIsMobile();
-  
+
   return (
-    <div className="min-h-screen flex flex-col bg-dark-50 text-dark-800 font-sans">
+    <div className="min-h-screen bg-dark-50">
       <Header />
       <div className="flex-1 flex">
         {!isMobile && <Sidebar />}
-        <div className="flex-1 overflow-auto">
+        <main className="flex-1 overflow-auto" role="main">
           {children}
-        </div>
+        </main>
       </div>
-      
+
       {/* Mobile menu button */}
       {isMobile && (
         <div className="fixed bottom-4 right-4">
-          <button className="bg-primary-600 text-white p-3 rounded-full shadow-lg">
-            <i className="ri-menu-line"></i>
+          <button
+            className="bg-primary-600 text-white p-3 rounded-full shadow-lg"
+            aria-label="Open menu"
+            aria-expanded="false"
+          >
+            <i className="ri-menu-line" aria-hidden="true"></i>
           </button>
         </div>
       )}

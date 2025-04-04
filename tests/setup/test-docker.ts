@@ -1,6 +1,7 @@
-import { describe, it, expect, beforeAll } from 'vitest';
 import { execSync } from 'child_process';
+
 import axios from 'axios';
+import { describe, it, expect, beforeAll } from 'vitest';
 
 // Helper functions
 const commandExists = (command: string): boolean => {
@@ -23,7 +24,9 @@ const containerIsRunning = (containerName: string): boolean => {
 
 const containerIsHealthy = (containerName: string): boolean => {
   try {
-    const status = execSync(`docker inspect -f '{{.State.Health.Status}}' ${containerName}`).toString().trim();
+    const status = execSync(`docker inspect -f '{{.State.Health.Status}}' ${containerName}`)
+      .toString()
+      .trim();
     return status === 'healthy';
   } catch {
     return false;
@@ -88,4 +91,4 @@ describe('Docker Setup', () => {
       expect(env).toMatch(/NODE_ENV=/);
     });
   });
-}); 
+});

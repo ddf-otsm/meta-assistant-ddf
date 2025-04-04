@@ -1,6 +1,7 @@
-import { describe, it, expect, beforeAll } from 'vitest';
 import { execSync } from 'child_process';
+
 import { Client } from 'pg';
+import { describe, it, expect, beforeAll } from 'vitest';
 
 // Helper functions
 const commandExists = (command: string): boolean => {
@@ -27,7 +28,7 @@ describe('PostgreSQL Setup', () => {
       port: 5432,
       user: 'postgres',
       password: 'postgres',
-      database: 'meta_assistant'
+      database: 'meta_assistant',
     });
 
     await client.connect();
@@ -75,4 +76,4 @@ describe('PostgreSQL Setup', () => {
       expect(dbUrlRegex.test(envContent)).toBe(true);
     });
   });
-}); 
+});

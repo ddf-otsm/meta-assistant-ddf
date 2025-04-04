@@ -1,4 +1,5 @@
 import { Router } from 'express';
+
 import { getLogger } from '../logging_config';
 
 const logger = getLogger('routes');
@@ -13,4 +14,4 @@ router.get('/example', (req, res) => {
   res.json({ message: 'Example route' });
 });
 
-export const routes = router; 
+export const routes = router;

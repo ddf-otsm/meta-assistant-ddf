@@ -10,10 +10,7 @@ export const createRotatingLogger = (name: string) => {
     zippedArchive: true,
     maxSize: '20m',
     maxFiles: '14d',
-    format: format.combine(
-      format.timestamp(),
-      format.json()
-    ),
+    format: format.combine(format.timestamp(), format.json()),
   });
 
   rotateTransport.on('rotate', (oldFilename, newFilename) => {
@@ -24,7 +21,7 @@ export const createRotatingLogger = (name: string) => {
     level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
     format: format.combine(
       format.timestamp({
-        format: 'YYYY-MM-DD HH:mm:ss'
+        format: 'YYYY-MM-DD HH:mm:ss',
       }),
       format.errors({ stack: true }),
       format.splat(),
@@ -34,11 +31,8 @@ export const createRotatingLogger = (name: string) => {
     transports: [
       rotateTransport,
       new transports.Console({
-        format: format.combine(
-          format.colorize(),
-          format.simple()
-        )
-      })
-    ]
+        format: format.combine(format.colorize(), format.simple()),
+      }),
+    ],
   });
-}; 
+};
