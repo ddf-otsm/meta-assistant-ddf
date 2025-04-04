@@ -1,0 +1,17 @@
+=== Cursor Azure OpenAI Configuration ===
+
+Base URL: https://meta-assistant-openai.openai.azure.com/
+Deployment Name: cursor-gpt4-high-tpm
+API Key: 0acef784e5f24db58d2414166b9e69a3
+
+API Version: 2023-12-01-preview
+
+Notes:
+- This deployment has higher capacity (TPM = 2000 tokens/minute) than the original
+- This deployment has higher requests/minute (2 requests per 10 seconds)
+- The API version 2024-03-01 does NOT work, only use 2023-12-01-preview
+
+Remember to:
+1. Completely quit Cursor (not just close the window)
+2. Wait 10-15 seconds
+3. Start Cursor fresh after changing settings

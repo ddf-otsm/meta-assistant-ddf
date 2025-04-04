@@ -129,34 +129,37 @@ export default function MetadataViewer({
   );
 }
 
+interface FileTreeItem {
+  path: string;
+  id?: string | number;
+  children?: Record<string, FileTreeItem | GeneratedCode>;
+}
+
 interface FileTreeProps {
   files: GeneratedCode[];
 }
 
+type FileTreeDirectory = FileTreeItem;
+
 function FileTree({ files }: FileTreeProps) {
-  // Create a nested structure from file paths
-  interface FileTreeDirectory {
-    [key: string]: FileTreeDirectory | GeneratedCode;
-  }
+  const fileTree: FileTreeDirectory = { path: '', children: {} };
 
-  const fileTree: FileTreeDirectory = {};
-
-  files.forEach(file => {
+  files.forEach((file: GeneratedCode) => {
     const pathParts = file.path.split('/');
     let current = fileTree;
 
-    // Create the nested structure
     for (let i = 0; i < pathParts.length - 1; i++) {
       const part = pathParts[i];
-      if (!current[part] || 'path' in current[part]) {
-        current[part] = {};
+      if (!current.children) current.children = {};
+      if (!current.children[part]) {
+        current.children[part] = { path: part, children: {} };
       }
-      current = current[part] as FileTreeDirectory;
+      current = current.children[part] as FileTreeDirectory;
     }
 
-    // Add the file at the end
     const fileName = pathParts[pathParts.length - 1];
-    current[fileName] = file;
+    if (!current.children) current.children = {};
+    current.children[fileName] = file;
   });
 
   // Render the tree recursively
@@ -171,7 +174,7 @@ function FileTree({ files }: FileTreeProps) {
         ) : (
           <div className="text-sm">{node.path}</div>
         )}
-        {isDirectory && node.children?.map(child => renderTree(child, level + 1))}
+        {isDirectory && Object.entries(node.children || {}).map(([childKey, child]) => renderTree(child, level + 1))}
       </div>
     );
   };
