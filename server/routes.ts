@@ -1,20 +1,16 @@
 import { createServer, type Server } from 'http';
 
-import express, { type Express } from 'express';
+import { Router } from 'express';
 import { z } from 'zod';
 
-import {
-  insertProjectSchema,
-  insertModelDefinitionSchema,
-  Message,
-} from '@shared/schema';
+import { insertProjectSchema, insertModelDefinitionSchema, Message } from '@shared/schema';
 
 import { aiService } from './services/aiService';
 import { generateCode } from './services/codeGenerator';
 import { storage } from './storage';
 
-export async function registerRoutes(app: Express): Promise<Server> {
-  const apiRouter = express.Router();
+export async function registerRoutes(app: Router): Promise<Server> {
+  const apiRouter = Router();
 
   // Get all projects for a user
   apiRouter.get('/projects', async (req, res) => {

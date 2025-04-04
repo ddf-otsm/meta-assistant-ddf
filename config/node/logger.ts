@@ -1,13 +1,13 @@
 import fs from 'fs';
 import path from 'path';
 
-import { 
-  addColors, 
-  createLogger, 
-  format as winstonFormat, 
-  transports as winstonTransports, 
-  Logger, 
-  LeveledLogMethod 
+import {
+  addColors,
+  createLogger,
+  format as winstonFormat,
+  transports as winstonTransports,
+  Logger,
+  LeveledLogMethod,
 } from 'winston';
 
 // Define log levels

@@ -1,18 +1,30 @@
 import fs from 'fs';
-import path, { dirname } from 'path';
-import { fileURLToPath } from 'url';
 import { type Server } from 'http';
+import path, { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
+
+import { type Express, static as expressStatic } from 'express';
 import { nanoid } from 'nanoid';
-import express, { type Express } from 'express';
-import { createServer as createViteServer, createLogger } from 'vite';
+import { createServer } from 'vite';
+import { createLogger, format, transports } from 'winston';
 
 import viteConfig from '../vite.config';
+
 import { getLogger } from './src/logging_config';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const viteLogger = createLogger();
+const viteLogger = createLogger({
+  level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
+  format: format.combine(format.timestamp(), format.json()),
+  transports: [
+    new transports.Console({
+      format: format.combine(format.colorize(), format.simple()),
+    }),
+  ],
+});
+
 const logger = getLogger('vite');
 
 export function log(message: string, source = 'express') {
@@ -33,7 +45,7 @@ export async function setupVite(app: Express, server: Server) {
     allowedHosts: true as const,
   };
 
-  const vite = await createViteServer({
+  const vite = await createServer({
     ...viteConfig,
     configFile: false,
     customLogger: {
@@ -75,7 +87,7 @@ export function serveStatic(app: Express) {
     );
   }
 
-  app.use(express.static(distPath));
+  app.use(expressStatic(join(__dirname, '../dist')));
 
   // fall through to index.html if the file doesn't exist
   app.use('*', (_req, res) => {

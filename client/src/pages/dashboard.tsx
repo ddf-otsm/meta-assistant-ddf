@@ -45,7 +45,7 @@ const projectSchema = z.object({
 });
 
 export default function Dashboard() {
-  const [_, setLocation] = useLocation();
+  const [, setLocation] = useLocation();
   const { toast } = useToast();
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 
@@ -222,7 +222,17 @@ export default function Dashboard() {
               >
                 <CardTitle>{project.name}</CardTitle>
                 <CardDescription>
-                  Created on {new Date(project.createdAt).toLocaleDateString()}
+                  <div className="flex items-center text-sm text-dark-500">
+                    <i className="ri-time-line mr-1"></i>
+                    <span>
+                      Created{' '}
+                      {new Date(project.createdAt || new Date()).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                      })}
+                    </span>
+                  </div>
                 </CardDescription>
               </CardHeader>
               <CardContent className="pt-4" onClick={() => handleProjectClick(project.id)}>

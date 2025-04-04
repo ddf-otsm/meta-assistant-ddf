@@ -137,7 +137,7 @@ function FileTree({ files }: FileTreeProps) {
   interface FileTreeDirectory {
     [key: string]: FileTreeDirectory | GeneratedCode;
   }
-  
+
   const fileTree: FileTreeDirectory = {};
 
   files.forEach(file => {
@@ -162,7 +162,7 @@ function FileTree({ files }: FileTreeProps) {
   const renderTree = (tree: FileTreeDirectory, indent = 0) => {
     return Object.entries(tree).map(([key, item]) => {
       const uniqueKey = 'path' in item ? item.path : `dir-${key}`;
-      
+
       // If it's a file (has path & code properties)
       if ('path' in item && 'code' in item) {
         return (

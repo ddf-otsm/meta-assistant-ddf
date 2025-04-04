@@ -1,8 +1,16 @@
+import { Express } from 'express';
+
 import { apiRequest } from '@/lib/queryClient';
-import { Message } from '@shared/schema';
+import { Message, ApiSpecification } from '@shared/schema';
 
 interface AiServiceResult {
   message: Message;
+}
+
+interface ApiResponse<T> {
+  data: T;
+  status: number;
+  message?: string;
 }
 
 export class AIService {
@@ -30,7 +38,10 @@ export class AIService {
   /**
    * Analyze a model specification and provide suggestions
    */
-  static async analyzeSpecification(projectId: number, specification: any): Promise<string> {
+  static async analyzeSpecification(
+    projectId: number,
+    specification: ApiSpecification
+  ): Promise<string> {
     try {
       const response = await apiRequest('POST', `/api/projects/${projectId}/conversation`, {
         message: `Analyze this API specification and provide suggestions for improvement:\n${JSON.stringify(specification, null, 2)}`,
@@ -70,4 +81,37 @@ export class AIService {
       throw new Error('Failed to generate code snippet');
     }
   }
+
+  async generateResponse<T>(prompt: string): Promise<ApiResponse<T>> {
+    try {
+      const response = await fetch('/api/ai/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prompt }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return {
+        data: data as T,
+        status: response.status,
+        message: 'Success',
+      };
+    } catch (error) {
+      return {
+        data: {} as T,
+        status: 500,
+        message: error instanceof Error ? error.message : 'An unknown error occurred',
+      };
+    }
+  }
 }
+
+export const setupRoutes = (app: Express) => {
+  app.use('/api', router);
+};

@@ -14,7 +14,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { ResourceProperty, Endpoint, ApiSpecification } from '@shared/schema';
+import { getLogger } from '@lib/logger';
+import { ResourceProperty, ApiSpecification } from '@shared/schema';
 
 // Shared types
 
@@ -24,6 +25,8 @@ interface ModelBuilderProps {
   onSave?: () => void;
   onNextStep?: () => void;
 }
+
+const logger = getLogger('ModelBuilder');
 
 export default function ModelBuilder({
   specification,
@@ -63,19 +66,6 @@ export default function ModelBuilder({
     setNewProperty({ name: '', type: 'string', required: false });
   };
 
-  const handleRemoveProperty = (index: number) => {
-    const updatedProperties = [...specification.resource.properties];
-    updatedProperties.splice(index, 1);
-
-    onSpecificationChange({
-      ...specification,
-      resource: {
-        ...specification.resource,
-        properties: updatedProperties,
-      },
-    });
-  };
-
   const handlePropertyChange = (
     index: number,
     field: keyof ResourceProperty,
@@ -92,22 +82,6 @@ export default function ModelBuilder({
       resource: {
         ...specification.resource,
         properties: updatedProperties,
-      },
-    });
-  };
-
-  const handleEndpointChange = (index: number, field: keyof Endpoint, value: unknown) => {
-    const updatedEndpoints = [...specification.resource.endpoints];
-    updatedEndpoints[index] = {
-      ...updatedEndpoints[index],
-      [field]: value,
-    };
-
-    onSpecificationChange({
-      ...specification,
-      resource: {
-        ...specification.resource,
-        endpoints: updatedEndpoints,
       },
     });
   };
@@ -159,11 +133,11 @@ export default function ModelBuilder({
   };
 
   const handleInfoClick = () => {
-    // Add info dialog logic
+    logger.info('Info button clicked');
   };
 
   const handleFullscreenClick = () => {
-    // Add fullscreen logic
+    logger.info('Fullscreen button clicked');
   };
 
   const handleEditProperty = (_property: ResourceProperty) => {
@@ -346,7 +320,7 @@ export default function ModelBuilder({
                     onCheckedChange={checked => {
                       // Since 'enabled' is not a property of Endpoint, we'll use this checkbox for toggling something else
                       // For now, let's just log the change
-                      console.log(
+                      logger.info(
                         `Toggled endpoint ${index} to ${checked ? 'enabled' : 'disabled'}`
                       );
                     }}
@@ -510,7 +484,7 @@ export default function ModelBuilder({
             className="bg-primary-600 hover:bg-primary-700 text-white flex items-center"
             onClick={() => {
               // Call onSave callback if provided
-              console.log('Saved specification and moving to next step');
+              logger.info('Saved specification and moving to next step');
               if (onSave) onSave();
               if (onNextStep) onNextStep();
             }}

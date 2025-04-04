@@ -1,23 +1,28 @@
 import cors from 'cors';
-import express from 'express';
+import express, { json, urlencoded } from 'express';
 import session from 'express-session';
 
-import { db } from './config/database';
-import { getLogger } from './logging_config';
+import { setupLogRotation } from './config/log-rotation';
+import { setupLogging } from './config/logging_config';
 import { errorHandler } from './middleware/errorHandler';
-import { routes } from './routes';
+import { setupRoutes } from './routes';
 
-const logger = getLogger('server');
 const app = express();
+
+// Setup logging
+setupLogging();
+const logger = setupLogRotation();
 
 // Middleware
 app.use(cors());
-app.use(express.json());
+app.use(json());
+app.use(urlencoded({ extended: true }));
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || 'default-secret',
+    secret: process.env.SESSION_SECRET || 'your-secret-key',
     resave: false,
     saveUninitialized: false,
+    cookie: { secure: process.env.NODE_ENV === 'production' },
   })
 );
 
@@ -31,7 +36,7 @@ app.use((req, res, next) => {
 });
 
 // Routes
-app.use('/api', routes);
+setupRoutes(app);
 
 // Error handling
 app.use(errorHandler);
@@ -45,7 +50,7 @@ app.get('/health', (req, res) => {
 // Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  logger.info(`Server started on port ${PORT}`);
+  logger.info(`Server is running on port ${PORT}`);
 });
 
 export { app };
