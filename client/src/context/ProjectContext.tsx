@@ -7,7 +7,7 @@ import {
   FrameworkDefinition,
   FeatureOptions,
   Message,
-} from '@shared/schema';
+} from '@shared/schema.js';
 
 // Default resource definition
 const defaultResource: ResourceDefinition = {
@@ -63,14 +63,15 @@ const defaultSpecification: ApiSpecification = {
 // Default workflow steps
 const defaultWorkflowSteps: ProjectStep[] = [
   'concept',
-  'model',
-  'template',
+  'patterns',
+  'metamodel',
   'specification',
+  'generator',
+  'template',
   'generate',
+  'refine',
   'test',
 ];
-
-type ProjectStep = 'data' | 'model' | 'deploy' | 'monitor';
 
 interface ProjectContextType {
   currentStep: ProjectStep;
@@ -91,7 +92,7 @@ interface ProjectContextType {
 }
 
 const ProjectContext = createContext<ProjectContextType>({
-  currentStep: 'data',
+  currentStep: 'concept',
   setCurrentStep: () => {},
   steps: defaultWorkflowSteps,
   specification: defaultSpecification,
@@ -122,7 +123,7 @@ interface ProjectProviderProps {
 
 export function ProjectProvider({ children }: ProjectProviderProps) {
   // Workflow state
-  const [currentStep, setCurrentStep] = useState<ProjectStep>('specification');
+  const [currentStep, setCurrentStep] = useState<ProjectStep>('concept');
   const [steps] = useState<ProjectStep[]>(defaultWorkflowSteps);
 
   // Specification state

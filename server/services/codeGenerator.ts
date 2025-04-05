@@ -1,4 +1,4 @@
-import { ModelDefinition, ApiSpecification } from '@shared/schema';
+import { ModelDefinition, ApiSpecification } from '@shared/schema.js';
 import mongoose from 'mongoose';
 import express from 'express';
 import joi from 'joi';

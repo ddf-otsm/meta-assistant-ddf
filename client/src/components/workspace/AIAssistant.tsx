@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { useToast } from '@/hooks/use-toast';
-import { apiRequest } from '@/lib/queryClient';
+import { Button } from '@/components/ui/button.js';
+import { Input } from '@/components/ui/input.js';
+import { useToast } from '@/hooks/use-toast.js';
+import { apiRequest } from '@/lib/queryClient.js';
 
-import { Message } from '@shared/schema';
+import { Message } from '@shared/schema.js';
 
 interface AIAssistantProps {
   projectId: number;
