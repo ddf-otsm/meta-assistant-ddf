@@ -13,7 +13,7 @@ import {
   InsertAiConversation,
   ApiSpecification,
   Message,
-} from '@shared/schema';
+} from '@shared/schema.js';
 
 export interface IStorage {
   // User operations

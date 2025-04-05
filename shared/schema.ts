@@ -6,7 +6,7 @@ import {
   boolean as pgBoolean,
   jsonb,
   timestamp,
-} from 'drizzle-orm/pg-core';
+} from 'drizzle-orm/pg-core.js';
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
 

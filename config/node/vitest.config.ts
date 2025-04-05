@@ -2,7 +2,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 import react from '@vitejs/plugin-react';
-import { defineConfig } from 'vitest/config';
+import { defineConfig } from 'vitest/config.js';
 import type { UserConfig } from 'vite';
 
 // Using process.cwd() instead of import.meta.url to avoid ESM issues

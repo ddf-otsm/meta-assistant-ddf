@@ -15,6 +15,23 @@ const cjsPatterns = [
 
 const importPattern = /import\s+(?:{[^}]+}|\w+)\s+from\s+['"]([^'"]+)['"]/g;
 
+// Node.js built-in modules
+const builtinModules = new Set([
+  'fs', 'path', 'url', 'http', 'https', 'child_process', 'crypto', 'events',
+  'os', 'stream', 'util', 'assert', 'buffer', 'cluster', 'console', 'constants',
+  'dgram', 'dns', 'domain', 'net', 'process', 'punycode', 'querystring',
+  'readline', 'repl', 'string_decoder', 'timers', 'tls', 'tty', 'v8', 'vm', 'zlib'
+]);
+
+function isNodeBuiltin(importPath: string): boolean {
+  return builtinModules.has(importPath);
+}
+
+function isExternalPackage(importPath: string): boolean {
+  // External packages start with @ or don't have a path separator
+  return importPath.startsWith('@') || !importPath.includes('/');
+}
+
 function checkForCJSPatterns(content: string, filePath: string): string[] {
   const issues: string[] = [];
   cjsPatterns.forEach(pattern => {
@@ -33,7 +50,12 @@ function checkImportPaths(content: string, filePath: string): string[] {
   const matches = content.matchAll(importPattern);
   for (const match of matches) {
     const importPath = match[1];
-    if (!importPath.endsWith('.js') && !importPath.startsWith('http')) {
+    // Skip Node.js built-ins, external packages, and URLs
+    if (isNodeBuiltin(importPath) || isExternalPackage(importPath) || importPath.startsWith('http')) {
+      continue;
+    }
+    // Local imports must have .js extension
+    if (!importPath.endsWith('.js')) {
       issues.push(`Import path "${importPath}" in ${filePath} should end with .js`);
     }
   }

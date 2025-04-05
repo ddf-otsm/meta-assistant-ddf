@@ -2,6 +2,17 @@ workflows:
   quality:
     description: 'This workflow performs comprehensive code quality analysis through multiple static analysis tools, enforces code style guidelines, and ensures type safety. It executes a complete suite of linting, formatting, and architectural checks to maintain high code quality standards across the codebase.'
     run: './scripts/run_all_checks.sh'
+    options:
+      - name: verbose
+        type: boolean
+        default: false
+        description: Enable verbose output for all checks
+    features:
+      - bash_version_check: Ensures Bash 4.0 or higher is used
+      - verbose_logging: Captures and displays detailed output when enabled
+      - child_process_logging: Forwards child process output to parent
+      - temporary_logs: Uses temporary files for log capture
+      - colorized_output: Provides color-coded status messages
     children:
       - sonar_analysis:
           description: 'Run SonarQube static code analysis'
@@ -31,6 +42,27 @@ workflows:
             - scripts/run_all_checks.sh
             - package.json
             - .github/workflows/code-quality.yml
+    checks:
+      - code_quality:
+          - linting
+          - type_checking
+          - formatting
+      - testing:
+          - unit_tests
+          - integration_tests
+          - e2e_tests
+      - coverage:
+          - test_coverage
+      - analysis:
+          - sonarqube
+          - codeclimate
+      - build:
+          - build_verification
+      - security:
+          - npm_audit
+          - security_checks
+      - documentation:
+          - docs_validation
 
   test:
     description: 'This workflow executes the entire testing strategy, including unit, integration, and end-to-end tests, while generating comprehensive code coverage reports. It ensures application behavior matches specifications at all levels, validates data flow between components, and verifies end-user interactions behave as expected.'
