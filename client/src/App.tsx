@@ -7,7 +7,7 @@ import Dashboard from '@/pages/dashboard';
 import NotFound from '@/pages/not-found';
 import Project from '@/pages/project';
 
-import { queryClient } from './lib/queryClient';
+import { queryClient } from './lib/queryClient.js';
 
 function Router() {
   return (

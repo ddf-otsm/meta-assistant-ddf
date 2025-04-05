@@ -15,11 +15,17 @@ const CJS_PATTERNS = [
   /__filename/g, // __filename usage
 ];
 
+const IMPORT_PATTERNS = [
+  /from\s+['"]([^'"]+)['"]/g, // import from statements
+  /import\s+['"]([^'"]+)['"]/g, // import statements
+];
+
 const EXCLUDED_DIRS = [
   'node_modules',
   'dist',
   '.git',
   'coverage',
+  'tests/coverage',
 ];
 
 const EXCLUDED_FILES = [
@@ -49,6 +55,25 @@ function checkFileForCJSPatterns(filePath: string): string[] {
   return issues;
 }
 
+function checkFileForImportIssues(filePath: string): string[] {
+  const content = fs.readFileSync(filePath, 'utf8');
+  const issues: string[] = [];
+
+  IMPORT_PATTERNS.forEach(pattern => {
+    const matches = content.matchAll(pattern);
+    for (const match of matches) {
+      const importPath = match[1];
+      
+      // Check for missing .js extension in relative imports
+      if (importPath.startsWith('.') && !importPath.endsWith('.js')) {
+        issues.push(`Import path "${importPath}" in ${filePath} should end with .js`);
+      }
+    }
+  });
+
+  return issues;
+}
+
 function findFiles(dir: string): string[] {
   const files: string[] = [];
   const entries = fs.readdirSync(dir, { withFileTypes: true });
@@ -71,7 +96,7 @@ function findFiles(dir: string): string[] {
 }
 
 describe('ESM Compliance', () => {
-  test('all files should use ESM patterns', () => {
+  test('no CommonJS patterns should be present', () => {
     const projectRoot = path.resolve(__dirname, '../..');
     const files = findFiles(projectRoot);
     const issues: string[] = [];
@@ -82,7 +107,25 @@ describe('ESM Compliance', () => {
     });
 
     if (issues.length > 0) {
-      console.error('\nFound files using CommonJS patterns:');
+      console.error('\nFound CommonJS patterns:');
+      issues.forEach(issue => console.error(`- ${issue}`));
+    }
+
+    expect(issues).toHaveLength(0);
+  });
+
+  test('all imports should be properly formatted', () => {
+    const projectRoot = path.resolve(__dirname, '../..');
+    const files = findFiles(projectRoot);
+    const issues: string[] = [];
+
+    files.forEach(file => {
+      const fileIssues = checkFileForImportIssues(file);
+      issues.push(...fileIssues);
+    });
+
+    if (issues.length > 0) {
+      console.error('\nFound import issues:');
       issues.forEach(issue => console.error(`- ${issue}`));
     }
 

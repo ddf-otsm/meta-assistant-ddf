@@ -1,4 +1,12 @@
 import { ModelDefinition, ApiSpecification } from '@shared/schema';
+import mongoose from 'mongoose';
+import express from 'express';
+import joi from 'joi';
+import jsonwebtoken from 'jsonwebtoken';
+import swaggerJsdoc from 'swagger-jsdoc';
+import swaggerUiExpress from 'swagger-ui-express';
+import cors from 'cors';
+import dotenv from 'dotenv';
 
 interface GeneratedFile {
   path: string;
@@ -55,7 +63,7 @@ function generateModelFile(spec: ApiSpecification): GeneratedFile {
     path = `src/models/${resource.name}.js`;
 
     content = `
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const ${resource.name}Schema = new mongoose.Schema({
 ${resource.properties
@@ -68,7 +76,7 @@ ${resource.properties
   .join(',\n')}
 }, { timestamps: true });
 
-module.exports = mongoose.model('${resource.name}', ${resource.name}Schema);
+export default mongoose.model('${resource.name}', ${resource.name}Schema);
 `;
   }
 
@@ -87,17 +95,19 @@ function generateRoutesFile(spec: ApiSpecification): GeneratedFile {
     path = `src/routes/${resource.path}Routes.js`;
 
     const authMiddleware = spec.features.authentication
-      ? "const { authenticate } = require('../middleware/auth');\n"
+      ? "import { authenticate } from '../middleware/auth.js';\n"
       : '';
     const validationMiddleware = spec.features.validation
-      ? `const { validate${resource.name} } = require('../middleware/validation');\n`
+      ? `import { validate${resource.name} } from '../middleware/validation.js';\n`
       : '';
 
     content = `
-const express = require('express');
-const router = express.Router();
-const ${resource.name}Controller = require('../controllers/${resource.name}Controller');
+import express from 'express';
+import ${resource.name}Controller from '../controllers/${resource.name}Controller.js';
 ${authMiddleware}${validationMiddleware}
+
+const router = express.Router();
+
 ${resource.endpoints
   .map(endpoint => {
     const method = endpoint.method.toLowerCase();
@@ -132,7 +142,7 @@ const paginate = (req, res, next) => {
   next();
 };
 
-module.exports = router;
+export default router;
 `;
   }
 
@@ -151,9 +161,9 @@ function generateControllerFile(spec: ApiSpecification): GeneratedFile {
     path = `src/controllers/${resource.name}Controller.js`;
 
     content = `
-const ${resource.name} = require('../models/${resource.name}');
+import ${resource.name} from '../models/${resource.name}.js';
 
-exports.getAll = async (req, res) => {
+export const getAll = async (req, res) => {
   try {
     ${
       endpoint.pagination
@@ -183,7 +193,7 @@ exports.getAll = async (req, res) => {
   }
 };
 
-exports.getOne = async (req, res) => {
+export const getOne = async (req, res) => {
   try {
     const ${resource.path.slice(0, -1)} = await ${resource.name}.findById(req.params.id);
     
@@ -197,7 +207,7 @@ exports.getOne = async (req, res) => {
   }
 };
 
-exports.create = async (req, res) => {
+export const create = async (req, res) => {
   try {
     const new${resource.name} = new ${resource.name}(req.body);
     const saved${resource.name} = await new${resource.name}.save();
@@ -208,7 +218,7 @@ exports.create = async (req, res) => {
   }
 };
 
-exports.update = async (req, res) => {
+export const update = async (req, res) => {
   try {
     const updated${resource.name} = await ${resource.name}.findByIdAndUpdate(
       req.params.id,
@@ -226,7 +236,7 @@ exports.update = async (req, res) => {
   }
 };
 
-exports.delete = async (req, res) => {
+export const delete = async (req, res) => {
   try {
     const ${resource.path.slice(0, -1)} = await ${resource.name}.findByIdAndDelete(req.params.id);
     
@@ -257,30 +267,22 @@ function generateValidationFile(spec: ApiSpecification): GeneratedFile {
     path = `src/middleware/validation.js`;
 
     content = `
-const Joi = require('joi');
+import joi from 'joi';
 
-const ${resource.name}Schema = Joi.object({
+export const validate${resource.name} = (req, res, next) => {
+  const schema = joi.object({
 ${resource.properties
   .map(prop => {
-    let validation = `Joi.${getJoiType(prop.type)}()`;
-    if (prop.required) {
-      validation += '.required()';
-    }
-    if (prop.type === 'string' && prop.name === 'email') {
-      validation += '.email()';
-    }
-    return `  ${prop.name}: ${validation}`;
+    return `    ${prop.name}: joi.${getJoiType(prop.type)}()${prop.required ? '.required()' : ''}`;
   })
   .join(',\n')}
-});
+  });
 
-exports.validate${resource.name} = (req, res, next) => {
-  const { error } = ${resource.name}Schema.validate(req.body);
-  
+  const { error } = schema.validate(req.body);
   if (error) {
     return res.status(400).json({ message: error.details[0].message });
   }
-  
+
   next();
 };
 `;
@@ -300,22 +302,21 @@ function generateAuthFile(spec: ApiSpecification): GeneratedFile {
     path = `src/middleware/auth.js`;
 
     content = `
-const jwt = require('jsonwebtoken');
+import jsonwebtoken from 'jsonwebtoken';
 
-exports.authenticate = (req, res, next) => {
+export const authenticate = (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({ message: 'No token provided' });
+  }
+
   try {
-    const token = req.headers.authorization?.split(' ')[1];
-    
-    if (!token) {
-      return res.status(401).json({ message: 'Authentication required' });
-    }
-    
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
     req.user = decoded;
-    
     next();
   } catch (err) {
-    return res.status(401).json({ message: 'Invalid or expired token' });
+    return res.status(401).json({ message: 'Invalid token' });
   }
 };
 `;
@@ -325,107 +326,96 @@ exports.authenticate = (req, res, next) => {
 }
 
 /**
- * Generate main app file
+ * Generate the main application file
  */
 function generateAppFile(spec: ApiSpecification): GeneratedFile {
   let path = '';
   let content = '';
 
   if (spec.framework.name === 'express') {
-    path = `src/app.js`;
+    path = `src/index.js`;
 
-    const swaggerSetup = spec.features.documentation
-      ? `
-// Swagger documentation setup
-const swaggerJsDoc = require('swagger-jsdoc');
-const swaggerUi = require('swagger-ui-express');
-
-const swaggerOptions = {
-  swaggerDefinition: {
-    openapi: '3.0.0',
-    info: {
-      title: '${spec.resource.name} API',
-      version: '1.0.0',
-      description: 'API endpoints for ${spec.resource.name} resource',
-    },
-    servers: [
-      {
-        url: 'http://localhost:3000',
-        description: 'Development server',
-      },
-    ],
-  },
-  apis: ['./src/routes/*.js'],
-};
-
-const swaggerDocs = swaggerJsDoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
-`
+    const authImport = spec.features.authentication
+      ? "import { authenticate } from './middleware/auth.js';\n"
+      : '';
+    const validationImport = spec.features.validation
+      ? "import { validate${resource.name} } from './middleware/validation.js';\n"
       : '';
 
     content = `
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-require('dotenv').config();
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import dotenv from 'dotenv';
+${authImport}${validationImport}
+${spec.resource ? `import ${spec.resource.path}Routes from './routes/${spec.resource.path}Routes.js';\n` : ''}
+
+dotenv.config();
 
 const app = express();
 
 // Middleware
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
 
 // Routes
-app.use('/api/${spec.resource.path}', require('./routes/${spec.resource.path}Routes'));
+${spec.resource ? `app.use('/api/${spec.resource.path}', ${spec.resource.path}Routes);\n` : ''}
 
-${swaggerSetup}
-
-// MongoDB connection
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.error('MongoDB connection error:', err));
-
-// Error handling middleware
+// Error handling
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ message: 'Something went wrong!' });
 });
 
-module.exports = app;
+// Start server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(\`Server is running on port \${PORT}\`);
+});
+
+// Connect to MongoDB
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('MongoDB connection error:', err));
 `;
   }
 
   return { path, content };
 }
 
-// Helper functions
+/**
+ * Helper function to get Mongoose type from property type
+ */
 function getMongooseType(type: string): string {
-  switch (type) {
+  switch (type.toLowerCase()) {
     case 'string':
       return 'String';
     case 'number':
       return 'Number';
     case 'boolean':
       return 'Boolean';
-    case 'object':
-      return 'Object';
+    case 'date':
+      return 'Date';
     case 'array':
-      return 'Array';
+      return '[String]';
     default:
       return 'String';
   }
 }
 
+/**
+ * Helper function to get Joi type from property type
+ */
 function getJoiType(type: string): string {
-  switch (type) {
+  switch (type.toLowerCase()) {
     case 'string':
       return 'string';
     case 'number':
       return 'number';
     case 'boolean':
       return 'boolean';
-    case 'object':
-      return 'object';
+    case 'date':
+      return 'date';
     case 'array':
       return 'array';
     default:
@@ -433,22 +423,12 @@ function getJoiType(type: string): string {
   }
 }
 
+/**
+ * Helper function to get controller method name from HTTP method and path
+ */
 function getControllerMethodName(method: string, path: string): string {
-  if (path === '' || path === '/') {
+  if (path === '/') {
     return method === 'get' ? 'getAll' : 'create';
-  } else if (path.includes(':id')) {
-    switch (method) {
-      case 'get':
-        return 'getOne';
-      case 'put':
-        return 'update';
-      case 'delete':
-        return 'delete';
-      default:
-        return 'getOne';
-    }
   }
-
-  // Custom endpoint
-  return `custom${path.replace(/\//g, '_').replace(/:/g, '').replace(/-/g, '_')}`;
+  return method;
 }
