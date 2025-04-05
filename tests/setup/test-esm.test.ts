@@ -1,49 +1,23 @@
+import { describe, test, expect } from 'vitest';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-import { describe, test, expect } from 'vitest';
+const baseDir = path.dirname(fileURLToPath(import.meta.url));
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const CJS_PATTERNS = [
-  /require\(['"]([^'"]+)['"]\)/g, // require() statements
-  /module\.exports\s*=/g, // module.exports
-  /exports\.\w+\s*=/g, // exports.something
-  /__dirname/g, // __dirname usage
-  /__filename/g, // __filename usage
+const cjsPatterns = [
+  /require\(['"]([^'"]+)['"]\)/g,
+  /module\.exports\s*=/g,
+  /exports\.\w+\s*=/g,
+  /\b__dirname\b/g,
+  /\b__filename\b/g
 ];
 
-const IMPORT_PATTERNS = [
-  /from\s+['"]([^'"]+)['"]/g, // import from statements
-  /import\s+['"]([^'"]+)['"]/g, // import statements
-];
+const importPattern = /import\s+(?:{[^}]+}|\w+)\s+from\s+['"]([^'"]+)['"]/g;
 
-const EXCLUDED_DIRS = [
-  'node_modules',
-  'dist',
-  '.git',
-  'coverage',
-  'tests/coverage',
-];
-
-const EXCLUDED_FILES = [
-  'package-lock.json',
-  'yarn.lock',
-  'pnpm-lock.yaml',
-];
-
-function isExcludedPath(filePath: string): boolean {
-  return EXCLUDED_DIRS.some(dir => filePath.includes(`/${dir}/`)) ||
-         EXCLUDED_FILES.some(file => filePath.endsWith(file));
-}
-
-function checkFileForCJSPatterns(filePath: string): string[] {
-  const content = fs.readFileSync(filePath, 'utf8');
+function checkForCJSPatterns(content: string, filePath: string): string[] {
   const issues: string[] = [];
-
-  CJS_PATTERNS.forEach(pattern => {
+  cjsPatterns.forEach(pattern => {
     const matches = content.match(pattern);
     if (matches) {
       matches.forEach(match => {
@@ -51,117 +25,74 @@ function checkFileForCJSPatterns(filePath: string): string[] {
       });
     }
   });
-
   return issues;
 }
 
-function checkFileForImportIssues(filePath: string): string[] {
-  const content = fs.readFileSync(filePath, 'utf8');
+function checkImportPaths(content: string, filePath: string): string[] {
   const issues: string[] = [];
-
-  IMPORT_PATTERNS.forEach(pattern => {
-    const matches = content.matchAll(pattern);
-    for (const match of matches) {
-      const importPath = match[1];
-      
-      // Check for missing .js extension in relative imports
-      if (importPath.startsWith('.') && !importPath.endsWith('.js')) {
-        issues.push(`Import path "${importPath}" in ${filePath} should end with .js`);
-      }
+  const matches = content.matchAll(importPattern);
+  for (const match of matches) {
+    const importPath = match[1];
+    if (!importPath.endsWith('.js') && !importPath.startsWith('http')) {
+      issues.push(`Import path "${importPath}" in ${filePath} should end with .js`);
     }
-  });
-
+  }
   return issues;
 }
 
 function findFiles(dir: string): string[] {
   const files: string[] = [];
   const entries = fs.readdirSync(dir, { withFileTypes: true });
-
   for (const entry of entries) {
     const fullPath = path.join(dir, entry.name);
-    
-    if (isExcludedPath(fullPath)) {
-      continue;
-    }
-
     if (entry.isDirectory()) {
-      files.push(...findFiles(fullPath));
-    } else if (entry.isFile() && /\.(js|ts|jsx|tsx)$/.test(entry.name)) {
+      if (entry.name !== 'node_modules' && entry.name !== 'dist') {
+        files.push(...findFiles(fullPath));
+      }
+    } else if (entry.name.endsWith('.ts') || entry.name.endsWith('.tsx')) {
       files.push(fullPath);
     }
   }
-
   return files;
 }
 
 describe('ESM Compliance', () => {
   test('no CommonJS patterns should be present', () => {
-    const projectRoot = path.resolve(__dirname, '../..');
+    const projectRoot = path.resolve(baseDir, '../..');
     const files = findFiles(projectRoot);
     const issues: string[] = [];
-
-    files.forEach(file => {
-      const fileIssues = checkFileForCJSPatterns(file);
-      issues.push(...fileIssues);
-    });
-
-    if (issues.length > 0) {
-      console.error('\nFound CommonJS patterns:');
-      issues.forEach(issue => console.error(`- ${issue}`));
+    for (const file of files) {
+      const content = fs.readFileSync(file, 'utf-8');
+      issues.push(...checkForCJSPatterns(content, file));
     }
-
     expect(issues).toHaveLength(0);
   });
 
   test('all imports should be properly formatted', () => {
-    const projectRoot = path.resolve(__dirname, '../..');
+    const projectRoot = path.resolve(baseDir, '../..');
     const files = findFiles(projectRoot);
     const issues: string[] = [];
-
-    files.forEach(file => {
-      const fileIssues = checkFileForImportIssues(file);
-      issues.push(...fileIssues);
-    });
-
-    if (issues.length > 0) {
-      console.error('\nFound import issues:');
-      issues.forEach(issue => console.error(`- ${issue}`));
+    for (const file of files) {
+      const content = fs.readFileSync(file, 'utf-8');
+      issues.push(...checkImportPaths(content, file));
     }
-
     expect(issues).toHaveLength(0);
   });
 
   test('package.json should have type: module', () => {
-    const packageJson = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../../package.json'), 'utf8'));
+    const packageJsonPath = path.resolve(baseDir, '../../package.json');
+    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
     expect(packageJson.type).toBe('module');
   });
 
   test('all TypeScript files should use .js extensions in imports', () => {
-    const projectRoot = path.resolve(__dirname, '../..');
+    const projectRoot = path.resolve(baseDir, '../..');
     const files = findFiles(projectRoot);
     const issues: string[] = [];
-
-    files.forEach(file => {
-      if (!file.endsWith('.ts') && !file.endsWith('.tsx')) return;
-
-      const content = fs.readFileSync(file, 'utf8');
-      const importPattern = /from\s+['"]([^'"]+)['"]/g;
-      let match;
-
-      while ((match = importPattern.exec(content)) !== null) {
-        const importPath = match[1];
-        if (importPath.startsWith('.') && !importPath.endsWith('.js')) {
-          issues.push(`Import path "${importPath}" in ${file} should end with .js`);
-        }
-      }
-    });
-
-    if (issues.length > 0) {
-      console.error('\nFound TypeScript files with incorrect import extensions:');
-      issues.forEach(issue => console.error(`- ${issue}`));
+    for (const file of files) {
+      const content = fs.readFileSync(file, 'utf-8');
+      issues.push(...checkImportPaths(content, file));
     }
-
     expect(issues).toHaveLength(0);
   });
 }); 

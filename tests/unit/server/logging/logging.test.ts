@@ -6,8 +6,7 @@ import { describe, test, expect, beforeEach, afterEach } from 'vitest';
 
 import { getLogger } from '../../../../server/src/logging_config.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const baseDir = path.dirname(fileURLToPath(import.meta.url));
 
 describe('Logging Configuration', () => {
   const testLoggerName = 'test-logger';

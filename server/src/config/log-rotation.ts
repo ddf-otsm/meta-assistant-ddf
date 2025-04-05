@@ -5,10 +5,8 @@ import { fileURLToPath } from 'url';
 import { createLogger, format, transports, Logger } from 'winston';
 import 'winston-daily-rotate-file';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const logDir = 'logs';
+const baseDir = path.dirname(fileURLToPath(import.meta.url));
+const logDir = path.join(baseDir, '../../logs');
 
 if (!fs.existsSync(logDir)) {
   fs.mkdirSync(logDir);

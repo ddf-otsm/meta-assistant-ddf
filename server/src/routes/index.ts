@@ -1,9 +1,14 @@
 import { Router } from 'express';
+import { createRotatingLogger } from '../config/log-rotation.js';
 
-import { getLogger } from '../logging_config';
-
-const logger = getLogger('routes');
+const logger = createRotatingLogger('routes');
 const router = Router();
+
+// Health check endpoint
+router.get('/health', (req, res) => {
+  logger.info('Health check requested');
+  res.json({ status: 'ok' });
+});
 
 // Example route with logging
 router.get('/example', (req, res) => {
@@ -14,4 +19,4 @@ router.get('/example', (req, res) => {
   res.json({ message: 'Example route' });
 });
 
-export const routes = router;
+export default router;

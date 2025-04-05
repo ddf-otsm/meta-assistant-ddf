@@ -1,6 +1,6 @@
-import { getLogger } from '../logging_config';
+import { createRotatingLogger } from '../config/log-rotation.js';
 
-const logger = getLogger('database');
+const logger = createRotatingLogger('database');
 
 interface DatabaseError {
   message: string;
@@ -74,3 +74,8 @@ export const db = {
     }
   },
 };
+
+export function setupDatabase() {
+  logger.info('Setting up database connection');
+  // Add your database setup code here
+}

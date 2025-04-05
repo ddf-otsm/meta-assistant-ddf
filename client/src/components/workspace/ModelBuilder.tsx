@@ -4,21 +4,21 @@ import { useState } from 'react';
 import { InfoIcon, MaximizeIcon, EditIcon, TrashIcon } from 'lucide-react';
 
 // UI Components
-import { getLogger } from '@lib/logger';
+import { getLogger } from '@/lib/logger.js';
 
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button.js';
+import { Checkbox } from '@/components/ui/checkbox.js';
+import { Input } from '@/components/ui/input.js';
+import { Label } from '@/components/ui/label.js';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from '@/components/ui/select.js';
 
-import { ResourceProperty, ApiSpecification } from '@shared/schema';
+import { ResourceProperty, ApiSpecification } from '@shared/schema.js';
 
 // Shared types
 

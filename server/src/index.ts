@@ -1,34 +1,18 @@
+import express from 'express';
 import cors from 'cors';
-import express, { json, urlencoded } from 'express';
-import session from 'express-session';
+import { createRotatingLogger } from './config/log-rotation.js';
+import { errorHandler } from './middleware/errorHandler.js';
+import { setupRoutes } from './routes.js';
 
-import { setupLogRotation } from './config/log-rotation';
-import { errorHandler } from './middleware/errorHandler';
-import { setupRoutes } from './routes';
-
-const logger = setupLogRotation();
 const app = express();
+const port = process.env.PORT || 3000;
+
+// Create logger
+const logger = createRotatingLogger('server');
 
 // Middleware
 app.use(cors());
-app.use(json());
-app.use(urlencoded({ extended: true }));
-app.use(
-  session({
-    secret: 'your-secret-key',
-    resave: false,
-    saveUninitialized: true,
-  })
-);
-
-// Request logging middleware
-app.use((req, res, next) => {
-  logger.info(`${req.method} ${req.url}`, {
-    ip: req.ip,
-    userAgent: req.get('user-agent'),
-  });
-  next();
-});
+app.use(express.json());
 
 // Routes
 setupRoutes(app);
@@ -43,9 +27,8 @@ app.get('/health', (req, res) => {
 });
 
 // Start server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  logger.info(`Server is running on port ${PORT}`);
+app.listen(port, () => {
+  logger.info(`Server is running on port ${port}`);
 });
 
 export { app };

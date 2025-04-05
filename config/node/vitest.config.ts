@@ -3,12 +3,13 @@ import { fileURLToPath } from 'url';
 
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vitest/config';
+import type { UserConfig } from 'vite';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// Using process.cwd() instead of import.meta.url to avoid ESM issues
+const projectRoot = process.cwd();
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react() as any], // Type assertion needed due to version mismatch between vite and vitest
   test: {
     environment: 'jsdom',
     globals: true,
@@ -43,14 +44,14 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './client/src'),
-      '@components': path.resolve(__dirname, './client/src/components'),
-      '@lib': path.resolve(__dirname, './client/src/lib'),
-      '@hooks': path.resolve(__dirname, './client/src/hooks'),
-      '@contexts': path.resolve(__dirname, './client/src/contexts'),
-      '@types': path.resolve(__dirname, './client/src/types'),
-      '@shared': path.resolve(__dirname, './shared/src'),
-      '@server': path.resolve(__dirname, './server/src')
+      '@': path.resolve(projectRoot, './client/src'),
+      '@components': path.resolve(projectRoot, './client/src/components'),
+      '@lib': path.resolve(projectRoot, './client/src/lib'),
+      '@hooks': path.resolve(projectRoot, './client/src/hooks'),
+      '@contexts': path.resolve(projectRoot, './client/src/contexts'),
+      '@types': path.resolve(projectRoot, './client/src/types'),
+      '@shared': path.resolve(projectRoot, './shared/src'),
+      '@server': path.resolve(projectRoot, './server/src')
     },
   },
-});
+} as UserConfig);

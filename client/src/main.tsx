@@ -1,16 +1,13 @@
-import { createRoot } from 'react-dom/client';
-
-import App from './App';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App.js';
 import './index.css';
-import { ProjectProvider } from './context/ProjectContext';
+import { ProjectProvider } from './context/ProjectContext.js';
 
-const rootElement = document.getElementById('root');
-if (!rootElement) {
-  throw new Error('Root element not found');
-}
-
-createRoot(rootElement).render(
-  <ProjectProvider>
-    <App />
-  </ProjectProvider>
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <ProjectProvider>
+      <App />
+    </ProjectProvider>
+  </React.StrictMode>
 );

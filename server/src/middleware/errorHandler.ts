@@ -1,17 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
+import { createRotatingLogger } from '../config/log-rotation.js';
 
-import { getLogger } from '../config/logging_config';
+const logger = createRotatingLogger('error-handler');
 
-const logger = getLogger('errorHandler');
-
-export const errorHandler = (err: Error, req: Request, res: Response, _next: NextFunction) => {
-  logger.error('Error occurred:', {
-    error: err.message,
-    path: req.path,
-    method: req.method,
-  });
+export function errorHandler(err: Error, req: Request, res: Response, next: NextFunction) {
+  logger.error('Error occurred', { error: err });
 
   res.status(500).json({
-    error: process.env.NODE_ENV === 'production' ? 'Internal server error' : err.message,
+    error: {
+      message: 'An internal server error occurred',
+      details: process.env.NODE_ENV === 'development' ? err.message : undefined,
+    },
   });
-};
+}

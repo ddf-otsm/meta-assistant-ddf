@@ -1,15 +1,7 @@
-#1 create a workflow_tasks/ 
-index_workflow.yaml
+#1 how can we bypass this limitation from cursor?
+Note: we default stop the agent after 25 tool calls. You ca
 
-#2 on the index, propose a description, the run command and related children files for each workflow and suggest others
 
-npm run sonar - Run SonarQube analysis
-npm run codeclimate - Run CodeClimate analysis
-npm run quality - Run all quality checks
-npm run validate - Run all checks including quality tools
 
-#3 include the test workflows
 
-#4 document sonaqube codeclimate and other jusificatoin for other libiraries on docs/tech_stack.md
 
-#5 Help me run and test sucessfully the azure open ai setup

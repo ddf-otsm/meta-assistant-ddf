@@ -1,9 +1,9 @@
 import { Router } from 'express';
 
-import { validateRequest } from '@shared/schema';
+import { validateRequest } from '@shared/schema.js';
 
-import { errorHandler } from './middleware/errorHandler';
-import { logger } from './utils/logger';
+import { errorHandler } from './middleware/errorHandler.js';
+import { logger } from './utils/logger.js';
 
 const router = Router();
 

@@ -1,6 +1,6 @@
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/lib/queryClient.js';
 
-import { ApiSpecification, GeneratedCode } from '@shared/schema';
+import { ApiSpecification, GeneratedCode } from '@shared/schema.js';
 
 interface GenerateCodeOptions {
   modelId: number;

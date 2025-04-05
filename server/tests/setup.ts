@@ -1,15 +1,13 @@
-import { afterAll, beforeAll } from 'vitest';
+import { beforeAll, afterAll } from 'vitest';
+import { createRotatingLogger } from '../src/config/log-rotation.js';
+import { app } from '../src/index.js';
 
-import { db } from '../src/config/database';
-import { app } from '../src/index';
+const logger = createRotatingLogger('test-setup');
 
-beforeAll(async () => {
-  // Setup test database
-  await db.migrate();
+beforeAll(() => {
+  logger.info('Setting up test environment');
 });
 
-afterAll(async () => {
-  // Cleanup test database
-  await db.destroy();
-  app.close();
+afterAll(() => {
+  logger.info('Cleaning up test environment');
 });

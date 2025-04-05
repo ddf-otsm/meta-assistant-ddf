@@ -1,18 +1,17 @@
-import { Router, Express } from 'express';
+import { Express } from 'express';
+import { createRotatingLogger } from './config/log-rotation.js';
+import routes from './routes/index.js';
 
-import { getLogger } from './config/logging_config';
-
-const logger = getLogger('routes');
-const router = Router();
+const logger = createRotatingLogger('routes-setup');
 
 // Health check endpoint
-router.get('/health', (req, res) => {
+routes.get('/health', (req, res) => {
   logger.info('Health check requested');
   res.json({ status: 'ok' });
 });
 
 // AI endpoints
-router.post('/ai/generate', async (req, res) => {
+routes.post('/ai/generate', async (req, res) => {
   try {
     const { prompt } = req.body;
     if (!prompt) {
@@ -30,6 +29,7 @@ router.post('/ai/generate', async (req, res) => {
   }
 });
 
-export const setupRoutes = (app: Express) => {
-  app.use('/api', router);
-};
+export function setupRoutes(app: Express) {
+  logger.info('Setting up routes');
+  app.use('/api', routes);
+}

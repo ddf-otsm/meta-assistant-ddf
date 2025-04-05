@@ -2,11 +2,11 @@ import cors from 'cors';
 import express, { json, urlencoded } from 'express';
 import session from 'express-session';
 
-import { setupLogRotation } from './src/config/log-rotation';
-import { errorHandler } from './src/middleware/errorHandler';
-import { setupRoutes } from './src/routes';
+import { createRotatingLogger } from './src/config/log-rotation.js';
+import { errorHandler } from './src/middleware/errorHandler.js';
+import { setupRoutes } from './src/routes.js';
 
-const logger = setupLogRotation();
+const logger = createRotatingLogger('server');
 const app = express();
 
 // Middleware

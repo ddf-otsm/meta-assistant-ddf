@@ -3,13 +3,13 @@ import { useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { useRoute } from 'wouter';
 
-import { Button } from '@/components/ui/button';
-import AIAssistant from '@/components/workspace/AIAssistant';
-import MetadataViewer from '@/components/workspace/MetadataViewer';
-import ModelBuilder from '@/components/workspace/ModelBuilder';
-import WorkflowSteps from '@/components/workspace/WorkflowSteps';
-import { useToast } from '@/hooks/use-toast';
-import { queryClient, apiRequest } from '@/lib/queryClient';
+import { Button } from '@/components/ui/button.js';
+import AIAssistant from '@/components/workspace/AIAssistant.js';
+import MetadataViewer from '@/components/workspace/MetadataViewer.js';
+import ModelBuilder from '@/components/workspace/ModelBuilder.js';
+import WorkflowSteps from '@/components/workspace/WorkflowSteps.js';
+import { useToast } from '@/hooks/use-toast.js';
+import { queryClient, apiRequest } from '@/lib/queryClient.js';
 
 import {
   Project,
@@ -19,7 +19,9 @@ import {
   ApiSpecification,
   ProjectStep,
   Message,
-} from '@shared/schema';
+  ResourceProperty,
+  ValidationError,
+} from '@shared/schema.js';
 
 export default function ProjectPage() {
   const [, params] = useRoute<{ id: string }>('/projects/:id');

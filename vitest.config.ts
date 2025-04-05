@@ -1,6 +1,9 @@
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 import { defineConfig } from 'vitest/config';
+
+const baseDir = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   test: {
@@ -22,9 +25,9 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'client/src'),
-      '@server': path.resolve(__dirname, 'server/src'),
-      '@shared': path.resolve(__dirname, 'shared'),
+      '@': path.resolve(baseDir, 'client/src'),
+      '@server': path.resolve(baseDir, 'server/src'),
+      '@shared': path.resolve(baseDir, 'shared'),
     },
   },
   esbuild: {

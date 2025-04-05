@@ -1,4 +1,4 @@
-import { ProjectStep } from '@shared/schema';
+import { ProjectStep } from '@shared/schema.js';
 
 interface WorkflowStepsProps {
   steps: ProjectStep[];

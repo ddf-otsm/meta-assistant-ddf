@@ -1,6 +1,6 @@
-import { apiRequest } from '@/lib/queryClient';
+import { apiRequest } from '@/lib/queryClient.js';
 
-import { Message, ApiSpecification } from '@shared/schema';
+import { Message, ApiSpecification } from '@shared/schema.js';
 
 interface AiServiceResult {
   message: Message;
