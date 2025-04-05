@@ -1,0 +1,44 @@
+name: Test Coverage Workflow
+description: Handles test coverage tasks in multiple steps
+
+steps:
+  - name: Setup
+    command: npm install
+    flags:
+      - --dev
+      - --coverage
+
+  - name: Run Tests
+    command: npm run test
+    flags:
+      - --coverage
+      - --watch=false
+
+  - name: Generate Report
+    command: npm run coverage:report
+    flags:
+      - --html
+      - --json
+
+  - name: Update Documentation
+    command: npm run docs:update
+    flags:
+      - --coverage
+      - --force
+
+checkpoints:
+  - after: Setup
+    file: docs/todos/plans/test_coverage_plan.md
+    status: in_progress
+
+  - after: Run Tests
+    file: docs/todos/plans/test_coverage_plan.md
+    status: tests_completed
+
+  - after: Generate Report
+    file: docs/todos/plans/test_coverage_plan.md
+    status: report_generated
+
+  - after: Update Documentation
+    file: docs/todos/plans/test_coverage_plan.md
+    status: completed 
