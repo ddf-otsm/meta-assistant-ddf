@@ -1,17 +1,11 @@
 import { execSync } from 'child_process';
 import fs from 'fs';
+import path from 'path';
 
 import { describe, it, expect } from 'vitest';
 
 // Helper functions
 const fileExists = (filepath: string): boolean => fs.existsSync(filepath);
-const isSymlink = (filepath: string): boolean => {
-  try {
-    return fs.lstatSync(filepath).isSymbolicLink();
-  } catch {
-    return false;
-  }
-};
 const commandExists = (command: string): boolean => {
   try {
     execSync(`command -v ${command}`);
@@ -42,10 +36,13 @@ describe('Project Configuration', () => {
 
   describe('Configuration Files', () => {
     it('should have all required config files', () => {
-      expect(fileExists('package.json')).toBe(true);
-      expect(fileExists('tsconfig.json')).toBe(true);
-      expect(fileExists('vite.config.ts')).toBe(true);
-      expect(fileExists('.env')).toBe(true);
+      const configFiles = ['config/config.yaml', 'config/vite/vite.config.ts', '.env.example'];
+
+      configFiles.forEach(file => {
+        const filePath = path.join(process.cwd(), file);
+        const exists = fs.existsSync(filePath);
+        expect(exists).toBe(true);
+      });
     });
 
     it('should have correct symlinks at root', () => {
@@ -65,6 +62,18 @@ describe('Project Configuration', () => {
       expect(envExample).toMatch(/DATABASE_URL=/);
       expect(envExample).toMatch(/PORT=/);
       expect(envExample).toMatch(/NODE_ENV=/);
+    });
+  });
+
+  it('should have required dependencies', () => {
+    const packageJson = JSON.parse(
+      fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf-8')
+    );
+
+    const requiredDeps = ['@vitejs/plugin-react', 'vite', 'vitest', '@playwright/test'];
+
+    requiredDeps.forEach(dep => {
+      expect(packageJson.devDependencies).toHaveProperty(dep);
     });
   });
 });

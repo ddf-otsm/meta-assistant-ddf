@@ -1,58 +1,59 @@
-import winston from 'winston';
-import 'winston-daily-rotate-file';
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-// Create logs directory if it doesn't exist
-const logsDir = path.join(process.cwd(), 'logs');
-if (!fs.existsSync(logsDir)) {
-  fs.mkdirSync(logsDir, { recursive: true });
+import { createLogger, format, transports, Logger } from 'winston';
+import 'winston-daily-rotate-file';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const logDir = 'logs';
+
+if (!fs.existsSync(logDir)) {
+  fs.mkdirSync(logDir);
 }
 
-/**
- * Creates a logger with rotating file transport
- * @param name The name of the logger
- * @returns A Winston logger instance with daily rotation
- */
-export function createRotatingLogger(name: string): winston.Logger {
-  const logger = winston.createLogger({
-    level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
-    format: winston.format.combine(
-      winston.format.timestamp({
-        format: 'YYYY-MM-DD HH:mm:ss:ms'
-      }),
-      winston.format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)
+export function createRotatingLogger(name: string): Logger {
+  const logger = createLogger({
+    level: 'debug',
+    format: format.combine(
+      format.timestamp(),
+      format.json(),
+      format.metadata({ fillExcept: ['message', 'level', 'timestamp'] })
     ),
-    defaultMeta: { service: name },
     transports: [
-      // Console transport
-      new winston.transports.Console({
-        format: winston.format.combine(
-          winston.format.colorize(),
-          winston.format.printf(
-            info => `${info.timestamp} ${info.level}: ${info.message}`
-          )
-        )
-      }),
-      
-      // File transports with rotation
-      new winston.transports.DailyRotateFile({
-        filename: path.join(logsDir, `%DATE%-${name}.log`),
+      new transports.DailyRotateFile({
+        filename: path.join(logDir, `${name}-%DATE%.log`),
         datePattern: 'YYYY-MM-DD',
+        zippedArchive: true,
         maxSize: '20m',
-        maxFiles: '14d'
+        maxFiles: '14d',
+        level: 'debug',
       }),
-      
-      // Separate error log
-      new winston.transports.DailyRotateFile({
-        filename: path.join(logsDir, `%DATE%-${name}-error.log`),
+      new transports.DailyRotateFile({
+        filename: path.join(logDir, `${name}-error-%DATE%.log`),
         datePattern: 'YYYY-MM-DD',
+        zippedArchive: true,
+        maxSize: '20m',
+        maxFiles: '14d',
         level: 'error',
-        maxSize: '20m',
-        maxFiles: '14d'
-      })
-    ]
+      }),
+    ],
   });
-  
+
+  // Add console transport in development
+  if (process.env.NODE_ENV !== 'production') {
+    logger.add(
+      new transports.Console({
+        format: format.combine(
+          format.colorize(),
+          format.simple(),
+          format.metadata({ fillExcept: ['message', 'level', 'timestamp'] })
+        ),
+      })
+    );
+  }
+
   return logger;
 }

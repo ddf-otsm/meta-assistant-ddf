@@ -32,14 +32,7 @@
     "warnOnUnsupportedTypeScriptVersion": false,
     "createDefaultProgram": true
   },
-  "plugins": [
-    "@typescript-eslint",
-    "react",
-    "react-hooks",
-    "import",
-    "jsx-a11y",
-    "prettier"
-  ],
+  "plugins": ["@typescript-eslint", "react", "react-hooks", "import", "jsx-a11y", "prettier"],
   "rules": {
     "prettier/prettier": "error",
     "react/react-in-jsx-scope": "off",
@@ -116,11 +109,7 @@
     },
     "import/resolver": {
       "typescript": {
-        "project": [
-          "./client/tsconfig.json",
-          "./server/tsconfig.json",
-          "./shared/tsconfig.json"
-        ],
+        "project": ["./client/tsconfig.json", "./server/tsconfig.json", "./shared/tsconfig.json"],
         "alwaysTryTypes": true
       },
       "node": {
@@ -133,10 +122,15 @@
     {
       "files": ["*.ts", "*.tsx"],
       "parserOptions": {
-        "project": ["./client/tsconfig.json", "./server/tsconfig.json", "./shared/tsconfig.json", "./tsconfig.node.json"],
+        "project": [
+          "./client/tsconfig.json",
+          "./server/tsconfig.json",
+          "./shared/tsconfig.json",
+          "./tsconfig.node.json"
+        ],
         "warnOnUnsupportedTypeScriptVersion": false,
         "createDefaultProgram": true
       }
     }
   ]
-} 
+}

@@ -1,9 +1,13 @@
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 import { describe, test, expect, beforeEach, afterEach } from 'vitest';
 
-import { getLogger } from '../logging_config';
+import { getLogger } from '../../../../server/src/logging_config.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 describe('Logging Configuration', () => {
   const testLoggerName = 'test-logger';

@@ -20,8 +20,25 @@ export const insertModelDefinitionSchema = z.object({
   type: z.enum(['component', 'page', 'form', 'workflow', 'api', 'report', 'custom']),
 });
 
+export const projectSchema = z.object({
+  name: z.string().min(1).max(100),
+  description: z.string().optional(),
+  components: z.array(z.string()),
+});
+
+export type Project = z.infer<typeof projectSchema>;
+
+export const validateRequest = (req, res, next) => {
+  try {
+    projectSchema.parse(req.body);
+    next();
+  } catch (error) {
+    res.status(400).json({ error: error.errors });
+  }
+};
+
 export const schema = {
   Message,
   insertProjectSchema,
   insertModelDefinitionSchema,
-}; 
+};

@@ -1,4 +1,4 @@
-version: "2"
+version: '2'
 checks:
   argument-count:
     enabled: true
@@ -38,30 +38,30 @@ checks:
     enabled: true
 
 exclude_patterns:
-  - "config/"
-  - "dist/"
-  - "**/node_modules/"
-  - "scripts/"
-  - "**/spec/"
-  - "**/test/"
-  - "**/tests/"
-  - "**/*.test.ts"
-  - "**/*.test.tsx"
-  - "**/*.spec.ts"
-  - "**/*.spec.tsx"
-  - "**/vendor/"
-  - "**/*.d.ts"
-  - ".github/"
-  - "coverage/"
-  - "docs/"
-  - "logs/"
-  - "multi_env/"
-  - ".tmp/"
+  - 'config/'
+  - 'dist/'
+  - '**/node_modules/'
+  - 'scripts/'
+  - '**/spec/'
+  - '**/test/'
+  - '**/tests/'
+  - '**/*.test.ts'
+  - '**/*.test.tsx'
+  - '**/*.spec.ts'
+  - '**/*.spec.tsx'
+  - '**/vendor/'
+  - '**/*.d.ts'
+  - '.github/'
+  - 'coverage/'
+  - 'docs/'
+  - 'logs/'
+  - 'multi_env/'
+  - '.tmp/'
 
 plugins:
   eslint:
     enabled: true
-    channel: "eslint-8"
+    channel: 'eslint-8'
     config:
       extensions:
         - .ts
@@ -75,4 +75,4 @@ plugins:
   shellcheck:
     enabled: true
   typescript:
-    enabled: true 
+    enabled: true

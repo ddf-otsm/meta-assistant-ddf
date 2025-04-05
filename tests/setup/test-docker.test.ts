@@ -1,6 +1,6 @@
 import { execSync } from 'child_process';
+import fs from 'fs';
 
-import axios from 'axios';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // Define mocks with vi.fn()
@@ -60,9 +60,15 @@ describe('Docker Setup', () => {
   });
 
   describe('Docker Configuration', () => {
-    it('should have valid configuration files', () => {
-      // Mock test - would check for Dockerfile and docker-compose.yml
-      expect(true).toBe(true);
+    it('should have docker-compose.yml file', () => {
+      const dockerComposeExists = fs.existsSync('docker-compose.yml');
+      expect(dockerComposeExists).toBe(true);
+    });
+
+    it('should have required services in docker-compose.yml', () => {
+      const dockerCompose = fs.readFileSync('docker-compose.yml', 'utf-8');
+      expect(dockerCompose).toContain('postgres');
+      expect(dockerCompose).toContain('redis');
     });
   });
 

@@ -1,0 +1,36 @@
+workflows:
+  - name: run_all_checks
+    description: Runs all code quality checks, tests, and validations
+    location: scripts/run_all_checks.sh
+    options:
+      - name: verbose
+        type: boolean
+        default: false
+        description: Enable verbose output for all checks
+    features:
+      - bash_version_check: Ensures Bash 4.0 or higher is used
+      - verbose_logging: Captures and displays detailed output when enabled
+      - child_process_logging: Forwards child process output to parent
+      - temporary_logs: Uses temporary files for log capture
+      - colorized_output: Provides color-coded status messages
+    checks:
+      - code_quality:
+          - linting
+          - type_checking
+          - formatting
+      - testing:
+          - unit_tests
+          - integration_tests
+          - e2e_tests
+      - coverage:
+          - test_coverage
+      - analysis:
+          - sonarqube
+          - codeclimate
+      - build:
+          - build_verification
+      - security:
+          - npm_audit
+          - security_checks
+      - documentation:
+          - docs_validation 

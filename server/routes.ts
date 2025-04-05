@@ -1,28 +1,28 @@
-import express from 'express';
-import { createServer } from 'http';
-import { Server } from 'socket.io';
-import { schema } from '@shared/schema';
+import { Router } from 'express';
+
+import { validateRequest } from '@shared/schema';
+
 import { errorHandler } from './middleware/errorHandler';
 import { logger } from './utils/logger';
 
-const router = express.Router();
+const router = Router();
 
 // Health check endpoint
-router.get('/health', (_, res) => {
-  res.json({ status: 'ok' });
+router.get('/health', (req, res) => {
+  logger.info('Health check requested');
+  res.json({
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+  });
 });
 
 // API routes
-router.use('/api', schema);
+router.post('/validate', validateRequest, (req, res) => {
+  logger.info('Validation request received');
+  res.json({ valid: true });
+});
 
-// Error handling
+// Error handling middleware
 router.use(errorHandler);
 
-// Create HTTP server
-const app = express();
-app.use(router);
-
-const httpServer = createServer(app);
-const io = new Server(httpServer);
-
-export { httpServer, io };
+export default router;

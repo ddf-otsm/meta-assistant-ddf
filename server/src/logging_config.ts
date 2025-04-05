@@ -1,6 +1,6 @@
 import { Logger } from 'winston';
 
-import { createRotatingLogger } from './config/log-rotation';
+import { createRotatingLogger } from './config/log-rotation.js';
 
 const loggers: Map<string, Logger> = new Map();
 
