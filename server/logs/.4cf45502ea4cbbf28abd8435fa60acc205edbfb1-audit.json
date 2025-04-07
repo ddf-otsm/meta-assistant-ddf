@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "/Users/luismartins/Documents/cursor_repos/meta-assistant-ddf/server/logs/.4cf45502ea4cbbf28abd8435fa60acc205edbfb1-audit.json",
+    "files": [
+        {
+            "date": 1743965594533,
+            "name": "/Users/luismartins/Documents/cursor_repos/meta-assistant-ddf/server/logs/database-error-2025-04-06.log",
+            "hash": "eb24207681140d8fbb9a86e1c7c1f0728bffa72b5f94e545f8808a445981c27a"
+        }
+    ],
+    "hashType": "sha256"
+}

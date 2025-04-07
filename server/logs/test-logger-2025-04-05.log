@@ -1,0 +1,4 @@
+{"level":"info","message":"Test log message","timestamp":"2025-04-05T22:22:30.275Z"}
+{"error":{},"level":"error","message":"Error occurred","timestamp":"2025-04-05T22:22:30.277Z"}
+{"level":"info","message":"Test log message","timestamp":"2025-04-05T22:22:53.496Z"}
+{"error":{},"level":"error","message":"Error occurred","timestamp":"2025-04-05T22:22:53.497Z"}
