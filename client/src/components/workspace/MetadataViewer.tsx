@@ -62,9 +62,9 @@ export default function MetadataViewer({
   };
 
   return (
-    <div className="bg-white rounded-lg border border-dark-200 shadow-sm overflow-hidden">
+    <div className="bg-background rounded-lg border border-dark-200 shadow-sm overflow-hidden">
       <div className="border-b border-dark-200 p-4 flex justify-between items-center">
-        <h2 className="font-semibold text-dark-800">Generated Metadata</h2>
+        <h2 className="font-semibold text-foreground">Generated Metadata</h2>
         <div className="flex items-center space-x-2">
           <Button 
             variant="ghost" 
@@ -86,14 +86,14 @@ export default function MetadataViewer({
         
         <div className="mt-4">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-medium text-dark-700">Output Preview</h3>
+            <h3 className="text-sm font-medium text-foreground">Output Preview</h3>
             <div className="flex items-center text-xs">
-              <span className="text-dark-500 mr-1">
+              <span className="text-muted-foreground mr-1">
                 {generatedFiles.length > 0 
                   ? `${generatedFiles.length} files generated` 
                   : "Ready to generate files"}
               </span>
-              <i className="ri-information-line text-dark-500"></i>
+              <i className="ri-information-line text-muted-foreground"></i>
             </div>
           </div>
           <div className="bg-dark-100 p-3 rounded-md">
@@ -102,7 +102,7 @@ export default function MetadataViewer({
                 <FileTree files={generatedFiles} />
               ) : (
                 <div className="text-center py-4">
-                  <p className="text-dark-500">
+                  <p className="text-muted-foreground">
                     Click "Generate" to create code files
                   </p>
                   <Button
@@ -168,7 +168,7 @@ function FileTree({ files }: FileTreeProps) {
         return (
           <div 
             key={item.path} 
-            className="text-dark-600 mb-1"
+            className="text-muted-foreground mb-1"
             style={{ marginLeft: `${indent * 5}px` }}
           >
             <i className="ri-file-code-line mr-1"></i>
@@ -181,7 +181,7 @@ function FileTree({ files }: FileTreeProps) {
       return (
         <div key={key}>
           <div 
-            className="flex items-center text-dark-700 mb-1"
+            className="flex items-center text-foreground mb-1"
             style={{ marginLeft: `${indent * 5}px` }}
           >
             <i className="ri-folder-line mr-1"></i>

@@ -67,15 +67,15 @@ export default function AIAssistant({ projectId, messages, onMessagesUpdate }: A
   };
 
   return (
-    <div className="bg-white rounded-lg border border-dark-200 shadow-sm overflow-hidden mb-6">
+    <div className="bg-background rounded-lg border border-dark-200 shadow-sm overflow-hidden mb-6">
       <div className="border-b border-dark-200 p-4 flex justify-between items-center">
         <div className="flex items-center">
           <div className="w-8 h-8 rounded-full bg-secondary-600 text-white flex items-center justify-center mr-2">
             <i className="ri-robot-line"></i>
           </div>
-          <h2 className="font-semibold text-dark-800">AI Assistant</h2>
+          <h2 className="font-semibold text-foreground">AI Assistant</h2>
         </div>
-        <button className="text-dark-500 hover:text-dark-700">
+        <button className="text-muted-foreground hover:text-foreground">
           <i className="ri-settings-3-line"></i>
         </button>
       </div>
@@ -83,7 +83,7 @@ export default function AIAssistant({ projectId, messages, onMessagesUpdate }: A
       <div className="p-4 h-96 flex flex-col">
         <div className="flex-1 overflow-y-auto mb-4 space-y-4">
           {messages.length === 0 ? (
-            <div className="flex items-center justify-center h-full text-dark-500">
+            <div className="flex items-center justify-center h-full text-muted-foreground">
               <div className="text-center">
                 <i className="ri-robot-line text-3xl mb-2"></i>
                 <p>Ask the AI assistant anything about your project!</p>
@@ -103,8 +103,8 @@ export default function AIAssistant({ projectId, messages, onMessagesUpdate }: A
                 <div 
                   className={`${
                     message.role === 'user' 
-                      ? 'bg-primary-100 rounded-lg rounded-tr-none text-dark-800' 
-                      : 'bg-dark-100 rounded-lg rounded-tl-none text-dark-800'
+                      ? 'bg-primary-100 rounded-lg rounded-tr-none text-foreground' 
+                      : 'bg-dark-100 rounded-lg rounded-tl-none text-foreground'
                   } p-3 text-sm max-w-xs sm:max-w-md whitespace-pre-wrap`}
                   dangerouslySetInnerHTML={{ 
                     __html: message.content

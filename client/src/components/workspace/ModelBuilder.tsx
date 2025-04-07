@@ -135,14 +135,14 @@ export default function ModelBuilder({ specification, onSpecificationChange, onS
   };
 
   return (
-    <div className="bg-white rounded-lg border border-dark-200 shadow-sm overflow-hidden">
+    <div className="bg-background rounded-lg border border-dark-200 shadow-sm overflow-hidden">
       <div className="border-b border-dark-200 p-4 flex justify-between items-center">
-        <h2 className="font-semibold text-dark-800">API Specification Builder</h2>
+        <h2 className="font-semibold text-foreground">API Specification Builder</h2>
         <div className="flex items-center space-x-2">
-          <button className="text-dark-500 hover:text-dark-700">
+          <button className="text-muted-foreground hover:text-foreground">
             <i className="ri-information-line"></i>
           </button>
-          <button className="text-dark-500 hover:text-dark-700">
+          <button className="text-muted-foreground hover:text-foreground">
             <i className="ri-fullscreen-line"></i>
           </button>
         </div>
@@ -150,7 +150,7 @@ export default function ModelBuilder({ specification, onSpecificationChange, onS
       
       <div className="p-5">
         <div className="mb-6">
-          <Label className="block text-dark-700 font-medium mb-2">API Resource Name</Label>
+          <Label className="block text-foreground font-medium mb-2">API Resource Name</Label>
           <div className="flex">
             <Input 
               type="text" 
@@ -162,19 +162,19 @@ export default function ModelBuilder({ specification, onSpecificationChange, onS
               <i className="ri-refresh-line"></i>
             </Button>
           </div>
-          <p className="text-dark-500 text-sm mt-1">The main resource this API will manage</p>
+          <p className="text-muted-foreground text-sm mt-1">The main resource this API will manage</p>
         </div>
 
         <div className="mb-6">
-          <Label className="block text-dark-700 font-medium mb-2">Resource Properties</Label>
+          <Label className="block text-foreground font-medium mb-2">Resource Properties</Label>
           <div className="border border-dark-300 rounded-md overflow-hidden">
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-dark-100">
-                  <th className="py-2 px-3 text-left font-medium text-dark-700">Name</th>
-                  <th className="py-2 px-3 text-left font-medium text-dark-700">Type</th>
-                  <th className="py-2 px-3 text-left font-medium text-dark-700">Required</th>
-                  <th className="py-2 px-3 text-left font-medium text-dark-700">Actions</th>
+                  <th className="py-2 px-3 text-left font-medium text-foreground">Name</th>
+                  <th className="py-2 px-3 text-left font-medium text-foreground">Type</th>
+                  <th className="py-2 px-3 text-left font-medium text-foreground">Required</th>
+                  <th className="py-2 px-3 text-left font-medium text-foreground">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -265,7 +265,7 @@ export default function ModelBuilder({ specification, onSpecificationChange, onS
         </div>
 
         <div className="mb-6">
-          <Label className="block text-dark-700 font-medium mb-2">API Endpoints</Label>
+          <Label className="block text-foreground font-medium mb-2">API Endpoints</Label>
           {specification.resource.endpoints.map((endpoint, index) => (
             <div key={index} className="bg-dark-100 p-3 rounded-md mb-3">
               <div className="flex items-center">
@@ -274,9 +274,9 @@ export default function ModelBuilder({ specification, onSpecificationChange, onS
                     <span className={`${getMethodColor(endpoint.method)} px-2 py-0.5 rounded text-xs font-medium mr-2`}>
                       {endpoint.method}
                     </span>
-                    <code className="text-dark-700 font-mono text-sm">{endpoint.path}</code>
+                    <code className="text-foreground font-mono text-sm">{endpoint.path}</code>
                   </div>
-                  <p className="text-dark-500 text-xs mt-1">{endpoint.description}</p>
+                  <p className="text-muted-foreground text-xs mt-1">{endpoint.description}</p>
                 </div>
                 <div className="flex items-center">
                   <Checkbox 
@@ -301,45 +301,45 @@ export default function ModelBuilder({ specification, onSpecificationChange, onS
         </div>
 
         <div className="mb-6">
-          <Label className="block text-dark-700 font-medium mb-2">Framework Selection</Label>
+          <Label className="block text-foreground font-medium mb-2">Framework Selection</Label>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <div 
-              className={`framework-option border rounded-md p-3 flex flex-col items-center cursor-pointer ${specification.framework.name === 'express' ? 'selected' : 'border-dark-300 bg-white'}`}
+              className={`framework-option border rounded-md p-3 flex flex-col items-center cursor-pointer ${specification.framework.name === 'express' ? 'selected' : 'border-dark-300 bg-background'}`}
               onClick={() => handleFrameworkChange('express')}
             >
               <img src="https://expressjs.com/images/express-facebook-share.png" alt="Express.js" className="h-10 object-contain mb-2" />
-              <span className="text-sm font-medium text-dark-800">Express.js</span>
-              <span className="text-xs text-dark-500 mt-1">Node.js</span>
+              <span className="text-sm font-medium text-foreground">Express.js</span>
+              <span className="text-xs text-muted-foreground mt-1">Node.js</span>
             </div>
             <div 
-              className={`framework-option border rounded-md p-3 flex flex-col items-center cursor-pointer ${specification.framework.name === 'fastapi' ? 'selected' : 'border-dark-300 bg-white'}`}
+              className={`framework-option border rounded-md p-3 flex flex-col items-center cursor-pointer ${specification.framework.name === 'fastapi' ? 'selected' : 'border-dark-300 bg-background'}`}
               onClick={() => handleFrameworkChange('fastapi')}
             >
               <img src="https://static-00.iconduck.com/assets.00/fastapi-icon-512x512-a7ggfxfw.png" alt="FastAPI" className="h-10 object-contain mb-2" />
-              <span className="text-sm font-medium text-dark-800">FastAPI</span>
-              <span className="text-xs text-dark-500 mt-1">Python</span>
+              <span className="text-sm font-medium text-foreground">FastAPI</span>
+              <span className="text-xs text-muted-foreground mt-1">Python</span>
             </div>
             <div 
-              className={`framework-option border rounded-md p-3 flex flex-col items-center cursor-pointer ${specification.framework.name === 'spring' ? 'selected' : 'border-dark-300 bg-white'}`}
+              className={`framework-option border rounded-md p-3 flex flex-col items-center cursor-pointer ${specification.framework.name === 'spring' ? 'selected' : 'border-dark-300 bg-background'}`}
               onClick={() => handleFrameworkChange('spring')}
             >
               <img src="https://spring.io/img/spring.svg" alt="Spring Boot" className="h-10 object-contain mb-2" />
-              <span className="text-sm font-medium text-dark-800">Spring Boot</span>
-              <span className="text-xs text-dark-500 mt-1">Java</span>
+              <span className="text-sm font-medium text-foreground">Spring Boot</span>
+              <span className="text-xs text-muted-foreground mt-1">Java</span>
             </div>
             <div 
-              className={`framework-option border rounded-md p-3 flex flex-col items-center cursor-pointer ${specification.framework.name === 'laravel' ? 'selected' : 'border-dark-300 bg-white'}`}
+              className={`framework-option border rounded-md p-3 flex flex-col items-center cursor-pointer ${specification.framework.name === 'laravel' ? 'selected' : 'border-dark-300 bg-background'}`}
               onClick={() => handleFrameworkChange('laravel')}
             >
               <img src="https://laravel.com/img/logomark.min.svg" alt="Laravel" className="h-10 object-contain mb-2" />
-              <span className="text-sm font-medium text-dark-800">Laravel</span>
-              <span className="text-xs text-dark-500 mt-1">PHP</span>
+              <span className="text-sm font-medium text-foreground">Laravel</span>
+              <span className="text-xs text-muted-foreground mt-1">PHP</span>
             </div>
           </div>
         </div>
 
         <div>
-          <Label className="block text-dark-700 font-medium mb-2">Additional Features</Label>
+          <Label className="block text-foreground font-medium mb-2">Additional Features</Label>
           <div className="space-y-2">
             <div className="flex items-center">
               <Checkbox 
@@ -348,7 +348,7 @@ export default function ModelBuilder({ specification, onSpecificationChange, onS
                 checked={specification.features.authentication}
                 onCheckedChange={(checked) => handleFeatureChange('authentication', !!checked)}
               />
-              <Label htmlFor="feature-auth" className="text-dark-700">Authentication & Authorization</Label>
+              <Label htmlFor="feature-auth" className="text-foreground">Authentication & Authorization</Label>
             </div>
             <div className="flex items-center">
               <Checkbox 
@@ -357,7 +357,7 @@ export default function ModelBuilder({ specification, onSpecificationChange, onS
                 checked={specification.features.documentation}
                 onCheckedChange={(checked) => handleFeatureChange('documentation', !!checked)}
               />
-              <Label htmlFor="feature-docs" className="text-dark-700">API Documentation (Swagger/OpenAPI)</Label>
+              <Label htmlFor="feature-docs" className="text-foreground">API Documentation (Swagger/OpenAPI)</Label>
             </div>
             <div className="flex items-center">
               <Checkbox 
@@ -366,7 +366,7 @@ export default function ModelBuilder({ specification, onSpecificationChange, onS
                 checked={specification.features.validation}
                 onCheckedChange={(checked) => handleFeatureChange('validation', !!checked)}
               />
-              <Label htmlFor="feature-validation" className="text-dark-700">Input Validation</Label>
+              <Label htmlFor="feature-validation" className="text-foreground">Input Validation</Label>
             </div>
             <div className="flex items-center">
               <Checkbox 
@@ -375,7 +375,7 @@ export default function ModelBuilder({ specification, onSpecificationChange, onS
                 checked={specification.features.testing}
                 onCheckedChange={(checked) => handleFeatureChange('testing', !!checked)}
               />
-              <Label htmlFor="feature-testing" className="text-dark-700">Automated Tests</Label>
+              <Label htmlFor="feature-testing" className="text-foreground">Automated Tests</Label>
             </div>
             <div className="flex items-center">
               <Checkbox 
@@ -384,7 +384,7 @@ export default function ModelBuilder({ specification, onSpecificationChange, onS
                 checked={specification.features.docker}
                 onCheckedChange={(checked) => handleFeatureChange('docker', !!checked)}
               />
-              <Label htmlFor="feature-docker" className="text-dark-700">Docker Configuration</Label>
+              <Label htmlFor="feature-docker" className="text-foreground">Docker Configuration</Label>
             </div>
           </div>
         </div>
