@@ -62,8 +62,8 @@ export default function MetadataViewer({
   };
 
   return (
-    <div className="bg-background rounded-lg border border-dark-200 shadow-sm overflow-hidden">
-      <div className="border-b border-dark-200 p-4 flex justify-between items-center">
+    <div className="bg-background rounded-lg border border-border shadow-sm overflow-hidden">
+      <div className="border-b border-border p-4 flex justify-between items-center">
         <h2 className="font-semibold text-foreground">Generated Metadata</h2>
         <div className="flex items-center space-x-2">
           <Button 

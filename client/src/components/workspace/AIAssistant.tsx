@@ -67,8 +67,8 @@ export default function AIAssistant({ projectId, messages, onMessagesUpdate }: A
   };
 
   return (
-    <div className="bg-background rounded-lg border border-dark-200 shadow-sm overflow-hidden mb-6">
-      <div className="border-b border-dark-200 p-4 flex justify-between items-center">
+    <div className="bg-background rounded-lg border border-border shadow-sm overflow-hidden mb-6">
+      <div className="border-b border-border p-4 flex justify-between items-center">
         <div className="flex items-center">
           <div className="w-8 h-8 rounded-full bg-secondary-600 text-white flex items-center justify-center mr-2">
             <i className="ri-robot-line"></i>

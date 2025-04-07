@@ -135,8 +135,8 @@ export default function ModelBuilder({ specification, onSpecificationChange, onS
   };
 
   return (
-    <div className="bg-background rounded-lg border border-dark-200 shadow-sm overflow-hidden">
-      <div className="border-b border-dark-200 p-4 flex justify-between items-center">
+    <div className="bg-background rounded-lg border border-border shadow-sm overflow-hidden">
+      <div className="border-b border-border p-4 flex justify-between items-center">
         <h2 className="font-semibold text-foreground">API Specification Builder</h2>
         <div className="flex items-center space-x-2">
           <button className="text-muted-foreground hover:text-foreground">
@@ -167,7 +167,7 @@ export default function ModelBuilder({ specification, onSpecificationChange, onS
 
         <div className="mb-6">
           <Label className="block text-foreground font-medium mb-2">Resource Properties</Label>
-          <div className="border border-dark-300 rounded-md overflow-hidden">
+          <div className="border border-input rounded-md overflow-hidden">
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-dark-100">
@@ -179,14 +179,14 @@ export default function ModelBuilder({ specification, onSpecificationChange, onS
               </thead>
               <tbody>
                 {specification.resource.properties.map((property, index) => (
-                  <tr key={index} className="border-t border-dark-200">
+                  <tr key={index} className="border-t border-border">
                     <td className="py-2 px-3">{property.name}</td>
                     <td className="py-2 px-3">
                       <Select 
                         value={property.type} 
                         onValueChange={(value) => handlePropertyChange(index, 'type', value)}
                       >
-                        <SelectTrigger className="border border-dark-300 rounded px-2 py-1 text-sm w-full">
+                        <SelectTrigger className="border border-input rounded px-2 py-1 text-sm w-full">
                           <SelectValue placeholder="Type" />
                         </SelectTrigger>
                         <SelectContent>
@@ -220,7 +220,7 @@ export default function ModelBuilder({ specification, onSpecificationChange, onS
                 ))}
               </tbody>
             </table>
-            <div className="border-t border-dark-200 p-2 bg-dark-50">
+            <div className="border-t border-border p-2 bg-dark-50">
               <div className="flex gap-2">
                 <Input 
                   className="text-sm flex-1"
@@ -304,7 +304,7 @@ export default function ModelBuilder({ specification, onSpecificationChange, onS
           <Label className="block text-foreground font-medium mb-2">Framework Selection</Label>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <div 
-              className={`framework-option border rounded-md p-3 flex flex-col items-center cursor-pointer ${specification.framework.name === 'express' ? 'selected' : 'border-dark-300 bg-background'}`}
+              className={`framework-option border rounded-md p-3 flex flex-col items-center cursor-pointer ${specification.framework.name === 'express' ? 'selected' : 'border-border bg-background'}`}
               onClick={() => handleFrameworkChange('express')}
             >
               <img src="https://expressjs.com/images/express-facebook-share.png" alt="Express.js" className="h-10 object-contain mb-2" />
@@ -312,7 +312,7 @@ export default function ModelBuilder({ specification, onSpecificationChange, onS
               <span className="text-xs text-muted-foreground mt-1">Node.js</span>
             </div>
             <div 
-              className={`framework-option border rounded-md p-3 flex flex-col items-center cursor-pointer ${specification.framework.name === 'fastapi' ? 'selected' : 'border-dark-300 bg-background'}`}
+              className={`framework-option border rounded-md p-3 flex flex-col items-center cursor-pointer ${specification.framework.name === 'fastapi' ? 'selected' : 'border-border bg-background'}`}
               onClick={() => handleFrameworkChange('fastapi')}
             >
               <img src="https://static-00.iconduck.com/assets.00/fastapi-icon-512x512-a7ggfxfw.png" alt="FastAPI" className="h-10 object-contain mb-2" />
@@ -320,7 +320,7 @@ export default function ModelBuilder({ specification, onSpecificationChange, onS
               <span className="text-xs text-muted-foreground mt-1">Python</span>
             </div>
             <div 
-              className={`framework-option border rounded-md p-3 flex flex-col items-center cursor-pointer ${specification.framework.name === 'spring' ? 'selected' : 'border-dark-300 bg-background'}`}
+              className={`framework-option border rounded-md p-3 flex flex-col items-center cursor-pointer ${specification.framework.name === 'spring' ? 'selected' : 'border-border bg-background'}`}
               onClick={() => handleFrameworkChange('spring')}
             >
               <img src="https://spring.io/img/spring.svg" alt="Spring Boot" className="h-10 object-contain mb-2" />
@@ -328,7 +328,7 @@ export default function ModelBuilder({ specification, onSpecificationChange, onS
               <span className="text-xs text-muted-foreground mt-1">Java</span>
             </div>
             <div 
-              className={`framework-option border rounded-md p-3 flex flex-col items-center cursor-pointer ${specification.framework.name === 'laravel' ? 'selected' : 'border-dark-300 bg-background'}`}
+              className={`framework-option border rounded-md p-3 flex flex-col items-center cursor-pointer ${specification.framework.name === 'laravel' ? 'selected' : 'border-border bg-background'}`}
               onClick={() => handleFrameworkChange('laravel')}
             >
               <img src="https://laravel.com/img/logomark.min.svg" alt="Laravel" className="h-10 object-contain mb-2" />
