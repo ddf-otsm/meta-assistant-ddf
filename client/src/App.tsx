@@ -6,6 +6,7 @@ import NotFound from "./pages/not-found";
 import Dashboard from "./pages/dashboard";
 import Project from "./pages/project";
 import MainLayout from "./components/layouts/MainLayout";
+import { ThemeProvider } from "./contexts/ThemeContext";
 
 function Router() {
   return (
@@ -19,12 +20,14 @@ function Router() {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <MainLayout>
-        <Router />
-      </MainLayout>
-      <Toaster />
-    </QueryClientProvider>
+    <ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <MainLayout>
+          <Router />
+        </MainLayout>
+        <Toaster />
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 }
 
