@@ -72,7 +72,7 @@ export default function Dashboard() {
   };
   
   const handleProjectClick = (projectId: number) => {
-    setLocation(`/projects/${projectId}`);
+    setLocation(`/project/${projectId}`);
   };
 
   return (

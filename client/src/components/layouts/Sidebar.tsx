@@ -9,20 +9,20 @@ export default function Sidebar() {
         <div className="mb-6">
           <h3 className="text-xs uppercase text-muted-foreground font-semibold tracking-wider mb-3">Projects</h3>
           <div className="space-y-1">
-            <Link href="/projects/1">
-              <a className={`flex items-center px-3 py-2 rounded-md ${location === '/projects/1' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-muted'}`}>
+            <Link href="/project/1">
+              <a className={`flex items-center px-3 py-2 rounded-md ${location === '/project/1' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-muted'}`}>
                 <i className="ri-folder-line mr-2"></i>
                 <span>Meta-API Generator</span>
               </a>
             </Link>
-            <Link href="/projects/2">
-              <a className={`flex items-center px-3 py-2 rounded-md ${location === '/projects/2' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-muted'}`}>
+            <Link href="/project/2">
+              <a className={`flex items-center px-3 py-2 rounded-md ${location === '/project/2' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-muted'}`}>
                 <i className="ri-folder-line mr-2"></i>
                 <span>Dashboard Builder</span>
               </a>
             </Link>
-            <Link href="/projects/3">
-              <a className={`flex items-center px-3 py-2 rounded-md ${location === '/projects/3' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-muted'}`}>
+            <Link href="/project/3">
+              <a className={`flex items-center px-3 py-2 rounded-md ${location === '/project/3' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-muted'}`}>
                 <i className="ri-folder-line mr-2"></i>
                 <span>CRUD App Generator</span>
               </a>

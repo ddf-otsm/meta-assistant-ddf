@@ -11,7 +11,7 @@ import MetadataViewer from "@/components/workspace/MetadataViewer";
 import { Project, ModelDefinition, AiConversation, GeneratedCode, ApiSpecification, ProjectStep, Message } from "@shared/schema";
 
 export default function ProjectPage() {
-  const [, params] = useRoute<{ id: string }>("/projects/:id");
+  const [, params] = useRoute<{ id: string }>("/project/:id");
   const projectId = parseInt(params?.id || "1");
   const { toast } = useToast();
   
