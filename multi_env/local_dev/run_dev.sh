@@ -7,6 +7,10 @@ echo "Starting Meta-Software Engineering Platform in local development mode..."
 export NODE_ENV=development
 export PORT=3000
 
+# Sync configuration files
+echo "Syncing configuration..."
+npm run config:sync
+
 # Check if --fast flag is provided
 if [[ "$*" == *--fast* ]]; then
   echo "Fast mode: Skipping type checking"

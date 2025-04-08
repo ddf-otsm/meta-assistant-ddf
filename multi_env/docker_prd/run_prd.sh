@@ -7,6 +7,10 @@ echo "Starting Meta-Software Engineering Platform in Docker production mode..."
 export NODE_ENV=production
 export PORT=5000
 
+# Sync configuration files
+echo "Syncing configuration..."
+npm run config:sync
+
 # Check if --full flag is provided (for complete build)
 if [[ "$*" == *--full* ]]; then
   echo "Full mode: Running complete build and tests"

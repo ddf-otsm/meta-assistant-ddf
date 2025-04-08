@@ -7,6 +7,10 @@ echo "Starting Meta-Software Engineering Platform in Replit development mode..."
 export NODE_ENV=development
 export PORT=5000
 
+# Sync configuration files
+echo "Syncing configuration..."
+npm run config:sync
+
 # Check if --turbo flag is provided
 if [[ "$*" == *--turbo* ]]; then
   echo "Turbo mode: Skipping type checking and using Replit cache"
