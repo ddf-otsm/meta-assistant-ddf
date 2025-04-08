@@ -7,8 +7,15 @@ vite.config.ts.*
 
 # Environment files
 .env
-.env.*
-*.local
+.env.local
+.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Do NOT ignore these files
+!.env.example
+!.env.template
 
 # Logs
 logs
