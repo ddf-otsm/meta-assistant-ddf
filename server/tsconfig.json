@@ -1,0 +1,29 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "outDir": "./dist",
+    "rootDir": ".",
+    "noEmit": false,
+    "module": "Node16",
+    "moduleResolution": "node16",
+    "types": ["node", "vitest/globals"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@shared/*": ["../shared/src/*"]
+    }
+  },
+  "include": [
+    "src/**/*",
+    "index.ts",
+    "routes.ts",
+    "storage.ts",
+    "services/**/*",
+    "tests/**/*",
+    "middleware/**/*",
+    "utils/**/*"
+  ],
+  "exclude": ["node_modules", "dist", "build", "coverage"]
+} 
