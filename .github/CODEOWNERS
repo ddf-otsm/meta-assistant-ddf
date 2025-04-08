@@ -1,0 +1,18 @@
+# These owners will be the default owners for everything in
+# the repo. Unless a later match takes precedence,
+# they will be requested for review when someone opens a pull request.
+*       @ddf-otsm
+
+# Server code
+/server/ @ddf-otsm
+
+# Client code
+/client/ @ddf-otsm
+
+# Configuration files
+*.json   @ddf-otsm
+*.yml    @ddf-otsm
+*.yaml   @ddf-otsm
+
+# Documentation
+/docs/   @ddf-otsm 

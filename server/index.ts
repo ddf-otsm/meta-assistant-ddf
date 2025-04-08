@@ -1,67 +1,58 @@
-import express, { type Request, Response, NextFunction } from "express";
-import { registerRoutes } from "./routes";
-import { setupVite, serveStatic, log } from "./vite";
-import { config } from "./config_loader";
+import cors from 'cors';
+import express, { json, urlencoded, type Request, Response, NextFunction } from 'express';
+import session from 'express-session';
 
+import { config } from './config_loader.js';
+import { setupVite, serveStatic, log } from './vite.js';
+import { createRotatingLogger } from './src/config/log-rotation.js';
+import { errorHandler } from './src/middleware/errorHandler.js';
+import { registerRoutes } from './routes.js';
+
+const logger = createRotatingLogger('server');
 const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
 
-app.use((req, res, next) => {
-  const start = Date.now();
-  const path = req.path;
-  let capturedJsonResponse: Record<string, any> | undefined = undefined;
-
-  const originalResJson = res.json;
-  res.json = function (bodyJson, ...args) {
-    capturedJsonResponse = bodyJson;
-    return originalResJson.apply(res, [bodyJson, ...args]);
-  };
-
-  res.on("finish", () => {
-    const duration = Date.now() - start;
-    if (path.startsWith("/api")) {
-      let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
-      if (capturedJsonResponse) {
-        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
-      }
-
-      if (logLine.length > 80) {
-        logLine = logLine.slice(0, 79) + "…";
-      }
-
-      log(logLine);
+// Middleware
+app.use(cors({
+  origin: config.security.cors.origins,
+  methods: config.security.cors.methods
+}));
+app.use(json());
+app.use(urlencoded({ extended: true }));
+app.use(
+  session({
+    secret: config.security.session_secret,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      maxAge: config.security.session_expiry_hours * 60 * 60 * 1000
     }
-  });
-
-  next();
-});
+  })
+);
 
 (async () => {
   const server = await registerRoutes(app);
 
+  // Error handling
+  app.use(errorHandler);
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
-
     res.status(status).json({ message });
-    throw err;
+    logger.error(err);
   });
 
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
+  // Setup Vite in development mode
   if (config.server.environment === "development") {
     await setupVite(app, server);
   } else {
     serveStatic(app);
   }
 
-  // Use the port from config
+  // Start server
   const port = config.server.port;
   const host = config.server.host;
   
-  server.listen(port, () => {
-    log(`serving on port ${port} in ${config.server.environment} mode`);
+  server.listen(port, host, () => {
+    logger.info(`Server is running on ${host}:${port} in ${config.server.environment} mode`);
   });
 })();

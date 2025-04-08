@@ -1,0 +1,95 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build:prod
+
+      - name: Generate changelog
+        id: changelog
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: commits } = await github.rest.repos.listCommits({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 100,
+              sha: context.sha
+            });
+
+            const categories = {
+              feat: '🚀 Features',
+              fix: '🐛 Bug Fixes',
+              docs: '📚 Documentation',
+              style: '💎 Styles',
+              refactor: '📦 Code Refactoring',
+              perf: '🚀 Performance Improvements',
+              test: '🚨 Tests',
+              build: '🛠 Build System',
+              ci: '⚙️ CI',
+              chore: '♻️ Chores',
+            };
+
+            const changes = {};
+            for (const type of Object.keys(categories)) {
+              changes[type] = [];
+            }
+
+            for (const commit of commits) {
+              const message = commit.commit.message.split('\n')[0];
+              const match = message.match(/^(\w+)(?:\(.*?\))?: (.+)$/);
+              if (match) {
+                const [, type, description] = match;
+                if (changes[type]) {
+                  changes[type].push(description.trim());
+                }
+              }
+            }
+
+            let changelog = '## What\'s Changed\n\n';
+            for (const [type, messages] of Object.entries(changes)) {
+              if (messages.length > 0) {
+                changelog += `### ${categories[type]}\n`;
+                for (const message of messages) {
+                  changelog += `- ${message}\n`;
+                }
+                changelog += '\n';
+              }
+            }
+
+            return changelog;
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          body: ${{ steps.changelog.outputs.result }}
+          draft: false
+          prerelease: false
+          files: |
+            dist/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

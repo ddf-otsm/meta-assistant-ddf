@@ -1,9 +1,11 @@
-import { useState, useEffect, useRef } from "react";
-import { Message } from "@shared/schema";
-import { apiRequest } from "@/lib/queryClient";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
+import { useState, useEffect, useRef } from 'react';
+
+import { Button } from '@/components/ui/button.js';
+import { Input } from '@/components/ui/input.js';
+import { useToast } from '@/hooks/use-toast.js';
+import { apiRequest } from '@/lib/queryClient.js';
+
+import { Message } from '@shared/schema.js';
 
 interface AIAssistantProps {
   projectId: number;
@@ -12,53 +14,53 @@ interface AIAssistantProps {
 }
 
 export default function AIAssistant({ projectId, messages, onMessagesUpdate }: AIAssistantProps) {
-  const [newMessage, setNewMessage] = useState("");
+  const [newMessage, setNewMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
   const { toast } = useToast();
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  
+
   useEffect(() => {
     // Scroll to the bottom when messages update
     if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
-  
+
   const handleSendMessage = async () => {
     if (!newMessage.trim()) return;
-    
+
     setIsSending(true);
-    
+
     try {
       // Add user message to the UI immediately
       const userMessage: Message = {
         role: 'user',
         content: newMessage,
-        timestamp: new Date()
+        timestamp: new Date(),
       };
       onMessagesUpdate([...messages, userMessage]);
-      
+
       // Send message to the server
-      const res = await apiRequest("POST", `/api/projects/${projectId}/conversation`, { 
-        message: newMessage 
+      const res = await apiRequest('POST', `/api/projects/${projectId}/conversation`, {
+        message: newMessage,
       });
       const conversation = await res.json();
-      
+
       // Update with the complete conversation from the server
       onMessagesUpdate(conversation.messages);
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to send message. Please try again.",
-        variant: "destructive"
+        title: 'Error',
+        description: 'Failed to send message. Please try again.',
+        variant: 'destructive',
       });
-      console.error("Error sending message:", error);
+      console.error('Error sending message:', error);
     } finally {
-      setNewMessage("");
+      setNewMessage('');
       setIsSending(false);
     }
   };
-  
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -70,51 +72,51 @@ export default function AIAssistant({ projectId, messages, onMessagesUpdate }: A
     <div className="bg-background rounded-lg border border-border shadow-sm overflow-hidden mb-6">
       <div className="border-b border-border p-4 flex justify-between items-center">
         <div className="flex items-center">
-          <div className="w-8 h-8 rounded-full bg-secondary-600 text-white flex items-center justify-center mr-2">
-            <i className="ri-robot-line"></i>
+          <div className="w-8 h-8 rounded-full bg-secondary text-secondary-foreground flex items-center justify-center mr-2">
+            <i className="ri-robot-line" aria-hidden="true"></i>
           </div>
           <h2 className="font-semibold text-foreground">AI Assistant</h2>
         </div>
-        <button className="text-muted-foreground hover:text-foreground">
-          <i className="ri-settings-3-line"></i>
+        <button className="text-muted-foreground hover:text-foreground" aria-label="Settings">
+          <i className="ri-settings-3-line" aria-hidden="true"></i>
         </button>
       </div>
-      
+
       <div className="p-4 h-96 flex flex-col">
         <div className="flex-1 overflow-y-auto mb-4 space-y-4">
           {messages.length === 0 ? (
             <div className="flex items-center justify-center h-full text-muted-foreground">
               <div className="text-center">
-                <i className="ri-robot-line text-3xl mb-2"></i>
+                <i className="ri-robot-line text-3xl mb-2" aria-hidden="true"></i>
                 <p>Ask the AI assistant anything about your project!</p>
               </div>
             </div>
           ) : (
             messages.map((message, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 className={`flex items-start ${message.role === 'user' ? 'justify-end' : ''}`}
               >
                 {message.role === 'assistant' && (
-                  <div className="w-8 h-8 rounded-full bg-secondary-600 text-white flex items-center justify-center mr-2 flex-shrink-0">
-                    <i className="ri-robot-line"></i>
+                  <div className="w-8 h-8 rounded-full bg-secondary text-secondary-foreground flex items-center justify-center mr-2">
+                    <i className="ri-robot-line" aria-hidden="true"></i>
                   </div>
                 )}
-                <div 
-                  className={`${
-                    message.role === 'user' 
-                      ? 'bg-primary-100 rounded-lg rounded-tr-none text-foreground' 
-                      : 'bg-dark-100 rounded-lg rounded-tl-none text-foreground'
-                  } p-3 text-sm max-w-xs sm:max-w-md whitespace-pre-wrap`}
-                  dangerouslySetInnerHTML={{ 
-                    __html: message.content
-                      .replace(/```([\s\S]*?)```/g, '<pre class="bg-dark-800 text-white p-2 rounded mt-2 overflow-x-auto font-mono text-xs">$1</pre>')
-                      .replace(/\n/g, '<br>')
-                  }}
-                />
+                <div
+                  className={`max-w-[80%] rounded-lg p-3 ${
+                    message.role === 'user'
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-muted text-foreground'
+                  }`}
+                >
+                  <p className="whitespace-pre-wrap">{message.content}</p>
+                  <p className="text-xs mt-1 opacity-70">
+                    {new Date(message.timestamp).toLocaleTimeString()}
+                  </p>
+                </div>
                 {message.role === 'user' && (
-                  <div className="w-8 h-8 rounded-full bg-primary-600 text-white flex items-center justify-center ml-2 flex-shrink-0">
-                    <span className="text-xs font-bold">You</span>
+                  <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center ml-2">
+                    <i className="ri-user-line" aria-hidden="true"></i>
                   </div>
                 )}
               </div>
@@ -122,26 +124,27 @@ export default function AIAssistant({ projectId, messages, onMessagesUpdate }: A
           )}
           <div ref={messagesEndRef} />
         </div>
-        
-        <div className="flex items-center">
-          <Input 
-            type="text" 
-            placeholder="Ask me anything about your API generator..." 
-            className="flex-1"
+
+        <div className="flex gap-2">
+          <Input
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             onKeyDown={handleKeyDown}
+            placeholder="Type your message..."
             disabled={isSending}
+            className="flex-1"
           />
-          <Button 
-            className="ml-2 bg-secondary-600 hover:bg-secondary-700 text-white p-2 rounded-md transition"
-            onClick={handleSendMessage}
-            disabled={isSending}
-          >
+          <Button onClick={handleSendMessage} disabled={isSending || !newMessage.trim()}>
             {isSending ? (
-              <i className="ri-loader-4-line animate-spin"></i>
+              <>
+                <i className="ri-loader-2-line animate-spin mr-2" aria-hidden="true"></i>
+                Sending...
+              </>
             ) : (
-              <i className="ri-send-plane-fill"></i>
+              <>
+                <i className="ri-send-plane-line mr-2" aria-hidden="true"></i>
+                Send
+              </>
             )}
           </Button>
         </div>

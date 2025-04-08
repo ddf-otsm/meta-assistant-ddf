@@ -1,29 +1,41 @@
-import OpenAI from "openai";
-import { 
-  ModelDefinition, 
-  ApiSpecification, 
+import { OpenAI } from 'openai';
+
+import {
+  ModelDefinition,
+  ApiSpecification,
   MetaModel,
   Generator,
   ResourceDefinition,
   FrameworkDefinition,
+<<<<<<< HEAD
   FeatureOptions
 } from "@shared/schema";
 import { config } from "../config_loader";
 
 // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
 const openai = new OpenAI({ apiKey: config.api_keys.openai || "" });
+=======
+  FeatureOptions,
+} from '@shared/schema';
+
+// the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || '' });
+>>>>>>> project-structure-improvement
 
 class AIService {
   /**
    * Generate a response from the AI based on the user message and project context
    */
-  async generateResponse(userMessage: string, projectModel: ModelDefinition | null): Promise<string> {
+  async generateResponse(
+    userMessage: string,
+    projectModel: ModelDefinition | null
+  ): Promise<string> {
     try {
       // If no API key is set, return a fallback response
       if (!config.api_keys.openai) {
         return this.getFallbackResponse(userMessage);
       }
-      
+
       let systemPrompt = `You are an AI assistant for a meta-software engineering platform called Meta-Engineer. 
 Your job is to help developers design and build software that generates other software.
 Respond in a helpful, knowledgeable manner about software design patterns, code generation, 
@@ -38,25 +50,27 @@ The platform follows a structured meta-engineering approach:
 
 Your goal is to help users think at a higher level of abstraction, where they
 build systems to build systems rather than building individual features directly.`;
-      
+
       // Add project context if available
       if (projectModel) {
         systemPrompt += `\n\nCurrent project context: ${JSON.stringify(projectModel.definition, null, 2)}`;
       }
 
       const response = await openai.chat.completions.create({
-        model: "gpt-4o",
+        model: 'gpt-4o',
         messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: userMessage }
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userMessage },
         ],
-        max_tokens: 1500
+        max_tokens: 1500,
       });
 
-      return response.choices[0].message.content || "I couldn't generate a response. Please try again.";
+      return (
+        response.choices[0].message.content || "I couldn't generate a response. Please try again."
+      );
     } catch (error) {
-      console.error("AI service error:", error);
-      return "Sorry, I encountered an error while processing your request. Please try again later.";
+      console.error('AI service error:', error);
+      return 'Sorry, I encountered an error while processing your request. Please try again later.';
     }
   }
 
@@ -65,8 +79,13 @@ build systems to build systems rather than building individual features directly
    */
   async analyzeModelDefinition(model: ModelDefinition): Promise<string> {
     try {
+<<<<<<< HEAD
       if (!config.api_keys.openai) {
         return "Model analysis is unavailable without an OpenAI API key.";
+=======
+      if (!process.env.OPENAI_API_KEY) {
+        return 'Model analysis is unavailable without an OpenAI API key.';
+>>>>>>> project-structure-improvement
       }
 
       const prompt = `Analyze this API model definition and provide suggestions for improvement:
@@ -84,55 +103,66 @@ Consider:
 Provide specific, actionable feedback that would improve this API design.`;
 
       const response = await openai.chat.completions.create({
-        model: "gpt-4o",
+        model: 'gpt-4o',
         messages: [
-          { 
-            role: "system", 
-            content: "You are an expert API designer who specializes in reviewing and improving API specifications. Focus on both immediate API design improvements and meta-level patterns that could be generalized for future code generation." 
+          {
+            role: 'system',
+            content:
+              'You are an expert API designer who specializes in reviewing and improving API specifications. Focus on both immediate API design improvements and meta-level patterns that could be generalized for future code generation.',
           },
-          { role: "user", content: prompt }
+          { role: 'user', content: prompt },
         ],
-        max_tokens: 1000
+        max_tokens: 1000,
       });
 
-      return response.choices[0].message.content || "No analysis available.";
+      return response.choices[0].message.content || 'No analysis available.';
     } catch (error) {
-      console.error("AI model analysis error:", error);
-      return "Sorry, I encountered an error while analyzing your model. Please try again later.";
+      console.error('AI model analysis error:', error);
+      return 'Sorry, I encountered an error while analyzing your model. Please try again later.';
     }
   }
 
   /**
    * Generate code snippets related to a specific query
    */
-  async generateCodeSnippet(language: string, task: string, context: string | null = null): Promise<string> {
+  async generateCodeSnippet(
+    language: string,
+    task: string,
+    context: string | null = null
+  ): Promise<string> {
     try {
+<<<<<<< HEAD
       if (!config.api_keys.openai) {
         return "Code generation is unavailable without an OpenAI API key.";
+=======
+      if (!process.env.OPENAI_API_KEY) {
+        return 'Code generation is unavailable without an OpenAI API key.';
+>>>>>>> project-structure-improvement
       }
 
       let prompt = `Generate a ${language} code snippet for the following task: ${task}`;
-      
+
       if (context) {
         prompt += `\n\nContext: ${context}`;
       }
 
       const response = await openai.chat.completions.create({
-        model: "gpt-4o",
+        model: 'gpt-4o',
         messages: [
-          { 
-            role: "system", 
-            content: "You are an expert programmer who specializes in generating clean, efficient, and well-documented code. Return only the code and brief inline comments explaining key parts." 
+          {
+            role: 'system',
+            content:
+              'You are an expert programmer who specializes in generating clean, efficient, and well-documented code. Return only the code and brief inline comments explaining key parts.',
           },
-          { role: "user", content: prompt }
+          { role: 'user', content: prompt },
         ],
-        max_tokens: 1000
+        max_tokens: 1000,
       });
 
-      return response.choices[0].message.content || "No code snippet available.";
+      return response.choices[0].message.content || 'No code snippet available.';
     } catch (error) {
-      console.error("AI code generation error:", error);
-      return "Sorry, I encountered an error while generating code. Please try again later.";
+      console.error('AI code generation error:', error);
+      return 'Sorry, I encountered an error while generating code. Please try again later.';
     }
   }
 
@@ -140,17 +170,19 @@ Provide specific, actionable feedback that would improve this API design.`;
    * Identify repetitive patterns in a codebase or domain description
    * This is the first step in meta-software engineering - pattern recognition
    */
-  async identifyPatterns(codeOrDescription: string): Promise<{ patterns: Array<{name: string, description: string, examples: string[]}> }> {
+  async identifyPatterns(
+    codeOrDescription: string
+  ): Promise<{ patterns: Array<{ name: string; description: string; examples: string[] }> }> {
     try {
       if (!config.api_keys.openai) {
         return { patterns: [] };
       }
 
       const response = await openai.chat.completions.create({
-        model: "gpt-4o",
+        model: 'gpt-4o',
         messages: [
-          { 
-            role: "system", 
+          {
+            role: 'system',
             content: `You are a meta-software engineering expert. Your task is to identify repetitive patterns in code or domain descriptions.
 For each pattern, provide:
 1. A name
@@ -165,22 +197,22 @@ Your output should be valid JSON in this format:
       "examples": ["string", "string"]
     }
   ]
-}` 
+}`,
           },
-          { 
-            role: "user", 
+          {
+            role: 'user',
             content: `Identify repetitive patterns in the following code or domain description:
-${codeOrDescription}` 
-          }
+${codeOrDescription}`,
+          },
         ],
-        response_format: { type: "json_object" },
-        max_tokens: 1500
+        response_format: { type: 'json_object' },
+        max_tokens: 1500,
       });
 
-      const result = JSON.parse(response.choices[0].message.content || "{}");
+      const result = JSON.parse(response.choices[0].message.content || '{}');
       return result.patterns ? result : { patterns: [] };
     } catch (error) {
-      console.error("Pattern identification error:", error);
+      console.error('Pattern identification error:', error);
       return { patterns: [] };
     }
   }
@@ -190,32 +222,32 @@ ${codeOrDescription}`
    * This is the second step in meta-software engineering - creating abstractions
    */
   async generateMetaModel(
-    patterns: Array<{name: string, description: string, examples: string[]}>,
+    patterns: Array<{ name: string; description: string; examples: string[] }>,
     type: 'component' | 'page' | 'form' | 'workflow' | 'api' | 'report' | 'custom'
   ): Promise<MetaModel> {
     try {
       if (!config.api_keys.openai) {
         return {
-          name: "Default Model",
+          name: 'Default Model',
           type: type,
           config: {},
-          templates: []
+          templates: [],
         };
       }
 
       const response = await openai.chat.completions.create({
-        model: "gpt-4o",
+        model: 'gpt-4o',
         messages: [
-          { 
-            role: "system", 
+          {
+            role: 'system',
             content: `You are a meta-software engineering expert. Your task is to create a metamodel based on identified patterns.
 A metamodel defines the structure and constraints for a family of models.
 Create a concise metamodel in JSON format that represents the patterns provided.
 The metamodel should define a reusable structure that can generate multiple instances.
-Output must be valid JSON in the format specified in the MetaModel type.` 
+Output must be valid JSON in the format specified in the MetaModel type.`,
           },
-          { 
-            role: "user", 
+          {
+            role: 'user',
             content: `Generate a metamodel of type "${type}" based on these patterns:
 ${JSON.stringify(patterns, null, 2)}
 
@@ -226,28 +258,28 @@ Return a valid MetaModel object with these properties:
   "type": "${type}",
   "config": Record<string, any> (configuration parameters),
   "templates": string[] (template identifiers)
-}` 
-          }
+}`,
+          },
         ],
-        response_format: { type: "json_object" },
-        max_tokens: 1000
+        response_format: { type: 'json_object' },
+        max_tokens: 1000,
       });
 
-      const result = JSON.parse(response.choices[0].message.content || "{}");
+      const result = JSON.parse(response.choices[0].message.content || '{}');
       return {
-        name: result.name || "Default Model",
+        name: result.name || 'Default Model',
         description: result.description,
         type: type,
         config: result.config || {},
-        templates: result.templates || []
+        templates: result.templates || [],
       };
     } catch (error) {
-      console.error("Metamodel generation error:", error);
+      console.error('Metamodel generation error:', error);
       return {
-        name: "Error Model",
+        name: 'Error Model',
         type: type,
         config: {},
-        templates: []
+        templates: [],
       };
     }
   }
@@ -260,46 +292,51 @@ Return a valid MetaModel object with these properties:
     metamodel: MetaModel,
     language: string,
     templateType: string
-  ): Promise<{ content: string, placeholders: string[] }> {
+  ): Promise<{ content: string; placeholders: string[] }> {
     try {
+<<<<<<< HEAD
       if (!config.api_keys.openai) {
         return { content: "// Template generation requires an OpenAI API key", placeholders: [] };
+=======
+      if (!process.env.OPENAI_API_KEY) {
+        return { content: '// Template generation requires an OpenAI API key', placeholders: [] };
+>>>>>>> project-structure-improvement
       }
 
       const response = await openai.chat.completions.create({
-        model: "gpt-4o",
+        model: 'gpt-4o',
         messages: [
-          { 
-            role: "system", 
+          {
+            role: 'system',
             content: `You are a code templating expert in ${language}. Your task is to create a reusable code template
 based on a metamodel specification. The template should use a simple {{placeholder}} syntax
 for variable replacement. Identify all dynamic parts that would change per instance.
-Include appropriate comments explaining the template usage.` 
+Include appropriate comments explaining the template usage.`,
           },
-          { 
-            role: "user", 
+          {
+            role: 'user',
             content: `Generate a ${language} code template for ${templateType} based on this metamodel:
 ${JSON.stringify(metamodel, null, 2)}
 
 Return a JSON object with:
 1. The template content (using {{placeholder}} syntax)
-2. A list of all placeholders used in the template` 
-          }
+2. A list of all placeholders used in the template`,
+          },
         ],
-        response_format: { type: "json_object" },
-        max_tokens: 1500
+        response_format: { type: 'json_object' },
+        max_tokens: 1500,
       });
 
-      const result = JSON.parse(response.choices[0].message.content || "{}");
+      const result = JSON.parse(response.choices[0].message.content || '{}');
       return {
-        content: result.content || "// Template generation failed",
-        placeholders: result.placeholders || []
+        content: result.content || '// Template generation failed',
+        placeholders: result.placeholders || [],
       };
     } catch (error) {
-      console.error("Template generation error:", error);
-      return { 
-        content: "// Error generating template", 
-        placeholders: [] 
+      console.error('Template generation error:', error);
+      return {
+        content: '// Error generating template',
+        placeholders: [],
       };
     }
   }
@@ -316,36 +353,36 @@ Return a JSON object with:
       if (!config.api_keys.openai) {
         return {
           resource: {
-            name: "Default",
-            path: "/default",
+            name: 'Default',
+            path: '/default',
             properties: [],
-            endpoints: []
+            endpoints: [],
           },
           framework: {
-            name: "express",
-            language: "javascript"
+            name: 'express',
+            language: 'javascript',
           },
           features: {
             authentication: false,
             documentation: false,
             validation: false,
             testing: false,
-            docker: false
-          }
+            docker: false,
+          },
         };
       }
 
       // Default empty structures for resource, framework and features
       const defaultResource: ResourceDefinition = {
-        name: "Resource",
-        path: "/resource",
+        name: 'Resource',
+        path: '/resource',
         properties: [],
-        endpoints: []
+        endpoints: [],
       };
 
       const defaultFramework: FrameworkDefinition = {
-        name: "express",
-        language: "javascript"
+        name: 'express',
+        language: 'javascript',
       };
 
       const defaultFeatures: FeatureOptions = {
@@ -353,20 +390,20 @@ Return a JSON object with:
         documentation: false,
         validation: false,
         testing: false,
-        docker: false
+        docker: false,
       };
 
       const response = await openai.chat.completions.create({
-        model: "gpt-4o",
+        model: 'gpt-4o',
         messages: [
-          { 
-            role: "system", 
+          {
+            role: 'system',
             content: `You are a meta-software engineering expert. Your task is to generate a specification
 based on a metamodel and user requirements. The specification should be concrete and
-detailed enough to be used for code generation. Follow the ApiSpecification format exactly.` 
+detailed enough to be used for code generation. Follow the ApiSpecification format exactly.`,
           },
-          { 
-            role: "user", 
+          {
+            role: 'user',
             content: `Generate a specification based on this metamodel and requirements:
 
 Metamodel:
@@ -375,15 +412,15 @@ ${JSON.stringify(metamodel, null, 2)}
 Requirements:
 ${requirements}
 
-Return a valid ApiSpecification object with resource, framework, and features properties.` 
-          }
+Return a valid ApiSpecification object with resource, framework, and features properties.`,
+          },
         ],
-        response_format: { type: "json_object" },
-        max_tokens: 1500
+        response_format: { type: 'json_object' },
+        max_tokens: 1500,
       });
 
-      const result = JSON.parse(response.choices[0].message.content || "{}");
-      
+      const result = JSON.parse(response.choices[0].message.content || '{}');
+
       // Ensure we have a valid structure with defaults as fallback
       return {
         resource: result.resource || defaultResource,
@@ -391,28 +428,28 @@ Return a valid ApiSpecification object with resource, framework, and features pr
         features: result.features || defaultFeatures,
         metamodels: result.metamodels || [metamodel],
         generators: result.generators,
-        version: result.version || "1.0.0"
+        version: result.version || '1.0.0',
       };
     } catch (error) {
-      console.error("Specification generation error:", error);
+      console.error('Specification generation error:', error);
       return {
         resource: {
-          name: "Error",
-          path: "/error",
+          name: 'Error',
+          path: '/error',
           properties: [],
-          endpoints: []
+          endpoints: [],
         },
         framework: {
-          name: "express",
-          language: "javascript"
+          name: 'express',
+          language: 'javascript',
         },
         features: {
           authentication: false,
           documentation: false,
           validation: false,
           testing: false,
-          docker: false
-        }
+          docker: false,
+        },
       };
     }
   }
@@ -420,32 +457,29 @@ Return a valid ApiSpecification object with resource, framework, and features pr
   /**
    * Design a code generator based on project requirements
    */
-  async designGenerator(
-    framework: FrameworkDefinition,
-    examples: string[]
-  ): Promise<Generator> {
+  async designGenerator(framework: FrameworkDefinition, examples: string[]): Promise<Generator> {
     try {
       if (!config.api_keys.openai) {
         return {
-          name: "Default Generator",
-          language: framework.language || "javascript",
-          framework: framework.name || "express",
-          templateEngine: "handlebars",
-          outputFormats: ["js", "json"]
+          name: 'Default Generator',
+          language: framework.language || 'javascript',
+          framework: framework.name || 'express',
+          templateEngine: 'handlebars',
+          outputFormats: ['js', 'json'],
         };
       }
 
       const response = await openai.chat.completions.create({
-        model: "gpt-4o",
+        model: 'gpt-4o',
         messages: [
-          { 
-            role: "system", 
+          {
+            role: 'system',
             content: `You are a meta-software engineering expert specializing in code generation systems.
 Your task is to design a code generator for a specific framework and language.
-Consider appropriate template engines, output formats, and configuration options.` 
+Consider appropriate template engines, output formats, and configuration options.`,
           },
-          { 
-            role: "user", 
+          {
+            role: 'user',
             content: `Design a code generator for:
 - Framework: ${framework.name}
 - Language: ${framework.language}
@@ -460,31 +494,31 @@ Return a Generator object with:
 - framework: Target framework
 - templateEngine: Appropriate template engine
 - outputFormats: File formats it generates
-- config: Any configuration parameters` 
-          }
+- config: Any configuration parameters`,
+          },
         ],
-        response_format: { type: "json_object" },
-        max_tokens: 1000
+        response_format: { type: 'json_object' },
+        max_tokens: 1000,
       });
 
-      const result = JSON.parse(response.choices[0].message.content || "{}");
+      const result = JSON.parse(response.choices[0].message.content || '{}');
       return {
-        name: result.name || "Default Generator",
+        name: result.name || 'Default Generator',
         description: result.description || `Generator for ${framework.name}`,
-        language: result.language || framework.language || "javascript",
-        framework: result.framework || framework.name || "express",
-        templateEngine: result.templateEngine || "handlebars",
-        outputFormats: result.outputFormats || ["js", "json"],
-        config: result.config || {}
+        language: result.language || framework.language || 'javascript',
+        framework: result.framework || framework.name || 'express',
+        templateEngine: result.templateEngine || 'handlebars',
+        outputFormats: result.outputFormats || ['js', 'json'],
+        config: result.config || {},
       };
     } catch (error) {
-      console.error("Generator design error:", error);
+      console.error('Generator design error:', error);
       return {
-        name: "Error Generator",
-        language: framework.language || "javascript",
-        framework: framework.name || "express",
-        templateEngine: "handlebars",
-        outputFormats: ["js"]
+        name: 'Error Generator',
+        language: framework.language || 'javascript',
+        framework: framework.name || 'express',
+        templateEngine: 'handlebars',
+        outputFormats: ['js'],
       };
     }
   }
@@ -505,17 +539,17 @@ Return a Generator object with:
       const feedbackPrompt = feedback ? `\n\nFeedback to address:\n${feedback}` : '';
 
       const response = await openai.chat.completions.create({
-        model: "gpt-4o",
+        model: 'gpt-4o',
         messages: [
-          { 
-            role: "system", 
+          {
+            role: 'system',
             content: `You are an expert code reviewer and refiner. Your task is to improve the provided
 generated code based on requirements and feedback. Maintain the structure and intent
 of the original code, but improve its quality, readability, and correctness.
-Return only the refined code without explanations.` 
+Return only the refined code without explanations.`,
           },
-          { 
-            role: "user", 
+          {
+            role: 'user',
             content: `Refine this generated code:
 
 \`\`\`
@@ -523,15 +557,15 @@ ${code}
 \`\`\`
 
 Requirements:
-${requirements}${feedbackPrompt}`
-          }
+${requirements}${feedbackPrompt}`,
+          },
         ],
-        max_tokens: 1500
+        max_tokens: 1500,
       });
 
       return response.choices[0].message.content || code;
     } catch (error) {
-      console.error("Code refinement error:", error);
+      console.error('Code refinement error:', error);
       return code;
     }
   }
@@ -540,6 +574,7 @@ ${requirements}${feedbackPrompt}`
    * Fallback response when no API key is available
    */
   private getFallbackResponse(message: string): string {
+<<<<<<< HEAD
     return `I'm sorry, but I can't provide a personalized response as the OpenAI API key is not configured. 
 Please add your API key to the configuration to enable AI assistance.
 
@@ -549,6 +584,70 @@ To configure the API key, you can:
 1. Add it to your .env file as OPENAI_API_KEY
 2. Or update the config/config.yaml file
 3. Or set it via environment variables before starting the server`;
+=======
+    const fallbackResponses = [
+      'I recommend implementing validation for input fields to ensure data integrity.',
+      'Consider adding pagination to your API endpoints that return collections of items.',
+      'Authentication and authorization are important aspects of API security. JWT tokens are a common approach.',
+      'For code generation, templating engines like Handlebars or EJS can be quite effective.',
+      "When designing your data model, think about the relationships between entities and how they'll be queried.",
+      'Error handling should be consistent across your API. Consider a standardized error response format.',
+      'Documentation is crucial for APIs. OpenAPI/Swagger can help automate this process.',
+      'For the controller pattern, separate your business logic from your route handlers for better maintainability.',
+      'Testing is essential for code generators. Consider unit tests for your templates and integration tests for the generated code.',
+      'Domain-Driven Design principles can be valuable when creating meta-models for code generation.',
+      'When developing meta-software, focus on identifying repetitive patterns first before creating generators.',
+      'The key to successful meta-engineering is finding the right level of abstraction for your domain.',
+      'Consider using a DSL (Domain-Specific Language) to express your domain concepts more clearly.',
+      'Template-based generation works well for structured code, while AI-assisted generation helps with complex logic.',
+      'The generator should be versioned alongside your codebase to ensure reproducibility.',
+    ];
+
+    // Choose a somewhat relevant response based on the message
+    if (message.toLowerCase().includes('pagination')) {
+      return fallbackResponses[1];
+    } else if (message.toLowerCase().includes('validation')) {
+      return fallbackResponses[0];
+    } else if (message.toLowerCase().includes('auth')) {
+      return fallbackResponses[2];
+    } else if (
+      message.toLowerCase().includes('template') ||
+      message.toLowerCase().includes('generat')
+    ) {
+      return fallbackResponses[3];
+    } else if (message.toLowerCase().includes('model') || message.toLowerCase().includes('data')) {
+      return fallbackResponses[4];
+    } else if (message.toLowerCase().includes('error')) {
+      return fallbackResponses[5];
+    } else if (message.toLowerCase().includes('doc')) {
+      return fallbackResponses[6];
+    } else if (
+      message.toLowerCase().includes('controller') ||
+      message.toLowerCase().includes('route')
+    ) {
+      return fallbackResponses[7];
+    } else if (message.toLowerCase().includes('test')) {
+      return fallbackResponses[8];
+    } else if (message.toLowerCase().includes('domain') || message.toLowerCase().includes('ddd')) {
+      return fallbackResponses[9];
+    } else if (message.toLowerCase().includes('pattern')) {
+      return fallbackResponses[10];
+    } else if (message.toLowerCase().includes('abstract')) {
+      return fallbackResponses[11];
+    } else if (
+      message.toLowerCase().includes('dsl') ||
+      message.toLowerCase().includes('language')
+    ) {
+      return fallbackResponses[12];
+    } else if (message.toLowerCase().includes('ai')) {
+      return fallbackResponses[13];
+    } else if (message.toLowerCase().includes('version')) {
+      return fallbackResponses[14];
+    }
+
+    // If no specific match, return a random response
+    return fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
+>>>>>>> project-structure-improvement
   }
 }
 

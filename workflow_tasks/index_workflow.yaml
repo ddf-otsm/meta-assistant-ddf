@@ -1,0 +1,152 @@
+workflows:
+  quality:
+    description: 'This workflow performs comprehensive code quality analysis through multiple static analysis tools, enforces code style guidelines, and ensures type safety. It executes a complete suite of linting, formatting, and architectural checks to maintain high code quality standards across the codebase.'
+    run: './scripts/run_all_checks.sh'
+    options:
+      - name: verbose
+        type: boolean
+        default: false
+        description: Enable verbose output for all checks
+    features:
+      - bash_version_check: Ensures Bash 4.0 or higher is used
+      - verbose_logging: Captures and displays detailed output when enabled
+      - child_process_logging: Forwards child process output to parent
+      - temporary_logs: Uses temporary files for log capture
+      - colorized_output: Provides color-coded status messages
+    children:
+      - sonar_analysis:
+          description: 'Run SonarQube static code analysis'
+          run: 'npm run sonar'
+          files:
+            - sonar-project.properties
+            - .github/workflows/code-quality.yml
+            - docs/code-quality.md
+      - codeclimate_analysis:
+          description: 'Run CodeClimate maintainability analysis'
+          run: 'npm run codeclimate'
+          files:
+            - .codeclimate.yml
+            - .github/workflows/code-quality.yml
+            - docs/code-quality.md
+      - validate:
+          description: 'Run all code validation checks'
+          run: 'npm run validate'
+          files:
+            - .eslintrc.json
+            - .prettierrc
+            - tsconfig.json
+      - all_checks:
+          description: 'Run comprehensive checks and tests'
+          run: './scripts/run_all_checks.sh'
+          files:
+            - scripts/run_all_checks.sh
+            - package.json
+            - .github/workflows/code-quality.yml
+    checks:
+      - code_quality:
+          - linting
+          - type_checking
+          - formatting
+      - testing:
+          - unit_tests
+          - integration_tests
+          - e2e_tests
+      - coverage:
+          - test_coverage
+      - analysis:
+          - sonarqube
+          - codeclimate
+      - build:
+          - build_verification
+      - security:
+          - npm_audit
+          - security_checks
+      - documentation:
+          - docs_validation
+
+  test:
+    description: 'This workflow executes the entire testing strategy, including unit, integration, and end-to-end tests, while generating comprehensive code coverage reports. It ensures application behavior matches specifications at all levels, validates data flow between components, and verifies end-user interactions behave as expected.'
+    run: 'npm run test:coverage'
+    children:
+      - unit_tests:
+          description: 'Run unit tests with Vitest'
+          run: 'npm run test'
+          files:
+            - vitest.config.ts
+            - tests/**/*.test.ts
+      - integration_tests:
+          description: 'Run integration tests'
+          run: 'npm run test:integration'
+          files:
+            - tests/integration/**/*.test.ts
+      - e2e_tests:
+          description: 'Run end-to-end tests'
+          run: 'npm run test:e2e'
+          files:
+            - tests/e2e/**/*.test.ts
+
+  azure:
+    description: 'This workflow manages the provisioning, configuration, and maintenance of Azure OpenAI resources used by the application. It handles credential management, deployment configuration, and service connectivity while providing diagnostics and usage monitoring for Azure OpenAI services.'
+    run: './scripts/setup_azure_openai.sh'
+    children:
+      - dry_run:
+          description: 'Test Azure OpenAI setup without making changes'
+          run: './scripts/setup_azure_openai.sh --dry-run'
+          files:
+            - scripts/setup_azure_openai.sh
+            - .env
+      - live_setup:
+          description: 'Create and configure Azure OpenAI resources'
+          run: './scripts/setup_azure_openai.sh'
+          files:
+            - scripts/setup_azure_openai.sh
+            - .env
+
+suggested_workflows:
+  - name: 'security_scan'
+    description: 'This proposed workflow would implement comprehensive security vulnerability scanning across dependencies, code, and infrastructure. It would integrate tools like Snyk and OWASP Dependency Check to identify potential security risks, CVEs, and best practice violations before they reach production.'
+    proposed_run: 'npm run security'
+    needed_files:
+      - .snyk
+      - security-audit.yml
+    tools:
+      - Snyk
+      - OWASP Dependency Check
+
+  - name: 'performance_test'
+    description: 'This suggested workflow would execute performance and load testing to identify bottlenecks, scalability limits, and response time degradations. It would establish baseline performance metrics and detect regressions using tools like k6 and Artillery to simulate realistic traffic patterns and user loads.'
+    proposed_run: 'npm run perf'
+    needed_files:
+      - k6-config.js
+      - performance-test.yml
+    tools:
+      - k6
+      - Artillery
+
+  - name: 'accessibility_test'
+    description: 'This workflow proposal would automate accessibility compliance verification against WCAG standards to ensure inclusive application design. It would scan UI components and pages using pa11y and axe-core to identify accessibility issues that might prevent users with disabilities from effectively using the application.'
+    proposed_run: 'npm run a11y'
+    needed_files:
+      - pa11y-config.json
+      - accessibility-test.yml
+    tools:
+      - pa11y
+      - axe-core
+
+  - name: 'documentation'
+    description: 'This proposed workflow would generate, validate, and maintain comprehensive technical documentation from code comments and dedicated documentation files. It would leverage TypeDoc and documentation.js to produce developer documentation, API references, and integration guides that stay synchronized with code changes.'
+    proposed_run: 'npm run docs'
+    needed_files:
+      - typedoc.json
+      - docs-validation.yml
+    tools:
+      - TypeDoc
+      - documentation.js
+
+  - name: 'format'
+    description: 'This workflow would run code formatting to fix issues with prettier'
+    proposed_run: 'npm run format'
+    needed_files:
+      - .prettierrc
+    tools:
+      - prettier

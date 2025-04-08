@@ -2,6 +2,44 @@
 
 A platform that implements the "Generate Instead of Code" approach to software engineering, where AI agents and human developers collaborate to build software that creates software.
 
+## Quick Start
+
+### Docker Setup (Recommended)
+```bash
+# Start the application with Docker
+npm run docker:start
+
+# Stop the application
+npm run docker:stop
+```
+
+The application will be available at http://localhost:3000
+
+### Local Setup
+```bash
+# Install dependencies
+npm install
+
+# Start the development server
+npm run dev
+```
+
+## Project Structure
+- `config/` - Configuration files
+  - `docker/` - Docker configuration files
+  - `node/` - Node.js configuration
+  - `typescript/` - TypeScript configuration
+  - `vite/` - Vite configuration
+  - `env/` - Environment configurations
+
+- `multi-env/` - Environment-specific code
+  - `docker/` - Docker environment scripts
+  - `local/` - Local development scripts
+  - `replit/` - Replit environment scripts
+
+- `docs/` - Project documentation
+  - See `docs/index.md` for detailed documentation
+
 ## Core Concept
 
 Rather than directly coding features, this platform enables you to:
@@ -27,16 +65,77 @@ Rather than directly coding features, this platform enables you to:
 - **AI Integration**: OpenAI API (GPT-4o)
 - **Data Storage**: In-memory storage (with database schema)
 
-## Getting Started
+## Detailed Setup Instructions
 
-1. Clone the repository
-2. Install dependencies: `npm install`
-3. Set up your OpenAI API key as an environment variable:
+### Docker Setup (Recommended for Development)
+
+1. Make sure Docker Desktop is installed and running
+2. Start the containers:
+   ```bash
+   npm run docker:start
    ```
-   OPENAI_API_KEY=your_api_key_here
+3. The application will be available at http://localhost:3000
+4. To stop the containers:
+   ```bash
+   npm run docker:stop
    ```
-4. Run the application: `npm run dev`
-5. Access the application at: http://localhost:5000
+
+### Local Setup
+
+#### Prerequisites
+- Node.js v23.11.0 or later
+- npm v10.9.2 or later
+- PostgreSQL 15
+
+#### Database Setup
+1. Install PostgreSQL 15:
+   ```bash
+   brew install postgresql@15
+   ```
+
+2. Add PostgreSQL to your PATH:
+   ```bash
+   echo 'export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"' >> ~/.zshrc
+   source ~/.zshrc
+   ```
+
+3. Start PostgreSQL service:
+   ```bash
+   brew services start postgresql@15
+   ```
+
+4. Create database and user:
+   ```bash
+   psql -f scripts/setup-local-db.sql postgres
+   ```
+
+#### Application Setup
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+2. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+3. The application will be available at http://localhost:3000
+
+## Development Scripts
+
+- `npm run dev` - Start the development server
+- `npm run build` - Build the application
+- `npm run start` - Start the production server
+- `npm run test` - Run tests
+- `npm run test:coverage` - Run tests with coverage
+- `npm run test:ui` - Run tests with UI
+- `npm run docker:start` - Start Docker containers
+- `npm run docker:stop` - Stop Docker containers
+
+## Database Management
+
+- `npm run db:push` - Push database schema changes
 
 ## Workflow Steps
 

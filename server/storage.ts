@@ -1,12 +1,19 @@
 import {
-  User, InsertUser,
-  Project, InsertProject,
-  ModelDefinition, InsertModelDefinition,
-  Template, InsertTemplate,
-  GeneratedCode, InsertGeneratedCode,
-  AiConversation, InsertAiConversation,
-  ApiSpecification, Message
-} from "@shared/schema";
+  User,
+  InsertUser,
+  Project,
+  InsertProject,
+  ModelDefinition,
+  InsertModelDefinition,
+  Template,
+  InsertTemplate,
+  GeneratedCode,
+  InsertGeneratedCode,
+  AiConversation,
+  InsertAiConversation,
+  ApiSpecification,
+  Message,
+} from '@shared/schema.js';
 
 export interface IStorage {
   // User operations
@@ -25,7 +32,10 @@ export interface IStorage {
   getModelDefinition(id: number): Promise<ModelDefinition | undefined>;
   getModelDefinitionsByProjectId(projectId: number): Promise<ModelDefinition[]>;
   createModelDefinition(modelDef: InsertModelDefinition): Promise<ModelDefinition>;
-  updateModelDefinition(id: number, modelDef: Partial<InsertModelDefinition>): Promise<ModelDefinition | undefined>;
+  updateModelDefinition(
+    id: number,
+    modelDef: Partial<InsertModelDefinition>
+  ): Promise<ModelDefinition | undefined>;
   deleteModelDefinition(id: number): Promise<boolean>;
 
   // Template operations
@@ -55,7 +65,7 @@ export class MemStorage implements IStorage {
   private templates: Map<number, Template>;
   private generatedCode: Map<number, GeneratedCode>;
   private aiConversations: Map<number, AiConversation>;
-  
+
   private userIdCounter: number;
   private projectIdCounter: number;
   private modelDefIdCounter: number;
@@ -70,7 +80,7 @@ export class MemStorage implements IStorage {
     this.templates = new Map();
     this.generatedCode = new Map();
     this.aiConversations = new Map();
-    
+
     this.userIdCounter = 1;
     this.projectIdCounter = 1;
     this.modelDefIdCounter = 1;
@@ -89,7 +99,7 @@ export class MemStorage implements IStorage {
       username: 'demo',
       password: 'password', // In a real app, this would be hashed
       displayName: 'Demo User',
-      createdAt: new Date()
+      createdAt: new Date(),
     };
     this.users.set(demoUser.id, demoUser);
 
@@ -100,40 +110,54 @@ export class MemStorage implements IStorage {
       description: 'Build a generator that creates API endpoints from specifications',
       userId: demoUser.id,
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
     this.projects.set(demoProject.id, demoProject);
 
     // Sample API specification model
     const apiSpec: ApiSpecification = {
       resource: {
-        name: "UserProfile",
-        path: "userProfiles",
+        name: 'UserProfile',
+        path: 'userProfiles',
         properties: [
-          { name: "id", type: "string", required: true },
-          { name: "username", type: "string", required: true },
-          { name: "email", type: "string", required: true },
-          { name: "isActive", type: "boolean", required: false }
+          { name: 'id', type: 'string', required: true },
+          { name: 'username', type: 'string', required: true },
+          { name: 'email', type: 'string', required: true },
+          { name: 'isActive', type: 'boolean', required: false },
         ],
         endpoints: [
-          { method: "GET", path: "/api/userProfiles", description: "List all user profiles", pagination: true, filtering: true },
-          { method: "GET", path: "/api/userProfiles/:id", description: "Get a single user profile" },
-          { method: "POST", path: "/api/userProfiles", description: "Create a new user profile" },
-          { method: "PUT", path: "/api/userProfiles/:id", description: "Update an existing user profile" },
-          { method: "DELETE", path: "/api/userProfiles/:id", description: "Delete a user profile" }
-        ]
+          {
+            method: 'GET',
+            path: '/api/userProfiles',
+            description: 'List all user profiles',
+            pagination: true,
+            filtering: true,
+          },
+          {
+            method: 'GET',
+            path: '/api/userProfiles/:id',
+            description: 'Get a single user profile',
+          },
+          { method: 'POST', path: '/api/userProfiles', description: 'Create a new user profile' },
+          {
+            method: 'PUT',
+            path: '/api/userProfiles/:id',
+            description: 'Update an existing user profile',
+          },
+          { method: 'DELETE', path: '/api/userProfiles/:id', description: 'Delete a user profile' },
+        ],
       },
       framework: {
-        name: "express",
-        language: "javascript"
+        name: 'express',
+        language: 'javascript',
       },
       features: {
         authentication: true,
         documentation: true,
         validation: true,
         testing: false,
-        docker: false
-      }
+        docker: false,
+      },
     };
 
     // Create demo model definition
@@ -143,7 +167,7 @@ export class MemStorage implements IStorage {
       projectId: demoProject.id,
       definition: apiSpec,
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
     this.modelDefinitions.set(demoModelDef.id, demoModelDef);
 
@@ -154,22 +178,25 @@ export class MemStorage implements IStorage {
       messages: [
         {
           role: 'assistant',
-          content: "I've analyzed your API specification. Your UserProfile resource looks good, but consider adding these improvements:\n- Add data validation rules for email\n- Consider pagination for the GET all endpoint\n- Add sorting and filtering capabilities",
-          timestamp: new Date()
+          content:
+            "I've analyzed your API specification. Your UserProfile resource looks good, but consider adding these improvements:\n- Add data validation rules for email\n- Consider pagination for the GET all endpoint\n- Add sorting and filtering capabilities",
+          timestamp: new Date(),
         },
         {
           role: 'user',
-          content: "How would I implement pagination in Express.js? Can you generate that part for me?",
-          timestamp: new Date()
+          content:
+            'How would I implement pagination in Express.js? Can you generate that part for me?',
+          timestamp: new Date(),
         },
         {
           role: 'assistant',
-          content: "Here's how to implement pagination in Express.js:\n```javascript\n// Pagination middleware\nconst paginate = (req, res, next) => {\n  const page = parseInt(req.query.page) || 1;\n  const limit = parseInt(req.query.limit) || 10;\n  const skip = (page - 1) * limit;\n  \n  req.pagination = { page, limit, skip };\n  next();\n};\n\n// In your route\nrouter.get('/api/userProfiles', paginate, async (req, res) => {\n  try {\n    const { skip, limit, page } = req.pagination;\n    \n    const profiles = await UserProfile.find()\n      .skip(skip)\n      .limit(limit);\n      \n    const total = await UserProfile.countDocuments();\n    \n    res.json({\n      data: profiles,\n      meta: {\n        total,\n        page,\n        pages: Math.ceil(total / limit)\n      }\n    });\n  } catch (err) {\n    res.status(500).json({ error: err.message });\n  }\n});\n```\nI'll add this to your generator template for the GET all endpoint.",
-          timestamp: new Date()
-        }
+          content:
+            "Here's how to implement pagination in Express.js:\n```javascript\n// Pagination middleware\nconst paginate = (req, res, next) => {\n  const page = parseInt(req.query.page) || 1;\n  const limit = parseInt(req.query.limit) || 10;\n  const skip = (page - 1) * limit;\n  \n  req.pagination = { page, limit, skip };\n  next();\n};\n\n// In your route\nrouter.get('/api/userProfiles', paginate, async (req, res) => {\n  try {\n    const { skip, limit, page } = req.pagination;\n    \n    const profiles = await UserProfile.find()\n      .skip(skip)\n      .limit(limit);\n      \n    const total = await UserProfile.countDocuments();\n    \n    res.json({\n      data: profiles,\n      meta: {\n        total,\n        page,\n        pages: Math.ceil(total / limit)\n      }\n    });\n  } catch (err) {\n    res.status(500).json({ error: err.message });\n  }\n});\n```\nI'll add this to your generator template for the GET all endpoint.",
+          timestamp: new Date(),
+        },
       ],
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
     this.aiConversations.set(demoConversation.id, demoConversation);
   }
@@ -180,9 +207,7 @@ export class MemStorage implements IStorage {
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username
-    );
+    return Array.from(this.users.values()).find(user => user.username === username);
   }
 
   async createUser(user: InsertUser): Promise<User> {
@@ -198,9 +223,7 @@ export class MemStorage implements IStorage {
   }
 
   async getProjectsByUserId(userId: number): Promise<Project[]> {
-    return Array.from(this.projects.values()).filter(
-      (project) => project.userId === userId
-    );
+    return Array.from(this.projects.values()).filter(project => project.userId === userId);
   }
 
   async createProject(project: InsertProject): Promise<Project> {
@@ -218,7 +241,7 @@ export class MemStorage implements IStorage {
     const updatedProject: Project = {
       ...existingProject,
       ...project,
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
     this.projects.set(id, updatedProject);
     return updatedProject;
@@ -235,7 +258,7 @@ export class MemStorage implements IStorage {
 
   async getModelDefinitionsByProjectId(projectId: number): Promise<ModelDefinition[]> {
     return Array.from(this.modelDefinitions.values()).filter(
-      (modelDef) => modelDef.projectId === projectId
+      modelDef => modelDef.projectId === projectId
     );
   }
 
@@ -247,14 +270,17 @@ export class MemStorage implements IStorage {
     return newModelDef;
   }
 
-  async updateModelDefinition(id: number, modelDef: Partial<InsertModelDefinition>): Promise<ModelDefinition | undefined> {
+  async updateModelDefinition(
+    id: number,
+    modelDef: Partial<InsertModelDefinition>
+  ): Promise<ModelDefinition | undefined> {
     const existingModelDef = this.modelDefinitions.get(id);
     if (!existingModelDef) return undefined;
 
     const updatedModelDef: ModelDefinition = {
       ...existingModelDef,
       ...modelDef,
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
     this.modelDefinitions.set(id, updatedModelDef);
     return updatedModelDef;
@@ -270,9 +296,7 @@ export class MemStorage implements IStorage {
   }
 
   async getTemplatesByProjectId(projectId: number): Promise<Template[]> {
-    return Array.from(this.templates.values()).filter(
-      (template) => template.projectId === projectId
-    );
+    return Array.from(this.templates.values()).filter(template => template.projectId === projectId);
   }
 
   async createTemplate(template: InsertTemplate): Promise<Template> {
@@ -283,14 +307,17 @@ export class MemStorage implements IStorage {
     return newTemplate;
   }
 
-  async updateTemplate(id: number, template: Partial<InsertTemplate>): Promise<Template | undefined> {
+  async updateTemplate(
+    id: number,
+    template: Partial<InsertTemplate>
+  ): Promise<Template | undefined> {
     const existingTemplate = this.templates.get(id);
     if (!existingTemplate) return undefined;
 
     const updatedTemplate: Template = {
       ...existingTemplate,
       ...template,
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
     this.templates.set(id, updatedTemplate);
     return updatedTemplate;
@@ -307,7 +334,7 @@ export class MemStorage implements IStorage {
 
   async getGeneratedCodeByProjectId(projectId: number): Promise<GeneratedCode[]> {
     return Array.from(this.generatedCode.values()).filter(
-      (genCode) => genCode.projectId === projectId
+      genCode => genCode.projectId === projectId
     );
   }
 
@@ -328,19 +355,17 @@ export class MemStorage implements IStorage {
   }
 
   async getAiConversationByProjectId(projectId: number): Promise<AiConversation | undefined> {
-    return Array.from(this.aiConversations.values()).find(
-      (conv) => conv.projectId === projectId
-    );
+    return Array.from(this.aiConversations.values()).find(conv => conv.projectId === projectId);
   }
 
   async createAiConversation(conversation: InsertAiConversation): Promise<AiConversation> {
     const id = this.aiConvIdCounter++;
     const now = new Date();
-    const newConversation: AiConversation = { 
-      ...conversation, 
-      id, 
-      createdAt: now, 
-      updatedAt: now 
+    const newConversation: AiConversation = {
+      ...conversation,
+      id,
+      createdAt: now,
+      updatedAt: now,
     };
     this.aiConversations.set(id, newConversation);
     return newConversation;
@@ -353,7 +378,7 @@ export class MemStorage implements IStorage {
     const updatedConversation: AiConversation = {
       ...existingConversation,
       messages: messages,
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
     this.aiConversations.set(id, updatedConversation);
     return updatedConversation;

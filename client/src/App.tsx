@@ -1,31 +1,27 @@
-import { Switch, Route } from "wouter";
-import { queryClient } from "./lib/queryClient";
-import { QueryClientProvider } from "@tanstack/react-query";
-import { Toaster } from "./components/ui/toaster";
-import NotFound from "./pages/not-found";
-import Dashboard from "./pages/dashboard";
-import Project from "./pages/project";
-import MainLayout from "./components/layouts/MainLayout";
-import { ThemeProvider } from "./contexts/ThemeContext";
+import { QueryClientProvider } from '@tanstack/react-query';
+import { Switch, Route } from 'wouter';
 
-function Router() {
-  return (
-    <Switch>
-      <Route path="/" component={Dashboard} />
-      <Route path="/project/:id" component={Project} />
-      <Route component={NotFound} />
-    </Switch>
-  );
-}
+import MainLayout from '@/components/layouts/MainLayout.js';
+import { Toaster } from '@/components/ui/toaster.js';
+import Dashboard from '@/pages/dashboard.js';
+import NotFound from '@/pages/not-found.js';
+import Project from '@/pages/project.js';
+import { ThemeProvider } from '@/contexts/ThemeContext.js';
+
+import { queryClient } from './lib/queryClient.js';
 
 function App() {
   return (
     <ThemeProvider>
       <QueryClientProvider client={queryClient}>
         <MainLayout>
-          <Router />
+          <Switch>
+            <Route path="/" component={Dashboard} />
+            <Route path="/project/:id" component={Project} />
+            <Route component={NotFound} />
+          </Switch>
+          <Toaster />
         </MainLayout>
-        <Toaster />
       </QueryClientProvider>
     </ThemeProvider>
   );

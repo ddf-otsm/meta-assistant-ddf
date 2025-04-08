@@ -1,14 +1,23 @@
-import { pgTable, text, serial, integer, boolean, jsonb, timestamp } from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
+import {
+  pgTable,
+  text,
+  serial,
+  integer,
+  boolean as pgBoolean,
+  jsonb,
+  timestamp,
+} from 'drizzle-orm/pg-core.js';
+import { createInsertSchema } from 'drizzle-zod';
+import { z } from 'zod';
 
 // User model
-export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
-  username: text("username").notNull().unique(),
-  password: text("password").notNull(),
-  displayName: text("display_name"),
-  createdAt: timestamp("created_at").defaultNow(),
+export const users = pgTable('users', {
+  id: serial('id').primaryKey(),
+  username: text('username').notNull().unique(),
+  password: text('password').notNull(),
+  displayName: text('display_name'),
+  isActive: pgBoolean('is_active').default(true),
+  createdAt: timestamp('created_at').defaultNow(),
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({
@@ -18,13 +27,13 @@ export const insertUserSchema = createInsertSchema(users).pick({
 });
 
 // Project model
-export const projects = pgTable("projects", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  description: text("description"),
-  userId: integer("user_id").notNull(),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
+export const projects = pgTable('projects', {
+  id: serial('id').primaryKey(),
+  name: text('name').notNull(),
+  description: text('description'),
+  userId: integer('user_id').notNull(),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
 });
 
 export const insertProjectSchema = createInsertSchema(projects).pick({
@@ -34,13 +43,13 @@ export const insertProjectSchema = createInsertSchema(projects).pick({
 });
 
 // ModelDefinition model (represents a meta-model)
-export const modelDefinitions = pgTable("model_definitions", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  projectId: integer("project_id").notNull(),
-  definition: jsonb("definition").notNull(), // Stores the model structure
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
+export const modelDefinitions = pgTable('model_definitions', {
+  id: serial('id').primaryKey(),
+  name: text('name').notNull(),
+  projectId: integer('project_id').notNull(),
+  definition: jsonb('definition').notNull(), // Stores the model structure
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
 });
 
 export const insertModelDefinitionSchema = createInsertSchema(modelDefinitions).pick({
@@ -50,15 +59,15 @@ export const insertModelDefinitionSchema = createInsertSchema(modelDefinitions).
 });
 
 // Template model (code generation templates)
-export const templates = pgTable("templates", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  projectId: integer("project_id").notNull(),
-  content: text("content").notNull(), // The template content with placeholders
-  language: text("language").notNull(), // Programming language
-  type: text("type").notNull(), // e.g., 'controller', 'model', 'view'
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
+export const templates = pgTable('templates', {
+  id: serial('id').primaryKey(),
+  name: text('name').notNull(),
+  projectId: integer('project_id').notNull(),
+  content: text('content').notNull(), // The template content with placeholders
+  language: text('language').notNull(), // Programming language
+  type: text('type').notNull(), // e.g., 'controller', 'model', 'view'
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
 });
 
 export const insertTemplateSchema = createInsertSchema(templates).pick({
@@ -70,13 +79,13 @@ export const insertTemplateSchema = createInsertSchema(templates).pick({
 });
 
 // GeneratedCode model (keeps track of generated code)
-export const generatedCode = pgTable("generated_code", {
-  id: serial("id").primaryKey(),
-  projectId: integer("project_id").notNull(),
-  modelId: integer("model_id").notNull(), // Reference to the model definition
-  code: text("code").notNull(), // Generated code
-  path: text("path").notNull(), // Where the code should be placed
-  createdAt: timestamp("created_at").defaultNow(),
+export const generatedCode = pgTable('generated_code', {
+  id: serial('id').primaryKey(),
+  projectId: integer('project_id').notNull(),
+  modelId: integer('model_id').notNull(), // Reference to the model definition
+  code: text('code').notNull(), // Generated code
+  path: text('path').notNull(), // Where the code should be placed
+  createdAt: timestamp('created_at').defaultNow(),
 });
 
 export const insertGeneratedCodeSchema = createInsertSchema(generatedCode).pick({
@@ -87,12 +96,12 @@ export const insertGeneratedCodeSchema = createInsertSchema(generatedCode).pick(
 });
 
 // AI Conversation model (stores conversations with AI assistant)
-export const aiConversations = pgTable("ai_conversations", {
-  id: serial("id").primaryKey(),
-  projectId: integer("project_id").notNull(),
-  messages: jsonb("messages").notNull(), // Array of messages
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
+export const aiConversations = pgTable('ai_conversations', {
+  id: serial('id').primaryKey(),
+  projectId: integer('project_id').notNull(),
+  messages: jsonb('messages').notNull(), // Array of messages
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
 });
 
 export const insertAiConversationSchema = createInsertSchema(aiConversations).pick({
@@ -126,7 +135,7 @@ export type ResourceProperty = {
   required: boolean;
   description?: string;
   validation?: string[];
-  defaultValue?: any;
+  defaultValue?: unknown;
 };
 
 export type Endpoint = {
@@ -183,7 +192,7 @@ export type MetaModel = {
   name: string;
   description?: string;
   type: 'component' | 'page' | 'form' | 'workflow' | 'api' | 'report' | 'custom';
-  config: Record<string, any>;
+  config: Record<string, unknown>;
   templates: string[]; // References to template IDs or names
 };
 
@@ -194,7 +203,7 @@ export type Generator = {
   framework: string;
   templateEngine: string;
   outputFormats: string[];
-  config?: Record<string, any>;
+  config?: Record<string, unknown>;
 };
 
 export type ApiSpecification = {
@@ -206,17 +215,17 @@ export type ApiSpecification = {
   version?: string;
 };
 
-export type ProjectStep = 
-  | 'concept'               // Initial project concept and goals
-  | 'patterns'              // Identify repetitive patterns in the domain
-  | 'metamodel'             // Define the meta-models for code generation
-  | 'specification'         // Create specifications using meta-models
-  | 'generator'             // Define/select the code generators
-  | 'template'              // Create code templates
-  | 'generate'              // Execute generation process
-  | 'refine'                // AI-assisted refinement of generated code
-  | 'test'                  // Test the generated system
-  | 'iterate';              // Cycle back with improvements;
+export type ProjectStep =
+  | 'concept' // Initial project concept and goals
+  | 'patterns' // Identify repetitive patterns in the domain
+  | 'metamodel' // Define the meta-models for code generation
+  | 'specification' // Create specifications using meta-models
+  | 'generator' // Define/select the code generators
+  | 'template' // Create code templates
+  | 'generate' // Execute generation process
+  | 'refine' // AI-assisted refinement of generated code
+  | 'test' // Test the generated system
+  | 'iterate'; // Cycle back with improvements;
 
 export type WorkflowState = {
   currentStep: ProjectStep;
