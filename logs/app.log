@@ -1,0 +1,8 @@
+2025-04-06 19:57:36:5736 info: Test info level
+2025-04-06 19:57:36:5736 error: Test error level
+2025-04-06 19:57:36:5736 warn: Test warn level
+2025-04-06 19:57:36:5736 http: Test http level
+2025-04-06 19:57:36:5736 info: Test log message
+2025-04-06 19:57:36:5736 error: Test error message
+2025-04-06 19:57:36:5736 warn: Test warning message
+2025-04-06 19:57:36:5736 http: Test HTTP message

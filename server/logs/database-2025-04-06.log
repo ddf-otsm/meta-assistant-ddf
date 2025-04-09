@@ -1,0 +1,26 @@
+{"level":"info","message":"Connecting to database...","timestamp":"2025-04-06T18:53:14.549Z"}
+{"level":"info","message":"Successfully connected to database","timestamp":"2025-04-06T18:53:14.552Z"}
+{"level":"info","message":"Disconnecting from database...","timestamp":"2025-04-06T18:53:14.557Z"}
+{"level":"info","message":"Successfully disconnected from database","timestamp":"2025-04-06T18:53:14.558Z"}
+{"level":"debug","message":"Executing query","params":[],"sql":"SELECT 1","timestamp":"2025-04-06T18:53:14.561Z"}
+{"level":"debug","message":"Query executed successfully","rowCount":1,"timestamp":"2025-04-06T18:53:14.561Z"}
+{"level":"debug","message":"Executing query","params":[1,"test"],"sql":"INSERT INTO test VALUES ($1, $2)","timestamp":"2025-04-06T18:53:14.562Z"}
+{"level":"debug","message":"Query executed successfully","rowCount":1,"timestamp":"2025-04-06T18:53:14.562Z"}
+{"level":"info","message":"Setting up database connection","timestamp":"2025-04-06T18:53:14.563Z"}
+{"level":"info","message":"Setting up database connection","timestamp":"2025-04-06T18:53:14.564Z"}
+{"level":"info","message":"Connecting to database...","timestamp":"2025-04-06T18:53:37.813Z"}
+{"level":"info","message":"Successfully connected to database","timestamp":"2025-04-06T18:53:37.815Z"}
+{"level":"info","message":"Disconnecting from database...","timestamp":"2025-04-06T18:53:37.821Z"}
+{"level":"info","message":"Successfully disconnected from database","timestamp":"2025-04-06T18:53:37.821Z"}
+{"level":"debug","message":"Executing query","params":[],"sql":"SELECT 1","timestamp":"2025-04-06T18:53:37.824Z"}
+{"level":"debug","message":"Query executed successfully","rowCount":1,"timestamp":"2025-04-06T18:53:37.825Z"}
+{"level":"debug","message":"Executing query","params":[1,"test"],"sql":"INSERT INTO test VALUES ($1, $2)","timestamp":"2025-04-06T18:53:37.825Z"}
+{"level":"debug","message":"Query executed successfully","rowCount":1,"timestamp":"2025-04-06T18:53:37.826Z"}
+{"level":"info","message":"Setting up database connection","timestamp":"2025-04-06T18:53:37.827Z"}
+{"level":"info","message":"Setting up database connection","timestamp":"2025-04-06T18:53:37.829Z"}
+{"level":"info","message":"Connecting to database...","timestamp":"2025-04-06T18:54:31.791Z"}
+{"level":"info","message":"Successfully connected to database","timestamp":"2025-04-06T18:54:31.792Z"}
+{"level":"info","message":"Disconnecting from database...","timestamp":"2025-04-06T18:54:31.797Z"}
+{"level":"info","message":"Successfully disconnected from database","timestamp":"2025-04-06T18:54:31.797Z"}
+{"level":"info","message":"Setting up database connection","timestamp":"2025-04-06T18:54:31.801Z"}
+{"level":"info","message":"Setting up database connection","timestamp":"2025-04-06T18:54:31.801Z"}

@@ -3,13 +3,13 @@ import { useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { useRoute } from 'wouter';
 
-import { Button } from '@/components/ui/button.js';
-import AIAssistant from '@/components/workspace/AIAssistant.js';
-import MetadataViewer from '@/components/workspace/MetadataViewer.js';
-import ModelBuilder from '@/components/workspace/ModelBuilder.js';
-import WorkflowSteps from '@/components/workspace/WorkflowSteps.js';
-import { useToast } from '@/hooks/use-toast.js';
-import { queryClient, apiRequest } from '@/lib/queryClient.js';
+import { Button } from '@/components/ui/button';
+import AIAssistant from '@/components/workspace/AIAssistant';
+import MetadataViewer from '@/components/workspace/MetadataViewer';
+import ModelBuilder from '@/components/workspace/ModelBuilder';
+import WorkflowSteps from '@/components/workspace/WorkflowSteps';
+import { useToast } from '@/hooks/use-toast';
+import { queryClient, apiRequest } from '@/lib/queryClient';
 
 import {
   Project,
@@ -21,11 +21,11 @@ import {
   Message,
   ResourceProperty,
   ValidationError,
-} from '@shared/schema.js';
+} from '@shared/schema';
 
 export default function ProjectPage() {
-  const [, params] = useRoute<{ id: string }>('/projects/:id');
-  const projectId = parseInt(params?.id || '1');
+  const [, params] = useRoute<{ id: string }>("/project/:id");
+  const projectId = parseInt(params?.id || "1");
   const { toast } = useToast();
 
   // State for the current workflow step
@@ -223,8 +223,8 @@ export default function ProjectPage() {
     return (
       <div className="container mx-auto p-6 flex justify-center items-center min-h-[60vh]">
         <div className="text-center">
-          <i className="ri-loader-4-line animate-spin text-3xl text-primary-600 mb-3"></i>
-          <p className="text-dark-600">Loading project...</p>
+          <i className="ri-loader-4-line animate-spin text-3xl text-primary mb-3"></i>
+          <p className="text-muted-foreground">Loading project...</p>
         </div>
       </div>
     );
@@ -234,13 +234,8 @@ export default function ProjectPage() {
     <div className="container mx-auto p-6">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-dark-900">
-            {project?.name || 'Meta-API Generator'}
-          </h1>
-          <p className="text-dark-500">
-            {project?.description ||
-              'Build a generator that creates API endpoints from specifications'}
-          </p>
+          <h1 className="text-2xl font-bold text-foreground">{project?.name || "Meta-API Generator"}</h1>
+          <p className="text-muted-foreground">{project?.description || "Build a generator that creates API endpoints from specifications"}</p>
         </div>
         <div className="flex space-x-3">
           <Button
@@ -256,8 +251,8 @@ export default function ProjectPage() {
             )}
             Save
           </Button>
-          <Button
-            className="flex items-center bg-primary-600 hover:bg-primary-700"
+          <Button 
+            className="flex items-center"
             onClick={() => {
               // Move to the generate step
               setCurrentStep('generate');
