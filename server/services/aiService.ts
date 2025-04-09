@@ -7,20 +7,12 @@ import {
   Generator,
   ResourceDefinition,
   FrameworkDefinition,
-<<<<<<< HEAD
-  FeatureOptions
-} from "@shared/schema";
+  FeatureOptions,
+} from '@shared/schema';
 import { config } from "../config_loader";
 
 // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
 const openai = new OpenAI({ apiKey: config.api_keys.openai || "" });
-=======
-  FeatureOptions,
-} from '@shared/schema';
-
-// the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || '' });
->>>>>>> project-structure-improvement
 
 class AIService {
   /**
@@ -79,13 +71,8 @@ build systems to build systems rather than building individual features directly
    */
   async analyzeModelDefinition(model: ModelDefinition): Promise<string> {
     try {
-<<<<<<< HEAD
       if (!config.api_keys.openai) {
-        return "Model analysis is unavailable without an OpenAI API key.";
-=======
-      if (!process.env.OPENAI_API_KEY) {
         return 'Model analysis is unavailable without an OpenAI API key.';
->>>>>>> project-structure-improvement
       }
 
       const prompt = `Analyze this API model definition and provide suggestions for improvement:
@@ -131,13 +118,8 @@ Provide specific, actionable feedback that would improve this API design.`;
     context: string | null = null
   ): Promise<string> {
     try {
-<<<<<<< HEAD
       if (!config.api_keys.openai) {
-        return "Code generation is unavailable without an OpenAI API key.";
-=======
-      if (!process.env.OPENAI_API_KEY) {
         return 'Code generation is unavailable without an OpenAI API key.';
->>>>>>> project-structure-improvement
       }
 
       let prompt = `Generate a ${language} code snippet for the following task: ${task}`;
@@ -294,13 +276,8 @@ Return a valid MetaModel object with these properties:
     templateType: string
   ): Promise<{ content: string; placeholders: string[] }> {
     try {
-<<<<<<< HEAD
       if (!config.api_keys.openai) {
-        return { content: "// Template generation requires an OpenAI API key", placeholders: [] };
-=======
-      if (!process.env.OPENAI_API_KEY) {
         return { content: '// Template generation requires an OpenAI API key', placeholders: [] };
->>>>>>> project-structure-improvement
       }
 
       const response = await openai.chat.completions.create({
@@ -574,7 +551,6 @@ ${requirements}${feedbackPrompt}`,
    * Fallback response when no API key is available
    */
   private getFallbackResponse(message: string): string {
-<<<<<<< HEAD
     return `I'm sorry, but I can't provide a personalized response as the OpenAI API key is not configured. 
 Please add your API key to the configuration to enable AI assistance.
 
@@ -584,70 +560,6 @@ To configure the API key, you can:
 1. Add it to your .env file as OPENAI_API_KEY
 2. Or update the config/config.yaml file
 3. Or set it via environment variables before starting the server`;
-=======
-    const fallbackResponses = [
-      'I recommend implementing validation for input fields to ensure data integrity.',
-      'Consider adding pagination to your API endpoints that return collections of items.',
-      'Authentication and authorization are important aspects of API security. JWT tokens are a common approach.',
-      'For code generation, templating engines like Handlebars or EJS can be quite effective.',
-      "When designing your data model, think about the relationships between entities and how they'll be queried.",
-      'Error handling should be consistent across your API. Consider a standardized error response format.',
-      'Documentation is crucial for APIs. OpenAPI/Swagger can help automate this process.',
-      'For the controller pattern, separate your business logic from your route handlers for better maintainability.',
-      'Testing is essential for code generators. Consider unit tests for your templates and integration tests for the generated code.',
-      'Domain-Driven Design principles can be valuable when creating meta-models for code generation.',
-      'When developing meta-software, focus on identifying repetitive patterns first before creating generators.',
-      'The key to successful meta-engineering is finding the right level of abstraction for your domain.',
-      'Consider using a DSL (Domain-Specific Language) to express your domain concepts more clearly.',
-      'Template-based generation works well for structured code, while AI-assisted generation helps with complex logic.',
-      'The generator should be versioned alongside your codebase to ensure reproducibility.',
-    ];
-
-    // Choose a somewhat relevant response based on the message
-    if (message.toLowerCase().includes('pagination')) {
-      return fallbackResponses[1];
-    } else if (message.toLowerCase().includes('validation')) {
-      return fallbackResponses[0];
-    } else if (message.toLowerCase().includes('auth')) {
-      return fallbackResponses[2];
-    } else if (
-      message.toLowerCase().includes('template') ||
-      message.toLowerCase().includes('generat')
-    ) {
-      return fallbackResponses[3];
-    } else if (message.toLowerCase().includes('model') || message.toLowerCase().includes('data')) {
-      return fallbackResponses[4];
-    } else if (message.toLowerCase().includes('error')) {
-      return fallbackResponses[5];
-    } else if (message.toLowerCase().includes('doc')) {
-      return fallbackResponses[6];
-    } else if (
-      message.toLowerCase().includes('controller') ||
-      message.toLowerCase().includes('route')
-    ) {
-      return fallbackResponses[7];
-    } else if (message.toLowerCase().includes('test')) {
-      return fallbackResponses[8];
-    } else if (message.toLowerCase().includes('domain') || message.toLowerCase().includes('ddd')) {
-      return fallbackResponses[9];
-    } else if (message.toLowerCase().includes('pattern')) {
-      return fallbackResponses[10];
-    } else if (message.toLowerCase().includes('abstract')) {
-      return fallbackResponses[11];
-    } else if (
-      message.toLowerCase().includes('dsl') ||
-      message.toLowerCase().includes('language')
-    ) {
-      return fallbackResponses[12];
-    } else if (message.toLowerCase().includes('ai')) {
-      return fallbackResponses[13];
-    } else if (message.toLowerCase().includes('version')) {
-      return fallbackResponses[14];
-    }
-
-    // If no specific match, return a random response
-    return fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
->>>>>>> project-structure-improvement
   }
 }
 
