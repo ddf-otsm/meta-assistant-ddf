@@ -1,0 +1,91 @@
+Use the more comprehensive interface at server/storage/interfaces/IStorage.ts
+Ensure all methods in the simpler interface are also in the comprehensive one
+Standardize method naming (e.g., getBaby vs getBabyById)
+Complete remaining MemStorage component implementations
+Fix the modular PgStorage implementation
+Update the main storage.ts file:
+
+Make it import the modular implementations
+Export a singleton instance based on environment
+Ensure backwards compatibility with existing code
+Update route implementations:
+
+Gradually update route files to use the standardized method names
+Fix any type issues with returns (undefined vs null)
+3. VisionSimulator Duplication
+There's a clear duplication problem:
+
+client/components/baby-vision/VisionSimulator.tsx:
+Contains a redundant implementation of simulateBabyVision
+Uses string properties (blurRadius, brightness, contrast) not in the model
+client/lib/baby-vision/babyVisionSimulator.ts:
+Contains the correct implementation that uses InfantVisionStage properties
+Already used by image-utils.ts
+Solution: Replace the VisionSimulator implementation with just a thin wrapper around the functions from image-utils.ts, which already provide the correct functionality.
+
+Action Plan
+Since there are multiple overlapping issues, I recommend tackling them in this order:
+
+Fix the VisionSimulator duplication first (smaller, more contained issue)
+Update the storage.ts file to support both old and new interfaces during transition
+Standardize method naming across storage implementations
+Update routes to use the standardized method names
+Would you like me to start with any of these specific tasks?
+
+Checkpoint made
+36 minutes ago
+•
+Update Baby Companion app with new features and bug fixes. Includes UI improvements, dependency updates, and code cleanup.
+Fix the VisionSimulator duplication first (smaller, more contained issue)
+Delete storage.ts after full implementation of
+
+New Modular Approach (server/storage/):
+
+Has a comprehensive IStorage interface
+Uses composition for MemStorage implementation with specialized classes
+Supports many entity types (over a dozen)
+As per the refactoring plan, is about 70% complete
+
+Standardize method naming across storage implementations
+Update routes to use the standardized method names
+
+33 minutes ago
+LM
+
+luis148
+I'll fix the VisionSimulator duplication first and then start the storage refactoring work. Let's begin:
+
+1. Fixing the VisionSimulator Duplication
+First, let's replace the duplicate implementation in VisionSimulator.tsx with a proper wrapper for the functions from image-utils.ts:
+
+
+Edited client/src/components/baby-vision/VisionSimulator.tsx
+Now, let's verify the rest of the file:
+
+
+Opened client/src/components/baby-vision/VisionSimulator.tsx
+Great! Now let's check the source functions we're using from image-utils.ts:
+
+
+Opened client/src/lib/image-utils.ts
+Let's also check babyVisionSimulator.tsx file that we're using:
+
+Let's check if it's a .ts file instead:
+
+
+Opened client/src/lib/baby-vision/babyVisionSimulator.ts
+Now, let's check the infantVisionStages.ts file:
+
+
+Opened client/src/lib/baby-vision/infantVisionStages.ts
+Great! Now we need to see if there are other files using the VisionSimulator component to ensure our changes don't break anything:
+
+
+Searched for "Find files that import or use VisionSimulator"
+
+Searched for "Find components that import VisionSimulator"
+
+Opened client/src/pages/BabyVision.tsx
+Perfect! Now I can complete the first task - fixing the VisionSimulator duplication.
+
+Our fix in VisionSimulator.tsx should be working correctly:
