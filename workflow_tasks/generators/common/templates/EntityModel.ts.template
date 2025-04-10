@@ -1,0 +1,35 @@
+export interface {{EntityName}} {
+  id: string;
+  name: string;
+  {{#each entityProperties}}
+  {{name}}: {{type}};
+  {{/each}}
+  lastUpdated: Date;
+}
+
+{{#if customEnums}}
+{{#each customEnums}}
+export enum {{name}} {
+  {{#each values}}
+  {{name}} = "{{value}}",
+  {{/each}}
+}
+{{/each}}
+{{/if}}
+
+export interface {{EntityName}}Metrics {
+  {{#each metrics}}
+  {{name}}: {
+    value: {{type}};
+    unit: "{{unit}}";
+  };
+  {{/each}}
+}
+
+export interface {{EntityName}}Event {
+  id: string;
+  {{entityName}}Id: string;
+  type: string;
+  timestamp: Date;
+  data: any;
+} 

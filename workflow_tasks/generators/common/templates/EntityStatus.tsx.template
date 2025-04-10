@@ -1,0 +1,46 @@
+import React from 'react';
+import { use{{EntityName}}Context } from '../../context/{{EntityName}}Context';
+{{#each imports}}
+import { {{name}} } from '{{{path}}}';
+{{/each}}
+
+export const {{EntityName}}Status: React.FC<{ {{entityName}}Id: string }> = ({ {{entityName}}Id }) => {
+  const { {{entityNamePlural}}, loading, error } = use{{EntityName}}Context();
+  const {{entityName}} = {{entityNamePlural}}.find(k => k.id === {{entityName}}Id);
+  
+  if (loading) return <p>Loading {{entityName}} status...</p>;
+  if (error) return <p>Error loading {{entityName}} data: {error}</p>;
+  if (!{{entityName}}) return <p>{{EntityName}} not found</p>;
+  
+  return (
+    <div className="{{entityName}}-status">
+      <h2>{{{entityName}}.name}</h2>
+      <div className="{{entityName}}-metrics">
+        {{#each metrics}}
+        <div className="metric">
+          <h3>{{displayName}}</h3>
+          <div className="metric-value">
+            {{{entityName}}.metrics.{{name}}.value} {{{entityName}}.metrics.{{name}}.unit}
+          </div>
+        </div>
+        {{/each}}
+      </div>
+      <div className="{{entityName}}-state">
+        <h3>Current State</h3>
+        <div className="state-indicator state-{{{entityName}}.currentState.toLowerCase()}">
+          {{{entityName}}.currentState}
+        </div>
+      </div>
+      <div className="{{entityName}}-controls">
+        {{#each actions}}
+        <button 
+          {{#if condition}}disabled={ {{condition}} }{{/if}} 
+          onClick={() => {{handler}}('{{action}}', {{entityName}}Id)}
+        >
+          {{label}}
+        </button>
+        {{/each}}
+      </div>
+    </div>
+  );
+}; 

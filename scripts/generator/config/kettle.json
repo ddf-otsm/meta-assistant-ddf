@@ -1,0 +1,74 @@
+{
+  "domain": "kettle",
+  "entityMapping": {
+    "Baby": "Kettle",
+    "baby": "kettle",
+    "Parent": "User",
+    "parent": "user",
+    "Doctor": "Maintenance",
+    "doctor": "maintenance"
+  },
+  "fileMapping": {
+    "src/components/Baby.tsx": "src/components/Kettle.tsx",
+    "src/components/BabyHealth.tsx": "src/components/KettleStatus.tsx",
+    "src/components/Feeding.tsx": "src/components/HeatingCycle.tsx",
+    "src/api/baby.ts": "src/api/kettle.ts",
+    "src/api/parent.ts": "src/api/user.ts"
+  },
+  "excludePaths": [
+    "node_modules",
+    ".git",
+    "dist",
+    "build"
+  ],
+  "customTransformations": [
+    {
+      "pattern": "temperature reading",
+      "replacement": "temperature sensor",
+      "flags": "g"
+    },
+    {
+      "pattern": "feeding schedule",
+      "replacement": "heating schedule",
+      "flags": "g"
+    },
+    {
+      "pattern": "sleep tracking",
+      "replacement": "idle time tracking",
+      "flags": "g"
+    },
+    {
+      "pattern": "growth chart",
+      "replacement": "usage pattern chart",
+      "flags": "g"
+    },
+    {
+      "pattern": "diaper change",
+      "replacement": "maintenance check",
+      "flags": "g"
+    }
+  ],
+  "domainSpecificData": {
+    "kettleStates": ["off", "heating", "boiled", "keepWarm"],
+    "metrics": [
+      {
+        "name": "temperature",
+        "unit": "celsius",
+        "minValue": 0,
+        "maxValue": 100
+      },
+      {
+        "name": "waterLevel",
+        "unit": "percentage",
+        "minValue": 0,
+        "maxValue": 100
+      },
+      {
+        "name": "powerConsumption",
+        "unit": "watts",
+        "minValue": 0,
+        "maxValue": 2000
+      }
+    ]
+  }
+} 

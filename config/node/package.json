@@ -37,7 +37,10 @@
     "test:all": "./scripts/run_all_tests.sh",
     "typecheck": "tsc --noEmit",
     "fix:imports": "tsx scripts/fix-imports.ts",
-    "fix:imports:dry-run": "tsx scripts/fix-imports.ts --dry-run"
+    "fix:imports:dry-run": "tsx scripts/fix-imports.ts --dry-run",
+    "gen:analyze": "tsx scripts/generator/analyze-repo.ts",
+    "gen:transform": "tsx scripts/generator/transform-repo.ts",
+    "gen:ui": "tsx scripts/generator/ui.ts"
   },
   "devDependencies": {
     "@playwright/test": "^1.51.1",
@@ -131,7 +134,12 @@
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0",
     "wouter": "^3.6.0",
-    "zod": "^3.24.2"
+    "zod": "^3.24.2",
+    "simple-git": "^3.21.0",
+    "glob": "^10.3.10",
+    "handlebars": "^4.7.8",
+    "jsonschema": "^1.4.1",
+    "node-nlp": "^4.27.0"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",

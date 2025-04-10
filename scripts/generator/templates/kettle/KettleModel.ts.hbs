@@ -1,0 +1,65 @@
+/**
+ * Kettle domain model
+ * Generated on {{timestamp}}
+ */
+
+export interface Kettle {
+  id: string;
+  name: string;
+  model: string;
+  maxCapacity: number; // in liters
+  currentState: KettleState;
+  metrics: KettleMetrics;
+  lastUpdated: Date;
+}
+
+export enum KettleState {
+  {{#each config.domainSpecificData.kettleStates}}
+  {{this.toUpperCase}} = "{{this}}",
+  {{/each}}
+}
+
+export interface KettleMetrics {
+  {{#each config.domainSpecificData.metrics}}
+  {{name}}: {
+    value: number;
+    unit: "{{unit}}";
+  };
+  {{/each}}
+  heatingCycles: {
+    today: number;
+    total: number;
+  };
+}
+
+export interface HeatingCycle {
+  id: string;
+  kettleId: string;
+  startTime: Date;
+  endTime?: Date;
+  startTemperature: number;
+  endTemperature?: number;
+  targetTemperature: number;
+  completed: boolean;
+}
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  preferences: {
+    defaultTemperature: number;
+    autoShutOff: boolean;
+    keepWarmDuration: number; // in minutes
+  };
+}
+
+export interface MaintenanceRecord {
+  id: string;
+  kettleId: string;
+  date: Date;
+  type: 'cleaning' | 'descaling' | 'repair';
+  notes: string;
+  performedBy: string;
+  nextScheduledDate?: Date;
+} 

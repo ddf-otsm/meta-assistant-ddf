@@ -1,0 +1,51 @@
+{
+  "domain": "kettle",
+  "entityName": "Kettle",
+  "entityMapping": {
+    "Baby": "Kettle",
+    "Parent": "User",
+    "Doctor": "Maintenance"
+  },
+  "metricMapping": {
+    "temperature": "temperature",
+    "weight": "waterLevel",
+    "height": null,
+    "feeding": "heatingCycle",
+    "sleep": "idleTime"
+  },
+  "componentMapping": {
+    "BabyHealthMetrics": "KettleMetrics",
+    "FeedingTracker": "HeatingCycleTracker",
+    "GrowthChart": "UsagePatternChart",
+    "SleepTracker": "IdleTimeTracker",
+    "BabyProfile": "KettleProfile"
+  },
+  "filePathMapping": {
+    "client/src/pages/Baby.tsx": "client/src/pages/Kettle.tsx",
+    "client/src/pages/BabyVision.tsx": "client/src/pages/KettleStatus.tsx",
+    "server/routes/baby.ts": "server/routes/kettle.ts"
+  },
+  "entityProperties": [
+    { "name": "model", "type": "string" },
+    { "name": "maxCapacity", "type": "number" },
+    { "name": "currentState", "type": "KettleState" },
+    { "name": "metrics", "type": "KettleMetrics" }
+  ],
+  "metrics": [
+    { "name": "temperature", "type": "number", "unit": "celsius" },
+    { "name": "waterLevel", "type": "number", "unit": "percentage" },
+    { "name": "powerConsumption", "type": "number", "unit": "watts" },
+    { "name": "heatingCycles", "type": "number", "unit": "count" }
+  ],
+  "customCode": {
+    "KettleState": "enum KettleState { OFF = 'off', HEATING = 'heating', BOILED = 'boiled', KEEP_WARM = 'keepWarm' }"
+  },
+  "skipFiles": [
+    "client/src/pages/ContractionTracker.tsx",
+    "client/src/pages/LullabyGenerator.tsx"
+  ],
+  "additionalComponents": [
+    "TemperatureAlertSettings",
+    "KettleScheduler"
+  ]
+} 
