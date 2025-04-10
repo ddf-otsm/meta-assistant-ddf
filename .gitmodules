@@ -1,0 +1,4 @@
+[submodule "submodules/baby-monitor"]
+	path = submodules/baby-monitor
+	url = https://github.com/ddf-otsm/baby-monitor.git
+	branch = v1.0.2-stable-front-back
