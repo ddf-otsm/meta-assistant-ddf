@@ -5,6 +5,7 @@ import { useRoute } from 'wouter';
 
 import { Button } from '@/components/ui/button';
 import AIAssistant from '@/components/workspace/AIAssistant';
+import DocumentationViewer from '@/components/workspace/DocumentationViewer';
 import MetadataViewer from '@/components/workspace/MetadataViewer';
 import ModelBuilder from '@/components/workspace/ModelBuilder';
 import WorkflowSteps from '@/components/workspace/WorkflowSteps';
@@ -20,7 +21,6 @@ import {
   ProjectStep,
   Message,
   ResourceProperty,
-  ValidationError,
 } from '@shared/schema';
 
 export default function ProjectPage() {
@@ -86,6 +86,9 @@ export default function ProjectPage() {
 
   // State for generated code files
   const [generatedFiles, setGeneratedFiles] = useState<GeneratedCode[]>([]);
+
+  // State for UI tabs
+  const [activeTab, setActiveTab] = useState<'metadata' | 'documentation'>('metadata');
 
   // Fetch project details
   const { data: project, isLoading: isLoadingProject } = useQuery<Project>({
@@ -288,13 +291,45 @@ export default function ProjectPage() {
             onMessagesUpdate={handleMessagesUpdate}
           />
 
-          <MetadataViewer
-            projectId={projectId}
-            modelId={models && models.length > 0 ? models[0].id : 0}
-            specification={specification}
-            generatedFiles={generatedFiles}
-            onCodeGenerated={handleCodeGenerated}
-          />
+          <div className="mt-6">
+            <div className="flex border-b border-border mb-4">
+              <button
+                className={`px-4 py-2 font-medium text-sm ${
+                  activeTab === 'metadata' 
+                    ? 'border-b-2 border-primary text-primary' 
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+                onClick={() => setActiveTab('metadata')}
+              >
+                Metadata & Code
+              </button>
+              <button
+                className={`px-4 py-2 font-medium text-sm ${
+                  activeTab === 'documentation' 
+                    ? 'border-b-2 border-primary text-primary' 
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+                onClick={() => setActiveTab('documentation')}
+              >
+                Documentation
+              </button>
+            </div>
+
+            {activeTab === 'metadata' ? (
+              <MetadataViewer
+                projectId={projectId}
+                modelId={models && models.length > 0 ? models[0].id : 0}
+                specification={specification}
+                generatedFiles={generatedFiles}
+                onCodeGenerated={handleCodeGenerated}
+              />
+            ) : (
+              <DocumentationViewer
+                projectId={projectId}
+                projectName={project?.name || ""}
+              />
+            )}
+          </div>
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import { Express } from 'express';
 import { createRotatingLogger } from './config/log-rotation.js';
 import routes from './routes/index.js';
+import documentationRoutes from './routes/documentation.js';
 
 const logger = createRotatingLogger('routes-setup');
 
@@ -32,4 +33,5 @@ routes.post('/ai/generate', async (req, res) => {
 export function setupRoutes(app: Express) {
   logger.info('Setting up routes');
   app.use('/api', routes);
+  app.use('/api', documentationRoutes);
 }
