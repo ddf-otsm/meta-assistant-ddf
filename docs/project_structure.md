@@ -1,74 +1,96 @@
-# Meta-Software Engineering Platform Directory Structure
+# Project Structure
 
-This document outlines the directory structure of the Meta-Software Engineering Platform project.
+This document outlines the organization of the project files and directories.
 
-## Root Structure
+## Root Directory Structure
 
-- `client/` - Front-end code and React application
-- `server/` - Back-end Express.js API and server code
-- `shared/` - Shared types and utilities used by both client and server
-- `config/` - Configuration files for the application
-- `docs/` - Documentation files
-- `tests/` - Test files for the application
-- `workflow_tasks/` - Generalizable scripts or tasks reusable across multiple projects
-- `multi_env/` - Environment-specific configurations and scripts
-- `logs/` - Log files and logging utilities
-- `.tmp/` - Temporary files and scripts
-
-## Multi-Environment Structure
-
-The `multi_env/` directory contains environment-specific configurations and scripts:
-
-- `multi_env/local_dev/` - Local development environment
-  - `run_dev.sh` - Script to run the application in local development mode
-  
-- `multi_env/replit_dev/` - Replit development environment
-  - `run_dev_repl.sh` - Script to run the application in Replit development mode
-  
-- `multi_env/docker_prd/` - Docker production environment
-  - `run_prd.sh` - Script to run the application in Docker production mode
-  
-- `multi_env/kubernetes_prd/` - Kubernetes production environment (to be implemented)
-
-## Client Structure
-
-- `client/src/` - Source code for the React application
-  - `components/` - Reusable UI components
-  - `pages/` - Page components
-  - `contexts/` - React context providers
-  - `hooks/` - Custom React hooks
-  - `lib/` - Utility functions and libraries
-
-## Server Structure
-
-- `server/` - Back-end server code
-  - `services/` - Business logic and services
-  - `routes.ts` - API route definitions
-  - `index.ts` - Server entry point
-  - `vite.ts` - Vite configuration for development
-  - `storage.ts` - Data storage interface
-
-## Workflow and Environment Flags
-
-The scripts in the `multi_env/` directory support various flags:
-
-- `--fast` - Skip type checking for faster development
-- `--turbo` - Skip type checking and use caching (for Replit)
-- `--full` - Run complete build and tests (for production)
-
-## Command to run the application
-
-For local development:
 ```
-bash multi_env/local_dev/run_dev.sh
+.
+├── client/              # Frontend application
+├── server/              # Backend application
+├── shared/              # Shared code between frontend and backend
+├── multi_env/          # Environment-specific configurations
+│   ├── docker_prd/     # Docker production environment
+│   ├── replit_dev/     # Replit development environment
+│   │   └── .replit     # Replit configuration
+│   └── local_dev/      # Local development environment
+├── workflow_tasks/     # Reusable workflow tasks and tools
+│   ├── python/         # Python scripts
+│   │   ├── process_large_file.py
+│   │   ├── process_with_claude.py
+│   │   └── split_large_file.py
+│   └── shell/          # Shell scripts
+│       ├── process_chunks.sh
+│       ├── cursor_process.sh
+│       └── combine_results.sh
+├── docs/               # Project documentation
+│   ├── README.md
+│   ├── README_CLAUDE_PROCESSING.md
+│   └── config_structure.md
+├── tests/              # Test files
+├── logs/              # Log files and test results
+│   └── test_results/  # Test execution results
+├── .github/            # GitHub configuration
+├── .husky/             # Git hooks
+├── .vscode/            # VS Code configuration
+├── package.json        # Project dependencies and scripts
+├── tsconfig.json       # TypeScript configuration
+├── .eslintrc.js        # ESLint configuration
+├── .eslintrc.json      # ESLint configuration (extended)
+├── .prettierrc         # Prettier configuration
+├── .prettierignore     # Prettier ignore rules
+├── .codeclimate.yml    # Code Climate configuration
+├── .lintstagedrc       # lint-staged configuration
+├── theme.json          # Theme configuration
+└── .gitignore          # Git ignore rules
 ```
 
-For Replit development:
-```
-bash multi_env/replit_dev/run_dev_repl.sh
-```
+## Key Directories
 
-For Docker production:
-```
-bash multi_env/docker_prd/run_prd.sh
-``` 
+### `workflow_tasks/`
+Contains reusable workflow tasks and tools:
+- `python/`: Python scripts for various tasks
+- `shell/`: Shell scripts for automation and maintenance
+
+### `multi_env/`
+Environment-specific configurations:
+- `docker_prd/`: Docker production environment setup
+- `replit_dev/`: Replit development environment setup (includes .replit config)
+- `local_dev/`: Local development environment setup
+
+### Core Application Directories
+- `client/`: Frontend React application
+- `server/`: Backend Node.js application
+- `shared/`: Code shared between frontend and backend
+
+## Usage
+
+1. Development:
+   - Use `multi_env/local_dev/` for local development
+   - Use `multi_env/replit_dev/` for Replit development
+
+2. Production:
+   - Use `multi_env/docker_prd/` for Docker-based production deployment
+
+3. Workflow Tasks:
+   - Python scripts in `workflow_tasks/python/`
+   - Shell scripts in `workflow_tasks/shell/`
+
+4. Configuration:
+   - All configuration files are at the root level
+   - Environment-specific configs in `multi_env/`
+
+## Naming Conventions
+
+1. Files and folders should use underscores (_) instead of hyphens (-)
+2. Configuration files should be at the root level
+3. Environment-specific files should be in their respective `multi_env/` subdirectories
+4. All scripts and tools should be in `workflow_tasks/`
+
+## Maintenance
+
+When adding new files:
+1. Place them in the appropriate directory based on their purpose
+2. Use underscores instead of hyphens in names
+3. Update this documentation if the structure changes
+4. Follow the existing naming conventions 

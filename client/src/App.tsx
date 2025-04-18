@@ -6,6 +6,8 @@ import { Toaster } from '@/components/ui/toaster';
 import Dashboard from '@/pages/dashboard';
 import NotFound from '@/pages/not-found';
 import Project from '@/pages/project';
+import SignupPage from '@/pages/signup';
+import LoginPage from '@/pages/login';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 
 import { queryClient } from './lib/queryClient';
@@ -15,6 +17,8 @@ function Router() {
     <Switch>
       <Route path="/" component={Dashboard} />
       <Route path="/project/:id" component={Project} />
+      <Route path="/signup" component={SignupPage} />
+      <Route path="/login" component={LoginPage} />
       <Route component={NotFound} />
     </Switch>
   );

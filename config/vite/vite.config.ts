@@ -21,6 +21,9 @@ export default defineConfig({
         changeOrigin: true,
       },
     },
+    hmr: {
+      overlay: false // Disable the error overlay
+    }
   },
   resolve: {
     alias: {
@@ -29,4 +32,11 @@ export default defineConfig({
       '@shared': path.resolve(baseDir, '../../shared'),
     },
   },
+  esbuild: {
+    logOverride: { 'this-is-undefined-in-esm': 'silent' }
+  },
+  optimizeDeps: {
+    include: ['react', 'react-dom'],
+    exclude: ['@types/react']
+  }
 });
